@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <!--    TODO : Change Setting Live & Local-->
     <!--Live URL-->
     <string name="server_url">https://hostelbasera.com/services/</string>
     <string name="image_url">https://hostelbasera.com/services/uploads/</string>

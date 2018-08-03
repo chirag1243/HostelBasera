@@ -83,8 +83,6 @@ public class SplashActivity extends Activity {
                     if (userDetailModel.status == 0) {
                         userDetailModel.loginUserDetail.password = globals.getUserDetails().loginUserDetail.password;
 
-                        //TODO Remove Line
-                        userDetailModel.loginUserDetail.token = Constant.Token_Value;
 
                         globals.setUserDetails(userDetailModel);
                         startActivity(new Intent(SplashActivity.this, DashboardActivity.class));
