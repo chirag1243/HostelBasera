@@ -14,6 +14,9 @@ public class Constant {
     public static final String Message = "message";
     public static final String Status = "status";
 
+    public static final String USER_MODEL = "USER_MODEL";
+    public static final String SELLER_MODEL = "SELLER_MODEL";
+
     public static final int progress_threshold_2 = 2;
     public static final boolean addLoadingRow = true;
     public static final int GRID_SPAN = 2;

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!--    TODO : Change Setting Live & Local-->
+    <!--Live URL-->
+    <string name="server_url">https://hostelbasera.com/services/</string>
+    <string name="image_url">https://hostelbasera.com/services/uploads/</string>
+
+
+    <string name="loginUser">login/loginUser</string>
+    <string name="addTask">user/addTask</string>
+    <string name="uploadAddTaskFiles">user/uploadAddTaskFiles</string>
+    <string name="getUserCreatedTaskList">user/getUserCreatedTaskList</string>
+    <string name="getAssigneeTaskList">user/getAssigneeTaskList</string>
+    <string name="viewTask">user/viewTask</string>
+    <string name="addTaskComment">user/addTaskComment</string>
+    <string name="getTaskComments">user/getTaskComments</string>
+
+    <string name="getTaskCount">user/getTaskCount</string>
+    <string name="logoutUser">login/logoutUser</string>
+    <string name="forwardTask">user/forwardTask</string>
+    <string name="getForwardedTasks">user/getForwardedTasks</string>
+
+    <string name="addSubTask">user/addSubTask</string>
+    <string name="getForwardedToMeTasks">user/getForwardedToMeTasks</string>
+
+    <string name="getUserCreatedSubTaskList">user/getUserCreatedSubTaskList</string>
+</resources>

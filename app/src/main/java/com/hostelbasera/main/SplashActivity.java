@@ -49,7 +49,7 @@ public class SplashActivity extends Activity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                startActivity(new Intent(SplashActivity.this, DashboardActivity.class));
+                startActivity(new Intent(SplashActivity.this, LoginActivity.class));
                 finish();
             }
         }, 3000);
@@ -59,7 +59,7 @@ public class SplashActivity extends Activity {
    /* private void init() {
         if (globals.getUserDetails() != null) {
             if (Globals.isNetworkAvailable(this)) {
-                btnRetry.setVisibility(View.GONE);
+                btnRetry.setVisibility(View.INVISIBLE);
                 startLoader();
                 doLogin();
             } else {
@@ -118,8 +118,8 @@ public class SplashActivity extends Activity {
 
     public void stopLoader() {
         rotateLoading.stop();
-        rotateLoading.setVisibility(View.GONE);
-        flRotateLoading.setVisibility(View.GONE);
+        rotateLoading.setVisibility(View.INVISIBLE);
+        flRotateLoading.setVisibility(View.INVISIBLE);
     }
 
     public void startLoader() {
