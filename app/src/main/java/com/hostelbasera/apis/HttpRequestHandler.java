@@ -10,6 +10,7 @@ import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 import com.orhanobut.logger.Logger;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import cc.cloudist.acplibrary.ACProgressConstant;
@@ -118,6 +119,28 @@ public class HttpRequestHandler {
         return params;
     }
 
+    public JSONObject getRegisterUserParam(String deviceId, String name, String password, String email, String mobile_no, String address, boolean isSeller) {
+        JSONObject params = new JSONObject();
+        JSONObject jsonObject = new JSONObject();
+        try {
+            params.put(Constant.DeviceType, Constant.AndroidDeviceType);
+            params.put(Constant.DeviceId, deviceId);
+            params.put(Constant.Fcm_token, globals.getFCMDeviceToken());
+
+            jsonObject.put(isSeller ? Constant.Seller_name : Constant.User_name, name);
+            jsonObject.put(isSeller ? Constant.Seller_pass : Constant.User_pass, password);
+            jsonObject.put(isSeller ? Constant.Seller_email : Constant.User_email, email);
+            jsonObject.put(isSeller ? Constant.Seller_cont_no : Constant.User_cont_no, mobile_no);
+            jsonObject.put(isSeller ? Constant.Seller_address : Constant.User_address, address);
+
+            params.put(isSeller ? Constant.RegisterSellerData : Constant.RegisterUserData, jsonObject);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return params;
+    }
+
+
     /*public JSONObject getLogoutUserParam() {
         JSONObject params = new JSONObject();
         JSONObject jsonObject = new JSONObject();
@@ -137,10 +160,10 @@ public class HttpRequestHandler {
 
     /*private JSONObject mParams;
 
-    public JSONObject setDefaultParameters() {
+    public JSONObject setDefaultParameters(boolean isSeller) {
         try {
             mParams = new JSONObject();
-            mParams.put(Constant.Token, globals.getUserDetails().loginUserDetail.token);
+            mParams.put(Constant.Fcm_token, globals.getUserDetails().loginUserDetail.token);
             mParams.put(Constant.DeviceType, Constant.AndroidDeviceType);
             mParams.put(Constant.User_id, globals.getUserDetails().loginUserDetail.user_id);
         } catch (JSONException e) {

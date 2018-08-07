@@ -68,7 +68,7 @@
                 android:textSize="@dimen/dim_text16" />
         </info.hoang8f.android.segmented.SegmentedGroup>
 
-        <EditText
+        <android.support.v7.widget.AppCompatEditText
             android:id="@+id/edt_email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -79,10 +79,11 @@
             android:drawablePadding="@dimen/dim_15dp"
             android:hint="@string/email"
             android:inputType="textEmailAddress"
+            android:backgroundTint="@android:color/white"
             android:textColor="@color/colorAccent"
             android:textColorHint="@color/colorAccent" />
 
-        <EditText
+        <android.support.v7.widget.AppCompatEditText
             android:id="@+id/edt_password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -93,6 +94,7 @@
             android:drawablePadding="@dimen/dim_15dp"
             android:hint="@string/password"
             android:inputType="textPassword"
+            android:backgroundTint="@android:color/white"
             android:textColor="@color/colorAccent"
             android:textColorHint="@color/colorAccent" />
 

@@ -13,6 +13,9 @@
     <string name="back_again">Please click BACK again to exit</string>
     <string name="ok">OK</string>
 
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
     <string name="retry">Retry</string>
     <string name="buyer">Buyer</string>
     <string name="seller">Seller</string>
@@ -26,4 +29,11 @@
     <string name="name">Name</string>
     <string name="mobile_no">Mobile No.</string>
     <string name="address">Address</string>
+    <string name="find_your_hostel">Find Your Hostel</string>
+    <string name="pg_hostel">PG/Hostel</string>
+    <string name="bookmarks">Bookmarks</string>
+    <string name="my_pg_hostel">My PG/Hostel</string>
+    <string name="feedback">Feedback</string>
+    <string name="share_app">Share App</string>
+    <string name="sign_out">Sign Out</string>
 </resources>

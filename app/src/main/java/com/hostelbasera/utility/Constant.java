@@ -37,6 +37,38 @@ public class Constant {
     public static final String LoginUserData = "loginUserData";
     public static final String LoginSellerData = "loginSellerData";
 
+
+    /*
+    "registerUserData":{
+						"user_name":"Dipen Patel",
+						"user_pass":"123456",
+						"user_email":"dipen2016@gmail.com",
+						"user_cont_no":"7567340599",
+						"user_address":"640 Ganesh Nagar Vijalpur road navsari"
+						}
+"registerSellerData":{
+						"seller_name":"Dipen Patel",
+						"seller_pass":"123456",
+						"seller_email":"dipen2016@gmail.com",
+						"seller_cont_no":"7567340599",
+						"seller_address":"640 Ganesh Nagar Vijalpur road navsari"
+						}
+     */
+    public static final String RegisterUserData = "registerUserData";
+
+    public static final String User_name = "user_name";
+    public static final String User_pass = "user_pass";
+    public static final String User_email = "user_email";
+    public static final String User_cont_no = "user_cont_no";
+    public static final String User_address = "user_address";
+
+    public static final String RegisterSellerData = "registerSellerData";
+    public static final String Seller_name = "seller_name";
+    public static final String Seller_pass = "seller_pass";
+    public static final String Seller_email = "seller_email";
+    public static final String Seller_cont_no = "seller_cont_no";
+    public static final String Seller_address = "seller_address";
+
     public static final String Is_valid_token = "is_valid_token";
     public static final String Token_Value = "si0d3lRh4Of7ld03l";
 

@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.support.v7.widget.AppCompatEditText;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -38,9 +39,9 @@ public class LoginActivity extends BaseActivity {
     @BindView(R.id.segmented_group)
     SegmentedGroup segmentedGroup;
     @BindView(R.id.edt_email)
-    EditText edtEmail;
+    AppCompatEditText edtEmail;
     @BindView(R.id.edt_password)
-    EditText edtPassword;
+    AppCompatEditText edtPassword;
     @BindView(R.id.btn_sign_in)
     Button btnSignIn;
     @BindView(R.id.tv_forget_password)
@@ -70,13 +71,7 @@ public class LoginActivity extends BaseActivity {
         segmentedGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
-                if (checkedId == R.id.rb_buyer) {
-                    Toaster.shortToast("Buyer");
-                    isSeller = false;
-                } else {
-                    Toaster.shortToast("Seller");
-                    isSeller = true;
-                }
+                isSeller = checkedId != R.id.rb_buyer;
             }
         });
     }
