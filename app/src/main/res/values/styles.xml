@@ -70,4 +70,16 @@
         <item name="tabSelectedTextColor">@color/colorAccent</item>
     </style>
 
+    <style name="RatingBar" parent="Theme.AppCompat">
+        <item name="colorControlNormal">@android:color/white</item>
+        <item name="colorControlActivated">@android:color/holo_orange_light</item>
+
+    </style>
+
+    <style name="customRatingBar" parent="@android:style/Widget.RatingBar">
+        <item name="android:progressDrawable">@drawable/customratingstars</item>
+        <item name="android:minHeight">20dip</item>
+        <item name="android:maxHeight">20dip</item>
+    </style>
+
 </resources>

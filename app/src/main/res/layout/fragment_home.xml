@@ -1,6 +1,99 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/home_bg"
+    android:orientation="vertical">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/dim_12dp"
+        android:background="@drawable/rounded_category_home_bg"
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/dim_20dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/rounded_search"
+            android:drawableRight="@drawable/search"
+            android:padding="@dimen/dim_8dp"
+            android:text="Search"
+            android:textColor="@color/colorAccent"
+            android:textSize="@dimen/dim_text16" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dim_10dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:drawableTop="@drawable/female"
+                android:gravity="center"
+                android:padding="@dimen/dim_5dp"
+                android:text="Girls"
+                android:textColor="@color/colorPrimary"
+                android:textSize="@dimen/dim_text14" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:drawableTop="@drawable/male"
+                android:gravity="center"
+                android:padding="@dimen/dim_5dp"
+                android:text="Boys"
+                android:textColor="@color/colorPrimary"
+                android:textSize="@dimen/dim_text14" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:drawableTop="@drawable/malefemale"
+                android:gravity="center"
+                android:padding="@dimen/dim_5dp"
+                android:text="Both"
+                android:textColor="@color/colorPrimary"
+                android:textSize="@dimen/dim_text14" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:drawableTop="@drawable/near"
+                android:gravity="center"
+                android:padding="@dimen/dim_5dp"
+                android:text="Near Me"
+                android:textColor="@color/colorPrimary"
+                android:textSize="@dimen/dim_text14" />
+        </LinearLayout>
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/rounded_hostel_list_bg"
+        android:orientation="vertical"
+        android:layout_marginTop="@dimen/dim_20dp"
+        android:paddingBottom="@dimen/dim_20dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_gravity="center"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorAccent"
+            android:textSize="@dimen/dim_text16"
+            android:textAllCaps="true"
+            android:textStyle="bold"
+            android:layout_marginTop="@dimen/dim_20dp"
+            android:text="Hostel Suggestion"/>
+
+    </LinearLayout>
 </LinearLayout>
