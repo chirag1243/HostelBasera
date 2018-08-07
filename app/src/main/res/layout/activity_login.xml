@@ -4,42 +4,151 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg"
+    android:background="@drawable/login_bg"
+    android:gravity="bottom"
+    android:orientation="vertical"
     tools:context=".main.LoginActivity">
 
-    <info.hoang8f.android.segmented.SegmentedGroup
-        xmlns:segmentedgroup="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/segmented2"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:gravity="center"
-        android:layout_margin="@dimen/dim_10dp"
-        android:orientation="horizontal"
-        segmentedgroup:sc_tint_color="@color/colorAccent"
-        segmentedgroup:sc_checked_text_color="@color/white"
-        android:background="@android:color/transparent"
-        segmentedgroup:sc_border_width="2dp"
-        segmentedgroup:sc_corner_radius="10dp">
+        android:layout_height="0dp"
+        android:layout_weight="0.7"
+        android:gravity="bottom"
+        android:orientation="vertical">
 
-
-        <RadioButton
-            android:id="@+id/button21"
+        <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Buyer"
-            android:padding="@dimen/dim_10dp"
-            android:textSize="@dimen/dim_text14"
-            android:checked="true"
-            style="@style/RadioButton" />
+            android:layout_gravity="center"
+            android:src="@drawable/logo" />
+    </LinearLayout>
 
-        <RadioButton
-            android:id="@+id/button22"
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1.3"
+        android:gravity="bottom"
+        android:orientation="vertical">
+
+        <info.hoang8f.android.segmented.SegmentedGroup xmlns:segmentedgroup="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/segmented_group"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/dim_40dp"
+            android:layout_marginRight="@dimen/dim_40dp"
+            android:background="@android:color/transparent"
+            android:gravity="center"
+            android:orientation="horizontal"
+            segmentedgroup:sc_border_width="2dp"
+            segmentedgroup:sc_checked_text_color="@color/white"
+            segmentedgroup:sc_corner_radius="15dp"
+            segmentedgroup:sc_tint_color="@color/colorAccent">
+
+            <RadioButton
+                android:id="@+id/rb_buyer"
+                style="@style/RadioButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:checked="true"
+                android:padding="@dimen/dim_10dp"
+                android:text="@string/buyer"
+                android:textAllCaps="true"
+                android:textSize="@dimen/dim_text16" />
+
+            <RadioButton
+                android:id="@+id/rb_seller"
+                style="@style/RadioButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:padding="@dimen/dim_10dp"
+                android:text="@string/seller"
+                android:textAllCaps="true"
+                android:textSize="@dimen/dim_text16" />
+        </info.hoang8f.android.segmented.SegmentedGroup>
+
+        <EditText
+            android:id="@+id/edt_email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/dim_40dp"
+            android:layout_marginRight="@dimen/dim_40dp"
+            android:layout_marginTop="@dimen/dim_30dp"
+            android:drawableLeft="@drawable/user"
+            android:drawablePadding="@dimen/dim_15dp"
+            android:hint="@string/email"
+            android:inputType="textEmailAddress"
+            android:textColor="@color/colorAccent"
+            android:textColorHint="@color/colorAccent" />
+
+        <EditText
+            android:id="@+id/edt_password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/dim_40dp"
+            android:layout_marginRight="@dimen/dim_40dp"
+            android:layout_marginTop="@dimen/dim_10dp"
+            android:drawableLeft="@drawable/password"
+            android:drawablePadding="@dimen/dim_15dp"
+            android:hint="@string/password"
+            android:inputType="textPassword"
+            android:textColor="@color/colorAccent"
+            android:textColorHint="@color/colorAccent" />
+
+        <Button
+            android:id="@+id/btn_sign_in"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="@dimen/dim_40dp"
+            android:layout_marginRight="@dimen/dim_40dp"
+            android:layout_marginTop="@dimen/dim_15dp"
+            android:background="@drawable/rounded_sign_in_bg"
+            android:padding="@dimen/dim_10dp"
+            android:text="@string/sign_in"
+            android:textAllCaps="true"
+            android:textColor="@color/colorPrimary"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tv_forget_password"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="@dimen/dim_10dp"
-            android:textSize="@dimen/dim_text14"
-            android:text="Seller"
-            style="@style/RadioButton" />
-    </info.hoang8f.android.segmented.SegmentedGroup>
+            android:layout_gravity="center"
+            android:layout_marginTop="@dimen/dim_15dp"
+            android:padding="@dimen/dim_5dp"
+            android:text="@string/forget_password_"
+            android:textColor="@color/white"
+            android:textSize="@dimen/dim_text14" />
+
+        <LinearLayout
+            android:id="@+id/ll_sign_up"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_marginTop="@dimen/dim_15dp"
+            android:background="@color/white"
+            android:gravity="center"
+            android:padding="@dimen/dim_10dp">
+
+            <TextView
+                android:id="@+id/tv_don_t_have_an_account_"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/don_t_have_an_account_"
+                android:textColor="@color/colorPrimary"
+                android:textSize="@dimen/dim_text12" />
+
+            <TextView
+                android:id="@+id/sign_up"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dim_5dp"
+                android:text="@string/sign_up"
+                android:textColor="@color/colorPrimary"
+                android:textSize="@dimen/dim_text12"
+                android:textStyle="bold" />
+        </LinearLayout>
+    </LinearLayout>
 </LinearLayout>

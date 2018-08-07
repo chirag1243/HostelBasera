@@ -14,4 +14,16 @@
     <string name="ok">OK</string>
 
     <string name="retry">Retry</string>
+    <string name="buyer">Buyer</string>
+    <string name="seller">Seller</string>
+    <string name="login">Login</string>
+    <string name="sign_in">Sign In</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="forget_password_">Forget Password?</string>
+    <string name="don_t_have_an_account_">Don\'t have an account?</string>
+    <string name="sign_up">Sign up</string>
+    <string name="name">Name</string>
+    <string name="mobile_no">Mobile No.</string>
+    <string name="address">Address</string>
 </resources>

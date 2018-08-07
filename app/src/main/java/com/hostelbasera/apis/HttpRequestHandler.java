@@ -3,7 +3,6 @@ package com.hostelbasera.apis;
 import android.content.Context;
 import android.graphics.Color;
 
-import com.hostelbasera.model.UserDetailModel;
 import com.hostelbasera.utility.Constant;
 import com.hostelbasera.utility.Globals;
 import com.loopj.android.http.AsyncHttpClient;
@@ -11,11 +10,7 @@ import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 import com.orhanobut.logger.Logger;
 
-import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.util.ArrayList;
 
 import cc.cloudist.acplibrary.ACProgressConstant;
 import cc.cloudist.acplibrary.ACProgressFlower;
@@ -102,26 +97,26 @@ public class HttpRequestHandler {
         return dialog;
     }
 
-
-    public JSONObject getLoginUserParam(String deviceId, String mobile, String password) {
+    public JSONObject getLoginUserParam(String deviceId, String email, String password, boolean isSeller) {
         JSONObject params = new JSONObject();
         JSONObject jsonObject = new JSONObject();
         try {
             params.put(Constant.DeviceType, Constant.AndroidDeviceType);
             params.put(Constant.DeviceId, deviceId);
 
-            jsonObject.put(Constant.Mobile, mobile);
+            jsonObject.put(Constant.Email, email);
             jsonObject.put(Constant.Password, password);
             jsonObject.put(Constant.Fcm_token, globals.getFCMDeviceToken());
 
-            params.put(Constant.LoginUserData, jsonObject);
+            if (isSeller)
+                params.put(Constant.LoginSellerData, jsonObject);
+            else
+                params.put(Constant.LoginUserData, jsonObject);
         } catch (Exception e) {
             e.printStackTrace();
         }
         return params;
     }
-
-
 
     /*public JSONObject getLogoutUserParam() {
         JSONObject params = new JSONObject();

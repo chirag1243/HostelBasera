@@ -10,6 +10,7 @@ public class Constant {
     static final String AS_Secrets = "secrets";
 
     public static final String Fcm_token = "fcm_token";
+    public static final String IsSeller = "IsSeller";
 
     public static final String Message = "message";
     public static final String Status = "status";
@@ -32,8 +33,10 @@ public class Constant {
     public static final String DeviceType = "deviceType";
     public static final String DeviceId = "deviceId";
     public static final String Password = "password";
-    public static final String Mobile = "mobile";
+    public static final String Email = "email";
     public static final String LoginUserData = "loginUserData";
+    public static final String LoginSellerData = "loginSellerData";
+
     public static final String Is_valid_token = "is_valid_token";
     public static final String Token_Value = "si0d3lRh4Of7ld03l";
 

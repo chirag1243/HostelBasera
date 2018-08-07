@@ -26,7 +26,6 @@ import android.view.inputmethod.InputMethodManager;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.hostelbasera.R;
-import com.hostelbasera.model.SellerDetailModel;
 import com.hostelbasera.model.UserDetailModel;
 
 import java.io.BufferedReader;
@@ -302,32 +301,14 @@ public class Globals extends CoreApp {
         }.getType());
     }
 
-    /*SellerDetails*/
-    public SellerDetailModel getSellerDetails() {
-        return toSellerDetails(getSharedPref().getString(Constant.SELLER_MODEL, null));
-    }
-
-    public void setSellerDetails(SellerDetailModel sellerMap) {
-        getEditor().putString(Constant.SELLER_MODEL, toJsonString(sellerMap));
+    public void setIsSeller(boolean isSeller) {
+        getEditor().putBoolean(Constant.IsSeller, isSeller);
         getEditor().commit();
     }
 
-    public static SellerDetailModel toSellerDetails(String params) {
-        if (params == null)
-            return null;
-
-        return new Gson().fromJson(params, new TypeToken<SellerDetailModel>() {
-        }.getType());
+    public boolean getIsSeller() {
+        return getSharedPref().getBoolean(Constant.IsSeller, false);
     }
-
-    public static String toJsonString(SellerDetailModel params) {
-        if (params == null) {
-            return null;
-        }
-        return new Gson().toJson(params, new TypeToken<SellerDetailModel>() {
-        }.getType());
-    }
-
 
     public void setFCMDeviceToken(String regId) {
         getEditor().putString(Constant.Fcm_token, regId);

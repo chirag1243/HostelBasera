@@ -138,7 +138,6 @@ public class PostRequest {
                     if (response.has(Constant.Is_valid_token) && !response.getBoolean(Constant.Is_valid_token)) {
                         Toaster.longToast(response.getString(Constant.Message));
                         globals.setUserDetails(null);
-                        globals.setSellerDetails(null);
                         context.startActivity(new Intent(context, LoginActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
                         return;
                     }

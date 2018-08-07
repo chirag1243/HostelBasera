@@ -5,7 +5,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Handler;
 import android.provider.Settings;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -13,7 +12,9 @@ import android.widget.FrameLayout;
 
 import com.google.gson.Gson;
 import com.hostelbasera.R;
-import com.hostelbasera.utility.Constant;
+import com.hostelbasera.apis.HttpRequestHandler;
+import com.hostelbasera.apis.PostRequest;
+import com.hostelbasera.model.UserDetailModel;
 import com.hostelbasera.utility.Globals;
 import com.hostelbasera.utility.Toaster;
 import com.orhanobut.logger.AndroidLogAdapter;
@@ -25,7 +26,6 @@ import org.json.JSONObject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import cz.msebera.android.httpclient.protocol.HttpRequestHandler;
 
 public class SplashActivity extends Activity {
 
@@ -36,8 +36,10 @@ public class SplashActivity extends Activity {
     Button btnRetry;
     @BindView(R.id.fl_rotate_loading)
     FrameLayout flRotateLoading;
-//    @BindView(R.id.img_icon)
+    //    @BindView(R.id.img_icon)
 //    ImageView imgIcon;
+    boolean isSeller;
+    UserDetailModel userModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,17 +48,12 @@ public class SplashActivity extends Activity {
         globals = ((Globals) getApplicationContext());
         ButterKnife.bind(this);
         Logger.addLogAdapter(new AndroidLogAdapter());
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                startActivity(new Intent(SplashActivity.this, LoginActivity.class));
-                finish();
-            }
-        }, 3000);
-//        init();
+        isSeller = globals.getIsSeller();
+        userModel = globals.getUserDetails();
+        init();
     }
 
-   /* private void init() {
+    private void init() {
         if (globals.getUserDetails() != null) {
             if (Globals.isNetworkAvailable(this)) {
                 btnRetry.setVisibility(View.INVISIBLE);
@@ -64,27 +61,36 @@ public class SplashActivity extends Activity {
                 doLogin();
             } else {
                 btnRetry.setVisibility(View.VISIBLE);
+                stopLoader();
                 Toaster.shortToast(R.string.no_internet_msg);
             }
         } else {
             redirect();
         }
-    }*/
+    }
 
-   /* @SuppressLint("HardwareIds")
+    @SuppressLint("HardwareIds")
     public void doLogin() {
-        JSONObject postData = HttpRequestHandler.getInstance().getLoginUserParam(Settings.Secure.getString(this.getContentResolver(), Settings.Secure.ANDROID_ID), globals.getUserDetails().loginUserDetail.mobile, globals.getUserDetails().loginUserDetail.password);
+        JSONObject postData = HttpRequestHandler.getInstance().getLoginUserParam(Settings.Secure.getString(this.getContentResolver(), Settings.Secure.ANDROID_ID),
+                isSeller ? userModel.loginSellerDetail.email : userModel.loginUserDetail.email,
+                isSeller ? userModel.loginSellerDetail.password : userModel.loginUserDetail.password, isSeller);
 
         if (postData != null) {
-            new PostRequest(this, getString(R.string.loginUser), postData, false, new PostRequest.OnPostServiceCallListener() {
+            new PostRequest(this, isSeller ? getString(R.string.loginSeller) : getString(R.string.loginUser),
+                    postData, false, new PostRequest.OnPostServiceCallListener() {
                 @Override
                 public void onSucceedToPostCall(JSONObject response) {
                     UserDetailModel userDetailModel = new Gson().fromJson(response.toString(), UserDetailModel.class);
                     if (userDetailModel.status == 0) {
                         userDetailModel.loginUserDetail.password = globals.getUserDetails().loginUserDetail.password;
 
-
+                        if (isSeller)
+                            userDetailModel.loginSellerDetail.password = userModel.loginSellerDetail.password;
+                        else
+                            userDetailModel.loginUserDetail.password = userModel.loginUserDetail.password;
+                        globals.setIsSeller(isSeller);
                         globals.setUserDetails(userDetailModel);
+
                         startActivity(new Intent(SplashActivity.this, DashboardActivity.class));
                     } else {
                         Toaster.shortToast(userDetailModel.message);
@@ -102,9 +108,9 @@ public class SplashActivity extends Activity {
             }).execute();
         }
         Globals.hideKeyboard(this);
-    }*/
+    }
 
-    /*private void redirect() {
+    private void redirect() {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -112,7 +118,7 @@ public class SplashActivity extends Activity {
                 finish();
             }
         }, 2000);
-    }*/
+    }
 
     public void stopLoader() {
         rotateLoading.stop();
@@ -134,6 +140,6 @@ public class SplashActivity extends Activity {
 
     @OnClick(R.id.btn_retry)
     public void onViewClicked() {
-//        init();
+        init();
     }
 }
