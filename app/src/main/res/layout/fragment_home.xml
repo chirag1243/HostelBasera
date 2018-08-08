@@ -8,9 +8,9 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="@dimen/dim_12dp"
         android:background="@drawable/rounded_category_home_bg"
         android:orientation="vertical"
+        android:padding="@dimen/dim_12dp"
         android:paddingBottom="@dimen/dim_20dp">
 
         <TextView
@@ -79,21 +79,40 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/dim_20dp"
         android:background="@drawable/rounded_hostel_list_bg"
         android:orientation="vertical"
-        android:layout_marginTop="@dimen/dim_20dp"
         android:paddingBottom="@dimen/dim_20dp">
 
         <TextView
             android:layout_width="wrap_content"
-            android:layout_gravity="center"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="@dimen/dim_20dp"
+            android:text="Hostel Suggestion"
+            android:textAllCaps="true"
             android:textColor="@color/colorAccent"
             android:textSize="@dimen/dim_text16"
-            android:textAllCaps="true"
-            android:textStyle="bold"
+            android:textStyle="bold" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/dim_20dp"
-            android:text="Hostel Suggestion"/>
+            android:orientation="horizontal">
+
+            <include
+                layout="@layout/home_hostel_item"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+
+            <include
+                layout="@layout/home_hostel_item"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+        </LinearLayout>
 
     </LinearLayout>
 </LinearLayout>
