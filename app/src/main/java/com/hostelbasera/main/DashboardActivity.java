@@ -6,6 +6,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -20,6 +21,13 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.Priority;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.Target;
 import com.hostelbasera.R;
 import com.hostelbasera.utility.BaseActivity;
 import com.hostelbasera.utility.Globals;
@@ -27,6 +35,7 @@ import com.hostelbasera.utility.Toaster;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class DashboardActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -43,6 +52,7 @@ public class DashboardActivity extends BaseActivity implements NavigationView.On
     DrawerLayout drawer;
     Globals globals;
     AppCompatImageView img_menu;
+    CircleImageView imgProfile;
     public TextView tvNavTitle;
 
     @Override
@@ -75,6 +85,16 @@ public class DashboardActivity extends BaseActivity implements NavigationView.On
         View headerView = navView.getHeaderView(0);
         tvNavTitle = headerView.findViewById(R.id.tv_nav_title);
         img_menu = headerView.findViewById(R.id.img_menu);
+        imgProfile = headerView.findViewById(R.id.img_profile);
+
+        Glide.with(this)
+                .load(getString(R.string.image_url) + globals.getUserDetails().loginUserDetail.name)//TODO : Add Image
+                .apply(new RequestOptions()
+                        .fitCenter()
+                        .placeholder(R.mipmap.ic_launcher)
+                        .dontAnimate()
+                        .priority(Priority.HIGH))
+                .into(imgProfile);
 
         img_menu.setOnClickListener(new View.OnClickListener() {
             @Override

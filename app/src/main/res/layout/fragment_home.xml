@@ -96,13 +96,14 @@
             android:orientation="vertical">
 
             <LinearLayout
+                android:id="@+id/ll_hostel"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
+                android:visibility="gone"
                 android:layout_marginTop="@dimen/dim_20dp"
                 android:background="@drawable/rounded_hostel_list_bg"
-                android:orientation="vertical"
-                android:paddingBottom="@dimen/dim_20dp">
+                android:orientation="vertical">
 
                 <TextView
                     android:id="@+id/tv_hostel_suggestion"
@@ -112,6 +113,7 @@
                     android:layout_marginTop="@dimen/dim_20dp"
                     android:text="@string/hostel_suggestion"
                     android:textAllCaps="true"
+                    android:visibility="visible"
                     android:textColor="@color/colorAccent"
                     android:textSize="@dimen/dim_text16"
                     android:textStyle="bold" />
@@ -121,19 +123,20 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginTop="@dimen/dim_20dp"
+                    android:visibility="visible"
                     android:nestedScrollingEnabled="false"
                     android:orientation="horizontal"
                     android:padding="@dimen/dim_8dp"
                     android:paddingBottom="@dimen/dim_5dp" />
 
-                <include
-                    android:id="@+id/progress"
-                    layout="@layout/progress_layout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center" />
-
             </LinearLayout>
+
+            <include
+                android:id="@+id/progress"
+                layout="@layout/progress_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center" />
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
     </android.support.v4.widget.SwipeRefreshLayout>

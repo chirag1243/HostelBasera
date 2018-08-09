@@ -10,8 +10,11 @@ import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 import com.orhanobut.logger.Logger;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
 
 import cc.cloudist.acplibrary.ACProgressConstant;
 import cc.cloudist.acplibrary.ACProgressFlower;
@@ -160,15 +163,40 @@ public class HttpRequestHandler {
 
      */
 
-    public JSONObject getPropertyListDataParam(String deviceId, String email, String password, boolean isSeller) {
+    public JSONObject getPropertyListDataParam(int pageNo, ArrayList<String> arrPropertyCategoryId, ArrayList<String> arrPropertyTypeId, ArrayList<String> arrTypeId, ArrayList<String> arrPropertySizeId) {
         JSONObject params = new JSONObject();
         JSONObject jsonObject = new JSONObject();
         try {
             params = setDefaultParameters();
-//todo : change as per above json
-            jsonObject.put(Constant.Email, email);
-            jsonObject.put(Constant.Password, password);
-            jsonObject.put(Constant.Token, Constant.Token_Value);
+
+            JSONObject jsonFilters = new JSONObject();
+            JSONArray jsonArray = new JSONArray();
+            for (int i = 0; i < arrPropertyCategoryId.size(); i++) {
+                jsonArray.put(arrPropertyCategoryId.get(i));
+            }
+            jsonFilters.put(Constant.Property_category_id, jsonArray);
+
+            jsonArray = new JSONArray();
+            for (int i = 0; i < arrPropertyTypeId.size(); i++) {
+                jsonArray.put(arrPropertyTypeId.get(i));
+            }
+            jsonFilters.put(Constant.Property_type_id, jsonArray);
+
+            jsonArray = new JSONArray();
+            for (int i = 0; i < arrTypeId.size(); i++) {
+                jsonArray.put(arrTypeId.get(i));
+            }
+            jsonFilters.put(Constant.Type_id, jsonArray);
+
+            jsonArray = new JSONArray();
+            for (int i = 0; i < arrPropertySizeId.size(); i++) {
+                jsonArray.put(arrPropertySizeId.get(i));
+            }
+            jsonFilters.put(Constant.Property_size_id, jsonArray);
+
+            jsonObject.put(Constant.Filters, jsonFilters);
+            jsonObject.put(Constant.Limit, 0);
+            jsonObject.put(Constant.Page, pageNo);
 
             params.put(Constant.GetPropertyListData, jsonObject);
         } catch (Exception e) {
@@ -200,7 +228,8 @@ public class HttpRequestHandler {
     private JSONObject setDefaultParameters() {
         try {
             mParams = new JSONObject();
-            mParams.put(Constant.Token, globals.getUserDetails().loginUserDetail.token);
+            //TODO : Change as per required
+            mParams.put(Constant.Token, Constant.Token_Value);//globals.getUserDetails().loginUserDetail.token);
             mParams.put(Constant.DeviceType, Constant.AndroidDeviceType);
             mParams.put(Constant.User_id, globals.getUserId());
         } catch (JSONException e) {

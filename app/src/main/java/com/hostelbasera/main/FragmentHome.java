@@ -1,10 +1,12 @@
 package com.hostelbasera.main;
 
 import android.annotation.SuppressLint;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -70,13 +72,13 @@ public class FragmentHome extends Fragment implements Paginate.Callbacks, SwipeR
     FrameLayout flRotateLoading;
     @BindView(R.id.tv_no_data_found)
     TextView tvNoDataFound;
-    @BindView(R.id.layout_progress)
-    LinearLayout layoutProgress;
+    @BindView(R.id.ll_hostel)
+    LinearLayout llHostel;
 
     private Paginate paginate;
     private boolean loading = false;
 
-//   DashboardPagerAdapter mDashboardPagerAdapter;
+    //   DashboardPagerAdapter mDashboardPagerAdapter;
     int currentPage = 0;
     int pageNo = 1;
     Timer timer;
@@ -86,8 +88,8 @@ public class FragmentHome extends Fragment implements Paginate.Callbacks, SwipeR
     GetPropertyDetailModel getPropertyDetailModel;
 
     ArrayList<GetPropertyDetailModel.PropertyDetail> arrHomePageStoresDetailArrayList;
-    //TODO : Remove comment
-//    AdapterHomeStoresDetail adapterHomeStoresDetail;
+
+    AdapterHomePropertyDetail adapterHomePropertyDetail;
     DashboardActivity activity;
 
     public static FragmentHome newInstance(/*AllCategoriesDetailModel model*/) {
@@ -100,7 +102,7 @@ public class FragmentHome extends Fragment implements Paginate.Callbacks, SwipeR
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_home, container, false);
         ButterKnife.bind(this, view);
-//        init();
+        init();
         return view;
     }
 
@@ -125,7 +127,6 @@ public class FragmentHome extends Fragment implements Paginate.Callbacks, SwipeR
     public void onTvNearMeClicked() {
     }
 
-
     @SuppressLint("SetTextI18n")
     private void init() {
         Globals.hideKeyboard(getActivity());
@@ -139,7 +140,7 @@ public class FragmentHome extends Fragment implements Paginate.Callbacks, SwipeR
 //        searchView.setQuery("", false);
 //        searchView.setIconified(false);
 //        searchView.clearFocus();
-
+        tvHostelSuggestion.setTypeface(tvHostelSuggestion.getTypeface(), Typeface.BOLD);
         arrHomePageStoresDetailArrayList = new ArrayList<>();
         tvNoDataFound.setText("");
 
@@ -163,7 +164,7 @@ public class FragmentHome extends Fragment implements Paginate.Callbacks, SwipeR
 
     private void showNoRecordFound(String no_data_found) {
         loading = false;
-        rvHostel.setVisibility(View.GONE);
+        llHostel.setVisibility(View.GONE);
         if (tvNoDataFound.getVisibility() == View.GONE) {
             tvNoDataFound.setVisibility(View.VISIBLE);
             tvNoDataFound.setText(no_data_found);
@@ -171,13 +172,13 @@ public class FragmentHome extends Fragment implements Paginate.Callbacks, SwipeR
     }
 
     private void hideNoRecordFound() {
-        rvHostel.setVisibility(View.VISIBLE);
+        llHostel.setVisibility(View.VISIBLE);
         if (tvNoDataFound.getVisibility() == View.VISIBLE)
             tvNoDataFound.setVisibility(View.GONE);
     }
 
 
-   public void stopLoader() {
+    public void stopLoader() {
         rotateLoading.stop();
         rotateLoading.setVisibility(View.GONE);
         flRotateLoading.setVisibility(View.GONE);
@@ -196,8 +197,7 @@ public class FragmentHome extends Fragment implements Paginate.Callbacks, SwipeR
     }
 
     public void getPropertyListData(boolean showProgress) {
-        //TODO : Remove comment
-       /* JSONObject postData = HttpRequestHandler.getInstance().getLoginUserParam(pageNo);
+        JSONObject postData = HttpRequestHandler.getInstance().getPropertyListDataParam(pageNo, new ArrayList<>(),new ArrayList<>(),new ArrayList<>(),new ArrayList<>());
 
         if (postData != null) {
             if (!swipeRefreshLayout.isRefreshing() && showProgress)
@@ -211,30 +211,20 @@ public class FragmentHome extends Fragment implements Paginate.Callbacks, SwipeR
                     if (progressBar.getVisibility() == View.VISIBLE)
                         progressBar.setVisibility(View.GONE);
 //                    stopLoader();
-
                     getPropertyDetailModel = new Gson().fromJson(response.toString(), GetPropertyDetailModel.class);
-                    if (getPropertyDetailModel.homePageStoresDetail != null && !getPropertyDetailModel.homePageStoresDetail.isEmpty()) {
+                    if (getPropertyDetailModel.propertyDetail != null && !getPropertyDetailModel.propertyDetail.isEmpty()) {
                         if (swipeRefreshLayout.isRefreshing()) {
                             stopRefreshing();
                             rvHostel.setAdapter(null);
                             arrHomePageStoresDetailArrayList.clear();
-                            adapterHomeStoresDetail.notifyDataSetChanged();
+                            adapterHomePropertyDetail.notifyDataSetChanged();
                         }
-                        setupList(getPropertyDetailModel.homePageStoresDetail);
+                        setupList(getPropertyDetailModel.propertyDetail);
                     } else {
                         stopRefreshing();
-                        if (getPropertyDetailModel.homePageStoresDetail != null && getPropertyDetailModel.doNextCall && !getPropertyDetailModel.isPageEnded) {
-                            pageNo++;
-                            getPropertyListData(false);
-                        } else {
-                            if (getPropertyDetailModel.homePageStoresDetail != null && getPropertyDetailModel.total_stores == 0) {
-                                showNoRecordFound("");
-                            } else {
-                                if (paginate != null)
-                                    paginate.unbind();
-                            }
-                            if (pageNo == 1)
-                                Toaster.shortToast(getPropertyDetailModel.message);
+                        if (pageNo == 1) {
+                            showNoRecordFound("");
+                            Toaster.shortToast(getPropertyDetailModel.message);
                         }
                     }
                 }
@@ -249,7 +239,7 @@ public class FragmentHome extends Fragment implements Paginate.Callbacks, SwipeR
                 }
             }).execute();
         }
-        Globals.hideKeyboard(getActivity());*/
+        Globals.hideKeyboard(getActivity());
     }
 
     private void stopRefreshing() {
@@ -268,20 +258,20 @@ public class FragmentHome extends Fragment implements Paginate.Callbacks, SwipeR
 
     private void setAdapter() {
         hideNoRecordFound();
-        //TODO : Remove comment
-        /*if (adapterHomeStoresDetail == null) {
+        if (adapterHomePropertyDetail == null) {
             if (paginate != null) {
                 paginate.unbind();
             }
-            adapterHomeStoresDetail = new AdapterHomeStoresDetail(getActivity(), activity);
+            adapterHomePropertyDetail = new AdapterHomePropertyDetail(getActivity());
         }
         loading = false;
-        adapterHomeStoresDetail.doRefresh(arrHomePageStoresDetailArrayList);
+        adapterHomePropertyDetail.doRefresh(arrHomePageStoresDetailArrayList);
 
         if (rvHostel.getAdapter() == null) {
-            rvHostel.setLayoutManager(new LinearLayoutManager(getActivity()));
+            rvHostel.setHasFixedSize(false);
+            rvHostel.setLayoutManager(new GridLayoutManager(getContext(), Constant.GRID_SPAN));
             rvHostel.setItemAnimator(new DefaultItemAnimator());
-            rvHostel.setAdapter(adapterHomeStoresDetail);
+            rvHostel.setAdapter(adapterHomePropertyDetail);
             if (arrHomePageStoresDetailArrayList.size() == getPropertyDetailModel.total_properties && rvHostel != null) {
                 paginate = Paginate.with(rvHostel, this)
                         .setLoadingTriggerThreshold(Constant.progress_threshold_2)
@@ -290,13 +280,12 @@ public class FragmentHome extends Fragment implements Paginate.Callbacks, SwipeR
                         .setLoadingListItemSpanSizeLookup(() -> Constant.GRID_SPAN)
                         .build();
             }
-        }*/
+        }
     }
 
     @Override
     public void onRefresh() {
         if (Globals.isNetworkAvailable(getActivity())) {
-//            getSliderImages();
             pageNo = 1;
             getPropertyListData(true);
         } else {
@@ -324,14 +313,6 @@ public class FragmentHome extends Fragment implements Paginate.Callbacks, SwipeR
     @Override
     public void onResume() {
         super.onResume();
-        //TODO : Remove comment
-        /*if (adapterHomeStoresDetail != null) {
-            if (adapterHomeStoresDetail.itemListDataAdapter != null) {
-                adapterHomeStoresDetail.itemListDataAdapter.size_Id = 0;
-            }
-        }*/
     }
-
-
 }
 

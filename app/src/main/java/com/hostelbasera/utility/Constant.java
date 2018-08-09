@@ -60,7 +60,7 @@ public class Constant {
     public static final String GetPropertyListData = "getPropertyListData";
     public static final String Filters = "filters";
 
-    public static final String property_category_id = "property_category_id";
+    public static final String Property_category_id = "property_category_id";
     public static final String Property_type_id = "property_type_id";
     public static final String Type_id = "type_id";
     public static final String Property_size_id = "property_size_id";

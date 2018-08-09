@@ -27,13 +27,13 @@ public class GetPropertyDetailModel implements Serializable {
         @SerializedName("image")
         public String image;
         @SerializedName("flag")
-        public int flag;
+        public String flag;
         @SerializedName("date")
         public String date;
         @SerializedName("by_admin")
-        public int by_admin;
+        public String by_admin;
         @SerializedName("seller_id")
-        public int seller_id;
+        public String seller_id;
         @SerializedName("cooking_menu")
         public String cooking_menu;
         @SerializedName("water_timing")
@@ -45,13 +45,13 @@ public class GetPropertyDetailModel implements Serializable {
         @SerializedName("profile_pic")
         public String profile_pic;
         @SerializedName("longitude")
-        public double longitude;
+        public String longitude;
         @SerializedName("latitude")
-        public double latitude;
+        public String latitude;
         @SerializedName("state_id")
-        public int state_id;
+        public String state_id;
         @SerializedName("city_id")
-        public int city_id;
+        public String city_id;
         @SerializedName("email")
         public String email;
         @SerializedName("cont_no")
@@ -61,16 +61,19 @@ public class GetPropertyDetailModel implements Serializable {
         @SerializedName("address")
         public String address;
         @SerializedName("property_size_id")
-        public int property_size_id;
+        public String property_size_id;
         @SerializedName("type_id")
-        public int type_id;
+        public String type_id;
         @SerializedName("property_type_id")
-        public int property_type_id;
+        public String property_type_id;
         @SerializedName("property_category_id")
-        public int property_category_id;
+        public String property_category_id;
         @SerializedName("property_name")
         public String property_name;
         @SerializedName("property_id")
-        public int property_id;
+        public String property_id;
+
+        @SerializedName("price")
+        public String price;
     }
 }

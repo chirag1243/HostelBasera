@@ -3,7 +3,7 @@
 
     <!--Live URL-->
     <string name="server_url">http://hostelbasera.com/services/</string>
-    <string name="image_url">http://hostelbasera.com/services/uploads/</string>
+    <string name="image_url">http://hostelbasera.com/hostelbaseraadmin/assets/images/hostel/</string>
 
 
     <string name="registerUser">Login/registerUser</string>
