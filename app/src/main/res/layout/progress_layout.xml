@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/layout_progress"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:visibility="visible">
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:indeterminate="true"
+        android:visibility="visible" />
+
+    <FrameLayout
+        android:id="@+id/fl_rotate_loading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone">
+
+        <com.victor.loading.rotate.RotateLoading
+            android:id="@+id/rotate_loading"
+            android:layout_width="@dimen/dim_50dp"
+            android:layout_height="@dimen/dim_50dp"
+            android:layout_gravity="center"
+            android:visibility="visible"
+            app:loading_color="@color/colorPrimary"
+            app:loading_speed="11"
+            app:loading_width="3dp" />
+
+        <ImageView
+            android:id="@+id/img_icon"
+            android:layout_width="@dimen/dim_30dp"
+            android:layout_height="@dimen/dim_30dp"
+            android:layout_gravity="center"
+            android:contentDescription="@string/app_name"
+            android:src="@drawable/logo" />
+    </FrameLayout>
+
+    <TextView
+        android:id="@+id/tv_no_data_found"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="@string/no_data_found"
+        android:textAppearance="@style/TextAppearance.FontPath_Regular"
+        android:textSize="@dimen/dim_text14"
+        android:visibility="visible" />
+</LinearLayout>

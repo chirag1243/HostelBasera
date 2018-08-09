@@ -108,10 +108,13 @@ public class SignUpActivity extends BaseActivity {
                         public void onSucceedToPostCall(JSONObject response) {
                             UserDetailModel userDetailModel = new Gson().fromJson(response.toString(), UserDetailModel.class);
                             if (userDetailModel.status == 0) {
-                                if (isSeller)
+                                if (isSeller) {
                                     userDetailModel.loginSellerDetail.password = edtPassword.getText().toString();
-                                else
+                                    globals.setUserId(userDetailModel.loginSellerDetail.seller_reg_Id);
+                                } else {
                                     userDetailModel.loginUserDetail.password = edtPassword.getText().toString();
+                                    globals.setUserId(userDetailModel.loginUserDetail.user_reg_Id);
+                                }
                                 globals.setIsSeller(isSeller);
                                 globals.setUserDetails(userDetailModel);
                                 startActivity(new Intent(SignUpActivity.this, DashboardActivity.class));

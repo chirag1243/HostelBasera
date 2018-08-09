@@ -36,4 +36,11 @@
     <string name="feedback">Feedback</string>
     <string name="share_app">Share App</string>
     <string name="sign_out">Sign Out</string>
+    <string name="hostel_suggestion">Hostel Suggestion</string>
+    <string name="girls">Girls</string>
+    <string name="boys">Boys</string>
+    <string name="both">Both</string>
+    <string name="near_me">Near Me</string>
+    <string name="search">Search</string>
+    <string name="no_data_found">No Data Found</string>
 </resources>

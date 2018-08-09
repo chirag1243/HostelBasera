@@ -140,6 +140,44 @@ public class HttpRequestHandler {
         return params;
     }
 
+    /*
+    {
+	"token":"si0d3lRh4Of7ld03l",
+	"deviceType":1,
+    	"user_id":2,
+	"getPropertyListData":{
+			"limit":0,
+			"page":1,
+			"filters":{
+				"property_category_id":["1","2"],
+				"property_type_id":["1","2","4","5"],
+				"type_id":["1","2"],
+				"property_size_id":["1","2","3"]
+			}
+
+		}
+}
+
+     */
+
+    public JSONObject getPropertyListDataParam(String deviceId, String email, String password, boolean isSeller) {
+        JSONObject params = new JSONObject();
+        JSONObject jsonObject = new JSONObject();
+        try {
+            params = setDefaultParameters();
+//todo : change as per above json
+            jsonObject.put(Constant.Email, email);
+            jsonObject.put(Constant.Password, password);
+            jsonObject.put(Constant.Token, Constant.Token_Value);
+
+            params.put(Constant.GetPropertyListData, jsonObject);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return params;
+    }
+
+
 
     /*public JSONObject getLogoutUserParam() {
         JSONObject params = new JSONObject();
@@ -157,20 +195,19 @@ public class HttpRequestHandler {
     }*/
 
 
+    private JSONObject mParams;
 
-    /*private JSONObject mParams;
-
-    public JSONObject setDefaultParameters(boolean isSeller) {
+    private JSONObject setDefaultParameters() {
         try {
             mParams = new JSONObject();
-            mParams.put(Constant.Fcm_token, globals.getUserDetails().loginUserDetail.token);
+            mParams.put(Constant.Token, globals.getUserDetails().loginUserDetail.token);
             mParams.put(Constant.DeviceType, Constant.AndroidDeviceType);
-            mParams.put(Constant.User_id, globals.getUserDetails().loginUserDetail.user_id);
+            mParams.put(Constant.User_id, globals.getUserId());
         } catch (JSONException e) {
             e.printStackTrace();
         }
         return mParams;
-    }*/
+    }
 
 
 }

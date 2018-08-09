@@ -37,23 +37,6 @@ public class Constant {
     public static final String LoginUserData = "loginUserData";
     public static final String LoginSellerData = "loginSellerData";
 
-
-    /*
-    "registerUserData":{
-						"user_name":"Dipen Patel",
-						"user_pass":"123456",
-						"user_email":"dipen2016@gmail.com",
-						"user_cont_no":"7567340599",
-						"user_address":"640 Ganesh Nagar Vijalpur road navsari"
-						}
-"registerSellerData":{
-						"seller_name":"Dipen Patel",
-						"seller_pass":"123456",
-						"seller_email":"dipen2016@gmail.com",
-						"seller_cont_no":"7567340599",
-						"seller_address":"640 Ganesh Nagar Vijalpur road navsari"
-						}
-     */
     public static final String RegisterUserData = "registerUserData";
 
     public static final String User_name = "user_name";
@@ -73,6 +56,14 @@ public class Constant {
     public static final String Token_Value = "si0d3lRh4Of7ld03l";
 
     public static final String User_id = "user_id";
+
+    public static final String GetPropertyListData = "getPropertyListData";
+    public static final String Filters = "filters";
+
+    public static final String property_category_id = "property_category_id";
+    public static final String Property_type_id = "property_type_id";
+    public static final String Type_id = "type_id";
+    public static final String Property_size_id = "property_size_id";
 
 
 }

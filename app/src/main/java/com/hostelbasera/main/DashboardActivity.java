@@ -174,6 +174,7 @@ public class DashboardActivity extends BaseActivity implements NavigationView.On
 
     public void doLogout() {
         globals.setUserDetails(null);
+        globals.setUserId(0);
         globals.clearAllSharedPreferences();
         startActivity(new Intent(DashboardActivity.this, LoginActivity.class));
         finish();

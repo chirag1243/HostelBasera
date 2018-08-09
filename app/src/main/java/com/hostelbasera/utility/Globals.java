@@ -301,6 +301,15 @@ public class Globals extends CoreApp {
         }.getType());
     }
 
+    public void setUserId(int userId) {
+        getEditor().putInt(Constant.User_id, userId);
+        getEditor().commit();
+    }
+
+    public int getUserId() {
+        return getSharedPref().getInt(Constant.User_id,0);
+    }
+
     public void setIsSeller(boolean isSeller) {
         getEditor().putBoolean(Constant.IsSeller, isSeller);
         getEditor().commit();

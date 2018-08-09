@@ -1,7 +1,6 @@
 package com.hostelbasera.main;
 
 import android.annotation.SuppressLint;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -11,6 +10,11 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.LinearInterpolator;
+import android.view.animation.RotateAnimation;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -19,8 +23,10 @@ import com.google.gson.Gson;
 import com.hostelbasera.R;
 import com.hostelbasera.apis.HttpRequestHandler;
 import com.hostelbasera.apis.PostRequest;
+import com.hostelbasera.model.GetPropertyDetailModel;
 import com.hostelbasera.utility.Constant;
 import com.hostelbasera.utility.Globals;
+import com.hostelbasera.utility.PaginationProgressBarAdapter;
 import com.hostelbasera.utility.Toaster;
 import com.paginate.Paginate;
 import com.victor.loading.rotate.RotateLoading;
@@ -34,53 +40,61 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class FragmentHome extends Fragment /*implements Paginate.Callbacks, SwipeRefreshLayout.OnRefreshListener */{
+public class FragmentHome extends Fragment implements Paginate.Callbacks, SwipeRefreshLayout.OnRefreshListener {
 
     Globals globals;
     View view;
-    /*@BindView(R.id.search_view)
-    TextView searchView;
-    @BindView(R.id.rv_category)
-    RecyclerView rvCategory;
-    @BindView(R.id.ll_category)
-    LinearLayout llCategory;
-    //    @BindView(R.id.vp_banner)
-//    ViewPager vpBanner;
-    @BindView(R.id.rv_StoreDetail)
-    RecyclerView rvStoreDetail;
+    @BindView(R.id.tv_search)
+    TextView tvSearch;
+    @BindView(R.id.tv_girls)
+    TextView tvGirls;
+    @BindView(R.id.tv_boys)
+    TextView tvBoys;
+    @BindView(R.id.t_both)
+    TextView tBoth;
+    @BindView(R.id.tv_near_me)
+    TextView tvNearMe;
+    @BindView(R.id.tv_hostel_suggestion)
+    TextView tvHostelSuggestion;
+    @BindView(R.id.rv_hostel)
+    RecyclerView rvHostel;
     @BindView(R.id.swipe_refresh_layout)
     SwipeRefreshLayout swipeRefreshLayout;
-
     @BindView(R.id.progressBar)
     ProgressBar progressBar;
-    @BindView(R.id.tv_no_data_found)
-    TextView tvNoDataFound;
     @BindView(R.id.rotate_loading)
     RotateLoading rotateLoading;
-
+    @BindView(R.id.img_icon)
+    ImageView imgIcon;
+    @BindView(R.id.fl_rotate_loading)
+    FrameLayout flRotateLoading;
+    @BindView(R.id.tv_no_data_found)
+    TextView tvNoDataFound;
+    @BindView(R.id.layout_progress)
+    LinearLayout layoutProgress;
 
     private Paginate paginate;
     private boolean loading = false;
 
-    DashboardPagerAdapter mDashboardPagerAdapter;
+//   DashboardPagerAdapter mDashboardPagerAdapter;
     int currentPage = 0;
     int pageNo = 1;
     Timer timer;
     final long DELAY_MS = 500;//delay in milliseconds before task is to be executed
     final long PERIOD_MS = 3000; // time in milliseconds between successive task executions.
 
-    AllCategoriesDetailModel allCategoriesModel;
-    AllHomePageStoresDetailModel homePageStoresDetailModel;
+    GetPropertyDetailModel getPropertyDetailModel;
 
-    ArrayList<AllHomePageStoresDetailModel.HomePageStoresDetail> arrHomePageStoresDetailArrayList;
-    AdapterHomeStoresDetail adapterHomeStoresDetail;
-    DashboardActivity activity;*/
+    ArrayList<GetPropertyDetailModel.PropertyDetail> arrHomePageStoresDetailArrayList;
+    //TODO : Remove comment
+//    AdapterHomeStoresDetail adapterHomeStoresDetail;
+    DashboardActivity activity;
 
-    /*public static FragmentHome newInstance(AllCategoriesDetailModel model) {
+    public static FragmentHome newInstance(/*AllCategoriesDetailModel model*/) {
         FragmentHome fragment = new FragmentHome();
-        fragment.allCategoriesModel = model;
+//        fragment.allCategoriesModel = model;
         return fragment;
-    }*/
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -90,7 +104,29 @@ public class FragmentHome extends Fragment /*implements Paginate.Callbacks, Swip
         return view;
     }
 
-   /* @SuppressLint("SetTextI18n")
+
+    @OnClick(R.id.tv_search)
+    public void onTvSearchClicked() {
+    }
+
+    @OnClick(R.id.tv_girls)
+    public void onTvGirlsClicked() {
+    }
+
+    @OnClick(R.id.tv_boys)
+    public void onTvBoysClicked() {
+    }
+
+    @OnClick(R.id.t_both)
+    public void onTBothClicked() {
+    }
+
+    @OnClick(R.id.tv_near_me)
+    public void onTvNearMeClicked() {
+    }
+
+
+    @SuppressLint("SetTextI18n")
     private void init() {
         Globals.hideKeyboard(getActivity());
         globals = ((Globals) getActivity().getApplicationContext());
@@ -103,49 +139,31 @@ public class FragmentHome extends Fragment /*implements Paginate.Callbacks, Swip
 //        searchView.setQuery("", false);
 //        searchView.setIconified(false);
 //        searchView.clearFocus();
-        if (allCategoriesModel != null && allCategoriesModel.all_categories_detail != null) {
-            llCategory.setVisibility(View.VISIBLE);
-            setUpCategory();
-        } else {
-            llCategory.setVisibility(View.GONE);
-        }
+
         arrHomePageStoresDetailArrayList = new ArrayList<>();
         tvNoDataFound.setText("");
 
         if (Globals.isNetworkAvailable(getActivity())) {
 //            vpBanner.setVisibility(View.GONE);
 //            getSliderImages();
-            getHomePageStoresDetail(true);
+            getPropertyListData(true);
         } else {
             showNoRecordFound(getString(R.string.no_data_found));
             Toaster.shortToast(R.string.no_internet_msg);
         }
-
     }
 
-    @OnClick(R.id.search_view)
+    @OnClick(R.id.tv_search)
     public void onSearchClick() {
-        startActivity(new Intent(getActivity(), SearchActivity.class));
+        //TODO : Remove comment once Search Activity ready
+//        startActivity(new Intent(getActivity(), SearchActivity.class));
+        Toaster.shortToast("Search");
     }
 
-
-    private void setUpCategory() {
-        rvCategory.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
-        rvCategory.setItemAnimator(new DefaultItemAnimator());
-//        ArrayList<AllCategoriesDetailModel.All_categories_detail> arrCategory = new ArrayList<>();
-//
-//        for (int i = 0; i < allCategoriesModel.all_categories_detail.size(); i++) {
-//            arrCategory.add(allCategoriesModel.all_categories_detail.get(i));
-////            if (i == 5) {
-////                break;
-////            }
-//        }
-        rvCategory.setAdapter(new HomeCategoryAdapter(getActivity(), allCategoriesModel.all_categories_detail));
-    }
 
     private void showNoRecordFound(String no_data_found) {
         loading = false;
-        rvStoreDetail.setVisibility(View.GONE);
+        rvHostel.setVisibility(View.GONE);
         if (tvNoDataFound.getVisibility() == View.GONE) {
             tvNoDataFound.setVisibility(View.VISIBLE);
             tvNoDataFound.setText(no_data_found);
@@ -153,18 +171,19 @@ public class FragmentHome extends Fragment /*implements Paginate.Callbacks, Swip
     }
 
     private void hideNoRecordFound() {
-        rvStoreDetail.setVisibility(View.VISIBLE);
+        rvHostel.setVisibility(View.VISIBLE);
         if (tvNoDataFound.getVisibility() == View.VISIBLE)
             tvNoDataFound.setVisibility(View.GONE);
     }
 
-    *//*public void stopLoader() {
+
+   public void stopLoader() {
         rotateLoading.stop();
         rotateLoading.setVisibility(View.GONE);
         flRotateLoading.setVisibility(View.GONE);
-    }*//*
+    }
 
-    *//*public void startLoader() {
+    public void startLoader() {
         flRotateLoading.setVisibility(View.VISIBLE);
         rotateLoading.setVisibility(View.VISIBLE);
         rotateLoading.start();
@@ -174,17 +193,18 @@ public class FragmentHome extends Fragment /*implements Paginate.Callbacks, Swip
 
         rotate.setRepeatCount(Animation.INFINITE);
         imgIcon.startAnimation(rotate);
-    }*//*
+    }
 
-    public void getHomePageStoresDetail(boolean showProgress) {
-        JSONObject postData = HttpRequestHandler.getInstance().getHomePageStoresDetailParam(pageNo);
+    public void getPropertyListData(boolean showProgress) {
+        //TODO : Remove comment
+       /* JSONObject postData = HttpRequestHandler.getInstance().getLoginUserParam(pageNo);
 
         if (postData != null) {
             if (!swipeRefreshLayout.isRefreshing() && showProgress)
                 progressBar.setVisibility(View.VISIBLE);
 //            startLoader();
 
-            new PostRequest(getActivity(), getString(R.string.getHomePageStoresDetail),
+            new PostRequest(getActivity(), getString(R.string.getPropertyList),
                     postData, false, new PostRequest.OnPostServiceCallListener() {
                 @Override
                 public void onSucceedToPostCall(JSONObject response) {
@@ -192,29 +212,29 @@ public class FragmentHome extends Fragment /*implements Paginate.Callbacks, Swip
                         progressBar.setVisibility(View.GONE);
 //                    stopLoader();
 
-                    homePageStoresDetailModel = new Gson().fromJson(response.toString(), AllHomePageStoresDetailModel.class);
-                    if (homePageStoresDetailModel.homePageStoresDetail != null && !homePageStoresDetailModel.homePageStoresDetail.isEmpty()) {
+                    getPropertyDetailModel = new Gson().fromJson(response.toString(), GetPropertyDetailModel.class);
+                    if (getPropertyDetailModel.homePageStoresDetail != null && !getPropertyDetailModel.homePageStoresDetail.isEmpty()) {
                         if (swipeRefreshLayout.isRefreshing()) {
                             stopRefreshing();
-                            rvStoreDetail.setAdapter(null);
+                            rvHostel.setAdapter(null);
                             arrHomePageStoresDetailArrayList.clear();
                             adapterHomeStoresDetail.notifyDataSetChanged();
                         }
-                        setupList(homePageStoresDetailModel.homePageStoresDetail);
+                        setupList(getPropertyDetailModel.homePageStoresDetail);
                     } else {
                         stopRefreshing();
-                        if (homePageStoresDetailModel.homePageStoresDetail != null && homePageStoresDetailModel.doNextCall && !homePageStoresDetailModel.isPageEnded) {
+                        if (getPropertyDetailModel.homePageStoresDetail != null && getPropertyDetailModel.doNextCall && !getPropertyDetailModel.isPageEnded) {
                             pageNo++;
-                            getHomePageStoresDetail(false);
+                            getPropertyListData(false);
                         } else {
-                            if (homePageStoresDetailModel.homePageStoresDetail != null && homePageStoresDetailModel.total_stores == 0) {
+                            if (getPropertyDetailModel.homePageStoresDetail != null && getPropertyDetailModel.total_stores == 0) {
                                 showNoRecordFound("");
                             } else {
                                 if (paginate != null)
                                     paginate.unbind();
                             }
                             if (pageNo == 1)
-                                Toaster.shortToast(homePageStoresDetailModel.message);
+                                Toaster.shortToast(getPropertyDetailModel.message);
                         }
                     }
                 }
@@ -229,7 +249,7 @@ public class FragmentHome extends Fragment /*implements Paginate.Callbacks, Swip
                 }
             }).execute();
         }
-        Globals.hideKeyboard(getActivity());
+        Globals.hideKeyboard(getActivity());*/
     }
 
     private void stopRefreshing() {
@@ -238,7 +258,7 @@ public class FragmentHome extends Fragment /*implements Paginate.Callbacks, Swip
         }
     }
 
-    private void setupList(ArrayList<AllHomePageStoresDetailModel.HomePageStoresDetail> homePageStoresDetailArrayList) {
+    private void setupList(ArrayList<GetPropertyDetailModel.PropertyDetail> homePageStoresDetailArrayList) {
         if (homePageStoresDetailArrayList != null && !homePageStoresDetailArrayList.isEmpty()) {
             arrHomePageStoresDetailArrayList.addAll(homePageStoresDetailArrayList);
             setAdapter();
@@ -248,7 +268,8 @@ public class FragmentHome extends Fragment /*implements Paginate.Callbacks, Swip
 
     private void setAdapter() {
         hideNoRecordFound();
-        if (adapterHomeStoresDetail == null) {
+        //TODO : Remove comment
+        /*if (adapterHomeStoresDetail == null) {
             if (paginate != null) {
                 paginate.unbind();
             }
@@ -257,19 +278,19 @@ public class FragmentHome extends Fragment /*implements Paginate.Callbacks, Swip
         loading = false;
         adapterHomeStoresDetail.doRefresh(arrHomePageStoresDetailArrayList);
 
-        if (rvStoreDetail.getAdapter() == null) {
-            rvStoreDetail.setLayoutManager(new LinearLayoutManager(getActivity()));
-            rvStoreDetail.setItemAnimator(new DefaultItemAnimator());
-            rvStoreDetail.setAdapter(adapterHomeStoresDetail);
-            if (!homePageStoresDetailModel.isPageEnded && rvStoreDetail != null) {
-                paginate = Paginate.with(rvStoreDetail, this)
+        if (rvHostel.getAdapter() == null) {
+            rvHostel.setLayoutManager(new LinearLayoutManager(getActivity()));
+            rvHostel.setItemAnimator(new DefaultItemAnimator());
+            rvHostel.setAdapter(adapterHomeStoresDetail);
+            if (arrHomePageStoresDetailArrayList.size() == getPropertyDetailModel.total_properties && rvHostel != null) {
+                paginate = Paginate.with(rvHostel, this)
                         .setLoadingTriggerThreshold(Constant.progress_threshold_2)
                         .addLoadingListItem(Constant.addLoadingRow)
-                        .setLoadingListItemCreator(new paginationProgressBarAdapter())
+                        .setLoadingListItemCreator(new PaginationProgressBarAdapter())
                         .setLoadingListItemSpanSizeLookup(() -> Constant.GRID_SPAN)
                         .build();
             }
-        }
+        }*/
     }
 
     @Override
@@ -277,7 +298,7 @@ public class FragmentHome extends Fragment /*implements Paginate.Callbacks, Swip
         if (Globals.isNetworkAvailable(getActivity())) {
 //            getSliderImages();
             pageNo = 1;
-            getHomePageStoresDetail(true);
+            getPropertyListData(true);
         } else {
             Toaster.shortToast(R.string.no_internet_msg);
         }
@@ -287,7 +308,7 @@ public class FragmentHome extends Fragment /*implements Paginate.Callbacks, Swip
     public void onLoadMore() {
         loading = true;
         pageNo++;
-        getHomePageStoresDetail(false);
+        getPropertyListData(false);
     }
 
     @Override
@@ -297,18 +318,19 @@ public class FragmentHome extends Fragment /*implements Paginate.Callbacks, Swip
 
     @Override
     public boolean hasLoadedAllItems() {
-        return homePageStoresDetailModel.isPageEnded; //arrHomePageStoresDetailArrayList.size() == homePageStoresDetailModel.total_stores
+        return arrHomePageStoresDetailArrayList.size() == getPropertyDetailModel.total_properties;
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        if (adapterHomeStoresDetail != null) {
+        //TODO : Remove comment
+        /*if (adapterHomeStoresDetail != null) {
             if (adapterHomeStoresDetail.itemListDataAdapter != null) {
                 adapterHomeStoresDetail.itemListDataAdapter.size_Id = 0;
             }
-        }
-    }*/
+        }*/
+    }
 
 
 }

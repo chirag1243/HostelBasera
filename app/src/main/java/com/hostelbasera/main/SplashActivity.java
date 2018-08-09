@@ -84,10 +84,13 @@ public class SplashActivity extends Activity {
                     if (userDetailModel.status == 0) {
                         userDetailModel.loginUserDetail.password = globals.getUserDetails().loginUserDetail.password;
 
-                        if (isSeller)
+                        if (isSeller) {
                             userDetailModel.loginSellerDetail.password = userModel.loginSellerDetail.password;
-                        else
+                            globals.setUserId(userDetailModel.loginSellerDetail.seller_reg_Id);
+                        } else {
                             userDetailModel.loginUserDetail.password = userModel.loginUserDetail.password;
+                            globals.setUserId(userDetailModel.loginUserDetail.user_reg_Id);
+                        }
                         globals.setIsSeller(isSeller);
                         globals.setUserDetails(userDetailModel);
 
