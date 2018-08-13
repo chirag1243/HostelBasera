@@ -41,6 +41,8 @@
     <dimen name="dim_140dp">140dp</dimen>
     <dimen name="dim_150dp">150dp</dimen>
     <dimen name="dim_170dp">170dp</dimen>
+    <dimen name="dim_200dp">200dp</dimen>
+    <dimen name="dim_220dp">220dp</dimen>
     <dimen name="dim_300dp">300dp</dimen>
 
     <!--Text-->

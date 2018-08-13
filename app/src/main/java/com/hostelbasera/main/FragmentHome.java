@@ -197,7 +197,7 @@ public class FragmentHome extends Fragment implements Paginate.Callbacks, SwipeR
     }
 
     public void getPropertyListData(boolean showProgress) {
-        JSONObject postData = HttpRequestHandler.getInstance().getPropertyListDataParam(pageNo, new ArrayList<>(),new ArrayList<>(),new ArrayList<>(),new ArrayList<>());
+        JSONObject postData = HttpRequestHandler.getInstance().getPropertyListDataParam(pageNo, new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
 
         if (postData != null) {
             if (!swipeRefreshLayout.isRefreshing() && showProgress)
@@ -272,7 +272,7 @@ public class FragmentHome extends Fragment implements Paginate.Callbacks, SwipeR
             rvHostel.setLayoutManager(new GridLayoutManager(getContext(), Constant.GRID_SPAN));
             rvHostel.setItemAnimator(new DefaultItemAnimator());
             rvHostel.setAdapter(adapterHomePropertyDetail);
-            if (arrHomePageStoresDetailArrayList.size() == getPropertyDetailModel.total_properties && rvHostel != null) {
+            if (arrHomePageStoresDetailArrayList.size() < getPropertyDetailModel.total_properties && rvHostel != null) {
                 paginate = Paginate.with(rvHostel, this)
                         .setLoadingTriggerThreshold(Constant.progress_threshold_2)
                         .addLoadingListItem(Constant.addLoadingRow)
@@ -307,7 +307,7 @@ public class FragmentHome extends Fragment implements Paginate.Callbacks, SwipeR
 
     @Override
     public boolean hasLoadedAllItems() {
-        return arrHomePageStoresDetailArrayList.size() == getPropertyDetailModel.total_properties;
+        return arrHomePageStoresDetailArrayList.size() >= getPropertyDetailModel.total_properties;
     }
 
     @Override
