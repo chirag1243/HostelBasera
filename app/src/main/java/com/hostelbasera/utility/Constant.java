@@ -68,6 +68,7 @@ public class Constant {
 
     public static final String GetPropertyData = "getPropertyData";
 
-
+    public static final String ArrProductImages = "arrProductImages";
+    public static final String Position = "Position";
 
 }

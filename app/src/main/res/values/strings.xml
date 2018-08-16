@@ -52,4 +52,6 @@
     <string name="bookmark">Bookmark</string>
     <string name="review">Review</string>
     <string name="rate">Rate</string>
+    <string name="sort">Sort</string>
+    <string name="filter">Filter</string>
 </resources>
