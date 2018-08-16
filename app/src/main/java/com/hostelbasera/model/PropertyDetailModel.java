@@ -16,19 +16,21 @@ public class PropertyDetailModel implements Serializable {
     @SerializedName("is_valid_token")
     public boolean is_valid_token;
 
-    public static class PropertyDetails implements Serializable {
-        @SerializedName("productimages")
-        public ArrayList<String> productimages;
+    public static class PropertyDetails {
+        @SerializedName("propertyFacility")
+        public ArrayList<PropertyFacility> propertyFacility;
+        @SerializedName("productImages")
+        public ArrayList<String> productImages;
         @SerializedName("city_name")
         public String city_name;
         @SerializedName("flag")
-        public String flag;
+        public int flag;
         @SerializedName("date")
         public String date;
         @SerializedName("by_admin")
-        public String by_admin;
+        public int by_admin;
         @SerializedName("seller_id")
-        public String seller_id;
+        public int seller_id;
         @SerializedName("price")
         public String price;
         @SerializedName("cooking_menu")
@@ -46,9 +48,9 @@ public class PropertyDetailModel implements Serializable {
         @SerializedName("latitude")
         public String latitude;
         @SerializedName("state_id")
-        public String state_id;
+        public int state_id;
         @SerializedName("city_id")
-        public String city_id;
+        public int city_id;
         @SerializedName("email")
         public String email;
         @SerializedName("cont_no")
@@ -58,17 +60,17 @@ public class PropertyDetailModel implements Serializable {
         @SerializedName("address")
         public String address;
         @SerializedName("property_size_id")
-        public String property_size_id;
+        public int property_size_id;
         @SerializedName("type_id")
-        public String type_id;
+        public int type_id;
         @SerializedName("property_type_id")
-        public String property_type_id;
+        public int property_type_id;
         @SerializedName("property_category_id")
         public int property_category_id;
         @SerializedName("property_name")
         public String property_name;
         @SerializedName("property_id")
-        public String property_id;
+        public int property_id;
         @SerializedName("property_size")
         public String property_size;
         @SerializedName("type_name")
@@ -77,5 +79,12 @@ public class PropertyDetailModel implements Serializable {
         public String property_type;
         @SerializedName("property_category_name")
         public String property_category_name;
+    }
+
+    public static class PropertyFacility {
+        @SerializedName("facility_icon_img")
+        public String facility_icon_img;
+        @SerializedName("facility_name")
+        public String facility_name;
     }
 }

@@ -1,11 +1,15 @@
 package com.hostelbasera.main;
 
 import android.annotation.SuppressLint;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -13,7 +17,6 @@ import com.google.gson.Gson;
 import com.hostelbasera.R;
 import com.hostelbasera.apis.HttpRequestHandler;
 import com.hostelbasera.apis.PostRequest;
-import com.hostelbasera.model.GetPropertyDetailModel;
 import com.hostelbasera.model.PropertyDetailModel;
 import com.hostelbasera.utility.BaseActivity;
 import com.hostelbasera.utility.Constant;
@@ -25,7 +28,6 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Timer;
-import java.util.TimerTask;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -71,7 +73,9 @@ public class HostelDetailActivity extends BaseActivity {
     Timer timer;
     final long DELAY_MS = 500;//delay in milliseconds before task is to be executed
     final long PERIOD_MS = 3000; // time in milliseconds between successive task executions.
-
+    AdapterAmenities adapterAmenities;
+    @BindView(R.id.btn_book_now)
+    Button btnBookNow;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,6 +89,7 @@ public class HostelDetailActivity extends BaseActivity {
         property_id = getIntent().getIntExtra(Constant.Property_id, 0);
         imgBack.setVisibility(View.VISIBLE);
         imgShare.setVisibility(View.VISIBLE);
+        btnBookNow.setTypeface(btnBookNow.getTypeface(), Typeface.BOLD);
         if (Globals.isNetworkAvailable(this)) {
             getPropertyListData();
         } else {
@@ -128,6 +133,21 @@ public class HostelDetailActivity extends BaseActivity {
         tvPrice.setText("₹ " + propertyDetails.price);
         setHostelFor();
         setImagePager();
+        setAmenitiesAdapter();
+    }
+
+    private void setAmenitiesAdapter() {
+        if (adapterAmenities == null) {
+            adapterAmenities = new AdapterAmenities(this);
+        }
+        adapterAmenities.doRefresh(propertyDetails.propertyFacility);
+
+        if (rvAmenities.getAdapter() == null) {
+            rvAmenities.setHasFixedSize(false);
+            rvAmenities.setLayoutManager(new GridLayoutManager(this, 5));
+            rvAmenities.setItemAnimator(new DefaultItemAnimator());
+            rvAmenities.setAdapter(adapterAmenities);
+        }
     }
 
     public void setHostelFor() {
@@ -147,12 +167,12 @@ public class HostelDetailActivity extends BaseActivity {
     }
 
     private void setImagePager() {
-        if (propertyDetails.productimages == null || propertyDetails.productimages.isEmpty()) {
+        if (propertyDetails.productImages == null || propertyDetails.productImages.isEmpty()) {
             ArrayList<String> arrayList = new ArrayList<>();
             arrayList.add("");
-            propertyDetails.productimages = arrayList;
+            propertyDetails.productImages = arrayList;
         }
-        DetailImagePagerAdapter mDashboardPagerAdapter = new DetailImagePagerAdapter(this, propertyDetails.productimages);
+        DetailImagePagerAdapter mDashboardPagerAdapter = new DetailImagePagerAdapter(this, propertyDetails.productImages);
         vpImage.setAdapter(mDashboardPagerAdapter);
 
        /* vpImage.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -194,21 +214,37 @@ public class HostelDetailActivity extends BaseActivity {
 
     @OnClick(R.id.tv_bookmark)
     public void onTvBookmarkClicked() {
+        Toaster.shortToast("Bookmark");
     }
 
     @OnClick(R.id.tv_review)
     public void onTvReviewClicked() {
+        Toaster.shortToast("Review");
     }
 
     @OnClick(R.id.tv_rate)
     public void onTvRateClicked() {
+        Toaster.shortToast("Rate");
     }
 
     @OnClick(R.id.img_back)
     public void onImgBackClicked() {
+        onBackPressed();
     }
 
     @OnClick(R.id.img_share)
     public void onImgShareClicked() {
+        Toaster.shortToast("Share");
+    }
+
+    @Override
+    public void onBackPressed() {
+        finish();
+        super.onBackPressed();
+    }
+
+    @OnClick(R.id.btn_book_now)
+    public void onViewClicked() {
+        Toaster.shortToast("Book Now");
     }
 }

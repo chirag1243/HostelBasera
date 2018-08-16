@@ -49,7 +49,6 @@ public class AdapterHomePropertyDetail extends RecyclerView.Adapter<AdapterHomeP
         return new ViewHolder(view, this);
     }
 
-
     class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private AdapterHomePropertyDetail adapterhomepropertydetail;
 
@@ -66,7 +65,6 @@ public class AdapterHomePropertyDetail extends RecyclerView.Adapter<AdapterHomeP
         @BindView(R.id.tv_location)
         TextView tvLocation;
 
-
         ViewHolder(View itemView, AdapterHomePropertyDetail adapterHomePropertyDetail) {
             super(itemView);
             this.adapterhomepropertydetail = adapterHomePropertyDetail;
@@ -80,7 +78,7 @@ public class AdapterHomePropertyDetail extends RecyclerView.Adapter<AdapterHomeP
             tvName.setText("" + mItem.property_name);
             tvName.setTypeface(tvName.getTypeface(), Typeface.BOLD);
             //TODO : Set As per required
-            tvPrice.setText("₹ 1520"); //mItem.price
+            tvPrice.setText("₹ " + mItem.price); //mItem.price
             tvPrice.setTypeface(tvPrice.getTypeface(), Typeface.BOLD);
             tvLocation.setText("" + mItem.address);
 
