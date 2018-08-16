@@ -127,7 +127,6 @@
                         android:nestedScrollingEnabled="false"
                         android:orientation="horizontal"
                         android:padding="@dimen/dim_8dp"
-                        android:paddingBottom="@dimen/dim_5dp"
                         android:visibility="visible" />
 
                 </LinearLayout>

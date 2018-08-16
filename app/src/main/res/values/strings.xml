@@ -43,8 +43,13 @@
     <string name="near_me">Near Me</string>
     <string name="search">Search</string>
     <string name="no_data_found">No Data Found</string>
-    <string name="address">Address</string>
     <string name="type_of_property">Type of Property</string>
     <string name="size_of_property">Size of Property</string>
     <string name="hostel_for">Hostel for</string>
+    <string name="amenities">Amenities</string>
+    <string name="price">Price</string>
+    <string name="book_now">Book Now</string>
+    <string name="bookmark">Bookmark</string>
+    <string name="review">Review</string>
+    <string name="rate">Rate</string>
 </resources>

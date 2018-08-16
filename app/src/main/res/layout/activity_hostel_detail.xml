@@ -21,10 +21,9 @@
             android:layout_height="wrap_content">
 
             <android.support.v4.view.ViewPager
-                android:id="@+id/vp_banner"
+                android:id="@+id/vp_image"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/dim_220dp"
-                android:background="@color/colorPrimary" />
+                android:layout_height="@dimen/dim_220dp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -42,10 +41,10 @@
                     android:orientation="vertical"
                     android:padding="@dimen/dim_8dp">
 
-                    <com.google.android.gms.maps.MapView
+                    <!--<com.google.android.gms.maps.MapView
                         android:id="@+id/map_view"
                         android:layout_width="match_parent"
-                        android:layout_height="@dimen/dim_220dp" />
+                        android:layout_height="@dimen/dim_220dp"/>-->
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -126,10 +125,7 @@
                             android:textColor="@color/colorAccent"
                             android:textSize="@dimen/dim_text16" />
                     </LinearLayout>
-
-
                 </LinearLayout>
-
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -183,36 +179,75 @@
                 </LinearLayout>
 
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/dim_12dp"
-                android:background="@color/white"
-                android:orientation="vertical">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dim_12dp"
+                    android:background="@color/white"
+                    android:orientation="vertical">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:padding="@dimen/dim_12dp"
-                android:text="@string/hostel_for"
-                android:textAllCaps="true"
-                android:textColor="@color/colorPrimary"
-                android:textSize="@dimen/dim_text13" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:padding="@dimen/dim_12dp"
+                        android:text="@string/amenities"
+                        android:textAllCaps="true"
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="@dimen/dim_text13" />
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/dim_0_5_dp"
-                android:background="@color/border_gray" />
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/dim_0_5_dp"
+                        android:background="@color/border_gray" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:padding="@dimen/dim_12dp">
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/rv_amenities"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:nestedScrollingEnabled="false"
+                        android:orientation="horizontal"
+                        android:padding="@dimen/dim_12dp"
+                        android:visibility="visible" />
+                </LinearLayout>
 
-            </LinearLayout>
-            </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dim_12dp"
+                    android:background="@color/white"
+                    android:orientation="vertical"
+                    android:padding="@dimen/dim_12dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/price"
+                        android:textAllCaps="true"
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="@dimen/dim_text13" />
+
+                    <TextView
+                        android:id="@+id/tv_price"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/dim_5dp"
+                        android:text="₹ 1500"
+                        android:textAllCaps="true"
+                        android:textColor="@color/colorAccent"
+                        android:textSize="@dimen/dim_text16" />
+
+                </LinearLayout>
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dim_12dp"
+                    android:background="@color/colorAccent"
+                    android:text="@string/book_now"
+                    android:textAllCaps="true"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/dim_text16" />
 
             </LinearLayout>
 
@@ -220,4 +255,49 @@
         </FrameLayout>
     </android.support.v4.widget.NestedScrollView>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dim_12dp"
+
+        android:background="@color/white"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/tv_bookmark"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:drawableTop="@drawable/footer_bookmark"
+            android:gravity="center"
+            android:padding="@dimen/dim_12dp"
+            android:text="@string/bookmark"
+            android:textColor="@color/colorPrimary"
+            android:textSize="@dimen/dim_text13" />
+
+        <TextView
+            android:id="@+id/tv_review"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:drawableTop="@drawable/footer_edit"
+            android:gravity="center"
+            android:padding="@dimen/dim_12dp"
+            android:text="@string/review"
+            android:textColor="@color/colorPrimary"
+            android:textSize="@dimen/dim_text13" />
+
+        <TextView
+            android:id="@+id/tv_rate"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:drawableTop="@drawable/footer_favourite"
+            android:gravity="center"
+            android:padding="@dimen/dim_12dp"
+            android:text="@string/rate"
+            android:textColor="@color/colorPrimary"
+            android:textSize="@dimen/dim_text13" />
+
+    </LinearLayout>
 </LinearLayout>

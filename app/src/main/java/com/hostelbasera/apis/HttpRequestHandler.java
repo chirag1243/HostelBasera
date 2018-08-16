@@ -143,25 +143,6 @@ public class HttpRequestHandler {
         return params;
     }
 
-    /*
-    {
-	"token":"si0d3lRh4Of7ld03l",
-	"deviceType":1,
-    	"user_id":2,
-	"getPropertyListData":{
-			"limit":0,
-			"page":1,
-			"filters":{
-				"property_category_id":["1","2"],
-				"property_type_id":["1","2","4","5"],
-				"type_id":["1","2"],
-				"property_size_id":["1","2","3"]
-			}
-
-		}
-}
-
-     */
 
     public JSONObject getPropertyListDataParam(int pageNo, ArrayList<String> arrPropertyCategoryId, ArrayList<String> arrPropertyTypeId, ArrayList<String> arrTypeId, ArrayList<String> arrPropertySizeId) {
         JSONObject params = new JSONObject();
@@ -206,6 +187,20 @@ public class HttpRequestHandler {
     }
 
 
+    public JSONObject getPropertyDetailsParam(int property_id) {
+        JSONObject params = new JSONObject();
+        JSONObject jsonObject = new JSONObject();
+        try {
+            params = setDefaultParameters();
+
+            jsonObject.put(Constant.Property_id, property_id);
+
+            params.put(Constant.GetPropertyData, jsonObject);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return params;
+    }
 
     /*public JSONObject getLogoutUserParam() {
         JSONObject params = new JSONObject();

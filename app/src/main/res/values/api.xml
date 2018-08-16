@@ -11,5 +11,6 @@
     <string name="registerSeller">Login/registerSeller</string>
     <string name="loginSeller">Login/loginSeller</string>
     <string name="getPropertyList">user/getPropertyList</string>
+    <string name="getPropertyDetails">user/getPropertyDetails</string>
 
 </resources>

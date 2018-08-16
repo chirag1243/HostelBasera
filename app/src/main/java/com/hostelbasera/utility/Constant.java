@@ -64,6 +64,10 @@ public class Constant {
     public static final String Property_type_id = "property_type_id";
     public static final String Type_id = "type_id";
     public static final String Property_size_id = "property_size_id";
+    public static final String Property_id = "property_id";
+
+    public static final String GetPropertyData = "getPropertyData";
+
 
 
 }

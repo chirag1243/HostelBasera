@@ -4,14 +4,11 @@ import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.List;
 
-public class GetPropertyDetailModel implements Serializable {
+public class PropertyDetailModel implements Serializable {
 
-    @SerializedName("propertyDetail")
-    public ArrayList<PropertyDetail> propertyDetail;
-    @SerializedName("total_properties")
-    public int total_properties;
+    @SerializedName("propertyDetails")
+    public PropertyDetails propertyDetails;
     @SerializedName("message")
     public String message;
     @SerializedName("status")
@@ -19,13 +16,11 @@ public class GetPropertyDetailModel implements Serializable {
     @SerializedName("is_valid_token")
     public boolean is_valid_token;
 
-    public static class PropertyDetail implements Serializable {
-        @SerializedName("property_type")
-        public String property_type;
-        @SerializedName("property_category_name")
-        public String property_category_name;
-        @SerializedName("image")
-        public String image;
+    public static class PropertyDetails implements Serializable {
+        @SerializedName("productimages")
+        public ArrayList<String> productimages;
+        @SerializedName("city_name")
+        public String city_name;
         @SerializedName("flag")
         public String flag;
         @SerializedName("date")
@@ -34,6 +29,8 @@ public class GetPropertyDetailModel implements Serializable {
         public String by_admin;
         @SerializedName("seller_id")
         public String seller_id;
+        @SerializedName("price")
+        public String price;
         @SerializedName("cooking_menu")
         public String cooking_menu;
         @SerializedName("water_timing")
@@ -67,13 +64,18 @@ public class GetPropertyDetailModel implements Serializable {
         @SerializedName("property_type_id")
         public String property_type_id;
         @SerializedName("property_category_id")
-        public String property_category_id;
+        public int property_category_id;
         @SerializedName("property_name")
         public String property_name;
         @SerializedName("property_id")
-        public int property_id;
-
-        @SerializedName("price")
-        public String price;
+        public String property_id;
+        @SerializedName("property_size")
+        public String property_size;
+        @SerializedName("type_name")
+        public String type_name;
+        @SerializedName("property_type")
+        public String property_type;
+        @SerializedName("property_category_name")
+        public String property_category_name;
     }
 }

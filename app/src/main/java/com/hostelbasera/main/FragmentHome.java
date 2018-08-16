@@ -1,13 +1,13 @@
 package com.hostelbasera.main;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.LinearInterpolator;
 import android.view.animation.RotateAnimation;
+import android.widget.AdapterView;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -87,7 +88,7 @@ public class FragmentHome extends Fragment implements Paginate.Callbacks, SwipeR
 
     GetPropertyDetailModel getPropertyDetailModel;
 
-    ArrayList<GetPropertyDetailModel.PropertyDetail> arrHomePageStoresDetailArrayList;
+    ArrayList<GetPropertyDetailModel.PropertyDetail> arrPropertyDetailArrayList;
 
     AdapterHomePropertyDetail adapterHomePropertyDetail;
     DashboardActivity activity;
@@ -105,7 +106,6 @@ public class FragmentHome extends Fragment implements Paginate.Callbacks, SwipeR
         init();
         return view;
     }
-
 
     @OnClick(R.id.tv_search)
     public void onTvSearchClicked() {
@@ -141,7 +141,7 @@ public class FragmentHome extends Fragment implements Paginate.Callbacks, SwipeR
 //        searchView.setIconified(false);
 //        searchView.clearFocus();
         tvHostelSuggestion.setTypeface(tvHostelSuggestion.getTypeface(), Typeface.BOLD);
-        arrHomePageStoresDetailArrayList = new ArrayList<>();
+        arrPropertyDetailArrayList = new ArrayList<>();
         tvNoDataFound.setText("");
 
         if (Globals.isNetworkAvailable(getActivity())) {
@@ -216,7 +216,7 @@ public class FragmentHome extends Fragment implements Paginate.Callbacks, SwipeR
                         if (swipeRefreshLayout.isRefreshing()) {
                             stopRefreshing();
                             rvHostel.setAdapter(null);
-                            arrHomePageStoresDetailArrayList.clear();
+                            arrPropertyDetailArrayList.clear();
                             adapterHomePropertyDetail.notifyDataSetChanged();
                         }
                         setupList(getPropertyDetailModel.propertyDetail);
@@ -250,7 +250,7 @@ public class FragmentHome extends Fragment implements Paginate.Callbacks, SwipeR
 
     private void setupList(ArrayList<GetPropertyDetailModel.PropertyDetail> homePageStoresDetailArrayList) {
         if (homePageStoresDetailArrayList != null && !homePageStoresDetailArrayList.isEmpty()) {
-            arrHomePageStoresDetailArrayList.addAll(homePageStoresDetailArrayList);
+            arrPropertyDetailArrayList.addAll(homePageStoresDetailArrayList);
             setAdapter();
         } else
             showNoRecordFound(getString(R.string.no_data_found));
@@ -265,14 +265,14 @@ public class FragmentHome extends Fragment implements Paginate.Callbacks, SwipeR
             adapterHomePropertyDetail = new AdapterHomePropertyDetail(getActivity());
         }
         loading = false;
-        adapterHomePropertyDetail.doRefresh(arrHomePageStoresDetailArrayList);
+        adapterHomePropertyDetail.doRefresh(arrPropertyDetailArrayList);
 
         if (rvHostel.getAdapter() == null) {
             rvHostel.setHasFixedSize(false);
             rvHostel.setLayoutManager(new GridLayoutManager(getContext(), Constant.GRID_SPAN));
             rvHostel.setItemAnimator(new DefaultItemAnimator());
             rvHostel.setAdapter(adapterHomePropertyDetail);
-            if (arrHomePageStoresDetailArrayList.size() < getPropertyDetailModel.total_properties && rvHostel != null) {
+            if (arrPropertyDetailArrayList.size() < getPropertyDetailModel.total_properties && rvHostel != null) {
                 paginate = Paginate.with(rvHostel, this)
                         .setLoadingTriggerThreshold(Constant.progress_threshold_2)
                         .addLoadingListItem(Constant.addLoadingRow)
@@ -281,6 +281,13 @@ public class FragmentHome extends Fragment implements Paginate.Callbacks, SwipeR
                         .build();
             }
         }
+
+        adapterHomePropertyDetail.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                startActivity(new Intent(getActivity(), HostelDetailActivity.class).putExtra(Constant.Property_id, arrPropertyDetailArrayList.get(position).property_id));
+            }
+        });
     }
 
     @Override
@@ -307,7 +314,7 @@ public class FragmentHome extends Fragment implements Paginate.Callbacks, SwipeR
 
     @Override
     public boolean hasLoadedAllItems() {
-        return arrHomePageStoresDetailArrayList.size() >= getPropertyDetailModel.total_properties;
+        return arrPropertyDetailArrayList.size() >= getPropertyDetailModel.total_properties;
     }
 
     @Override
