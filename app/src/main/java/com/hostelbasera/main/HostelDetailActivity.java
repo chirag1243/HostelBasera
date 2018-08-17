@@ -144,7 +144,7 @@ public class HostelDetailActivity extends BaseActivity {
 
         if (rvAmenities.getAdapter() == null) {
             rvAmenities.setHasFixedSize(false);
-            rvAmenities.setLayoutManager(new GridLayoutManager(this, 5));
+            rvAmenities.setLayoutManager(new GridLayoutManager(this, 4));
             rvAmenities.setItemAnimator(new DefaultItemAnimator());
             rvAmenities.setAdapter(adapterAmenities);
         }
