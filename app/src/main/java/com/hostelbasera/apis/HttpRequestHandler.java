@@ -202,6 +202,33 @@ public class HttpRequestHandler {
         return params;
     }
 
+    public JSONObject getAddBookmarkParam(int property_id) {
+        JSONObject params = new JSONObject();
+        JSONObject jsonObject = new JSONObject();
+        try {
+            params = setDefaultParameters();
+
+            jsonObject.put(Constant.Property_id, property_id);
+            jsonObject.put(Constant.User_id, globals.getUserId());
+
+            params.put(Constant.AddBookmarkData, jsonObject);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return params;
+    }
+
+
+    public JSONObject getFilterListParam() {
+        JSONObject params = new JSONObject();
+        try {
+            params = setDefaultParameters();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return params;
+    }
     /*public JSONObject getLogoutUserParam() {
         JSONObject params = new JSONObject();
         JSONObject jsonObject = new JSONObject();

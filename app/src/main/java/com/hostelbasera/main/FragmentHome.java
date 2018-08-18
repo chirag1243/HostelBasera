@@ -113,14 +113,17 @@ public class FragmentHome extends Fragment implements Paginate.Callbacks, SwipeR
 
     @OnClick(R.id.tv_girls)
     public void onTvGirlsClicked() {
+        startActivity(new Intent(getActivity(), CategoryListActivity.class).putExtra(Constant.ArrPropertyCategoryId, new ArrayList<>().add("2")));
     }
 
     @OnClick(R.id.tv_boys)
     public void onTvBoysClicked() {
+        startActivity(new Intent(getActivity(), CategoryListActivity.class).putExtra(Constant.ArrPropertyCategoryId, new ArrayList<>().add("1")));
     }
 
     @OnClick(R.id.t_both)
     public void onTBothClicked() {
+        startActivity(new Intent(getActivity(), CategoryListActivity.class).putExtra(Constant.ArrPropertyCategoryId, new ArrayList<>().add("4")));
     }
 
     @OnClick(R.id.tv_near_me)

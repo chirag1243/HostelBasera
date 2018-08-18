@@ -214,8 +214,35 @@ public class HostelDetailActivity extends BaseActivity {
 
     @OnClick(R.id.tv_bookmark)
     public void onTvBookmarkClicked() {
-        Toaster.shortToast("Bookmark");
+        doAddBookmark();
     }
+
+    public void doAddBookmark() {
+        JSONObject postData = HttpRequestHandler.getInstance().getAddBookmarkParam(property_id);
+
+        if (postData != null) {
+
+            new PostRequest(this, getString(R.string.addBookmark), postData, true, new PostRequest.OnPostServiceCallListener() {
+                @Override
+                public void onSucceedToPostCall(JSONObject response) {
+                    PropertyDetailModel propertyDetailModel = new Gson().fromJson(response.toString(), PropertyDetailModel.class);
+                    /*if (propertyDetailModel.status == 0) {
+                        propertyDetails = propertyDetailModel.propertyDetails;
+                        setPropertyDetials();
+                    }*/
+                    Toaster.shortToast(propertyDetailModel.message);
+
+                }
+
+                @Override
+                public void onFailedToPostCall(int statusCode, String msg) {
+                    Toaster.shortToast(msg);
+                }
+            }).execute();
+        }
+        Globals.hideKeyboard(this);
+    }
+
 
     @OnClick(R.id.tv_review)
     public void onTvReviewClicked() {

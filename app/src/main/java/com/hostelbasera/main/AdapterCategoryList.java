@@ -65,9 +65,9 @@ public class AdapterCategoryList extends RecyclerView.Adapter<AdapterCategoryLis
         @BindView(R.id.tv_location)
         TextView tvLocation;
         @BindView(R.id.vw_right_border)
-        TextView vwRightBorder;
+        View vwRightBorder;
         @BindView(R.id.vw_bottom_border)
-        TextView vwBottomBorder;
+        View vwBottomBorder;
 
         ViewHolder(View itemView, AdapterCategoryList adapterCategoryList) {
             super(itemView);
@@ -80,15 +80,16 @@ public class AdapterCategoryList extends RecyclerView.Adapter<AdapterCategoryLis
         void setDataToView(GetPropertyDetailModel.PropertyDetail mItem, ViewHolder holder, int position) {
 
             if (position % 2 == 0) {
-                vwRightBorder.setVisibility(View.GONE);
-            } else {
                 vwRightBorder.setVisibility(View.VISIBLE);
+            } else {
+                vwRightBorder.setVisibility(View.GONE);
             }
+
             tvName.setText("" + mItem.property_name);
             tvName.setTypeface(tvName.getTypeface(), Typeface.BOLD);
             tvPrice.setText("₹ " + mItem.price);
             tvPrice.setTypeface(tvPrice.getTypeface(), Typeface.BOLD);
-            tvLocation.setText("" + mItem.address);
+            tvLocation.setText("" + mItem.city_name);
 
             //TODO : Set As per required
             simpleRatingBar.setRating(3.5f);

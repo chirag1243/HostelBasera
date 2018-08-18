@@ -1,6 +1,7 @@
 package com.hostelbasera.main;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -19,6 +20,7 @@ import com.google.gson.Gson;
 import com.hostelbasera.R;
 import com.hostelbasera.apis.HttpRequestHandler;
 import com.hostelbasera.apis.PostRequest;
+import com.hostelbasera.model.FilterModel;
 import com.hostelbasera.model.GetPropertyDetailModel;
 import com.hostelbasera.utility.BaseActivity;
 import com.hostelbasera.utility.Constant;
@@ -36,7 +38,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class CategoryListActivity extends BaseActivity implements Paginate.Callbacks, SwipeRefreshLayout.OnRefreshListener{
+public class CategoryListActivity extends BaseActivity implements Paginate.Callbacks, SwipeRefreshLayout.OnRefreshListener {
 
     @BindView(R.id.toolbar_title)
     TextView toolbarTitle;
@@ -72,6 +74,13 @@ public class CategoryListActivity extends BaseActivity implements Paginate.Callb
 
     AdapterCategoryList adapterCategoryList;
 
+    ArrayList<String> arrPropertyCategoryId;
+    ArrayList<String> arrPropertyTypeId;
+    ArrayList<String> arrTypeId;
+    ArrayList<String> arrPropertySizeId;
+    FilterModel filterModel;
+    private static final int filterCode = 1005;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -87,20 +96,43 @@ public class CategoryListActivity extends BaseActivity implements Paginate.Callb
 
         swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary);
         swipeRefreshLayout.setOnRefreshListener(this);
+        imgBack.setVisibility(View.VISIBLE);
 
         arrPropertyDetailArrayList = new ArrayList<>();
         tvNoDataFound.setText("");
 
+        arrPropertyTypeId = new ArrayList<>();
+        arrTypeId = new ArrayList<>();
+        arrPropertySizeId = new ArrayList<>();
+
+        arrPropertyCategoryId = getIntent().getStringArrayListExtra(Constant.ArrPropertyCategoryId);
+
         if (Globals.isNetworkAvailable(this)) {
             getPropertyListData(true);
+            getFiltersData();
         } else {
             showNoRecordFound(getString(R.string.no_data_found));
             Toaster.shortToast(R.string.no_internet_msg);
         }
+
+        rvHostelList.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+            }
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                if (rvHostelList.getChildAt(0) != null) {
+                    swipeRefreshLayout.setEnabled(rvHostelList.getChildAt(0).getTop() == 0);
+                }
+                super.onScrolled(recyclerView, dx, dy);
+            }
+        });
     }
 
     public void getPropertyListData(boolean showProgress) {
-        JSONObject postData = HttpRequestHandler.getInstance().getPropertyListDataParam(pageNo, new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+        JSONObject postData = HttpRequestHandler.getInstance().getPropertyListDataParam(pageNo, arrPropertyCategoryId, arrPropertyTypeId, arrTypeId, arrPropertySizeId);
 
         if (postData != null) {
             if (!swipeRefreshLayout.isRefreshing() && showProgress)
@@ -138,6 +170,30 @@ public class CategoryListActivity extends BaseActivity implements Paginate.Callb
                         progressBar.setVisibility(View.GONE);
                     if (paginate != null)
                         paginate.unbind();
+                    Toaster.shortToast(msg);
+                }
+            }).execute();
+        }
+        Globals.hideKeyboard(this);
+    }
+
+    public void getFiltersData() {
+        JSONObject postData = HttpRequestHandler.getInstance().getFilterListParam();
+
+        if (postData != null) {
+            new PostRequest(this, getString(R.string.getFilterList),
+                    postData, false, new PostRequest.OnPostServiceCallListener() {
+                @Override
+                public void onSucceedToPostCall(JSONObject response) {
+                    filterModel = new Gson().fromJson(response.toString(), FilterModel.class);
+                    /*if (filterModel.status == 0 && filterModel.filtersOfFullCatalogsDetail != null) {
+                    } else {
+                        Toaster.shortToast(filterModel.message);
+                    }*/
+                }
+
+                @Override
+                public void onFailedToPostCall(int statusCode, String msg) {
                     Toaster.shortToast(msg);
                 }
             }).execute();
@@ -225,6 +281,53 @@ public class CategoryListActivity extends BaseActivity implements Paginate.Callb
 
     @OnClick(R.id.ll_filter)
     public void onLlFilterClicked() {
+        if (filterModel != null) {
+            if (filterModel.status == 0 && filterModel.filterDetail != null) {
+                startActivityForResult(new Intent(this, FilterActivity.class).putExtra(Constant.FilterModel, filterModel), filterCode);
+            } else {
+                Toaster.shortToast(filterModel.message);
+            }
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == filterCode) {
+            if (resultCode == Activity.RESULT_OK) {
+                if (data != null) {
+                    filterModel = (FilterModel) data.getSerializableExtra(Constant.FilterModel);
+                    doGetFilterData(data.getBooleanExtra(Constant.IsClearAll, false));
+                }
+            }
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    public void doGetFilterData(boolean isClearAll) {
+        arrPropertyCategoryId.clear();
+        arrPropertySizeId.clear();
+        arrTypeId.clear();
+
+        if (!isClearAll) {
+            for (int i = 0; i < filterModel.filterDetail.size(); i++) {
+                for (int j = 0; j < filterModel.filterDetail.get(i).propertySize.size(); j++) {
+                    if (filterModel.filterDetail.get(i).propertySize.get(j).isSelected) {
+                        switch (filterModel.filterDetail.get(i).name) {
+                            case Constant.Size:
+                                arrPropertySizeId.add("" + filterModel.filterDetail.get(i).propertySize.get(j).property_size_id);
+                                break;
+                            case Constant.Property_Types:
+                                arrPropertyTypeId.add("" + filterModel.filterDetail.get(i).propertySize.get(j).property_size_id);
+                                break;
+                            case Constant.Types:
+                                arrPropertyCategoryId.add("" + filterModel.filterDetail.get(i).propertySize.get(j).property_size_id);
+                                break;
+                        }
+                    }
+                }
+            }
+        }
+        getPropertyListData(true);
     }
 
     @Override

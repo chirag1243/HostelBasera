@@ -54,4 +54,8 @@
     <string name="rate">Rate</string>
     <string name="sort">Sort</string>
     <string name="filter">Filter</string>
+    <string name="apply">Apply</string>
+    <string name="clear_all">Clear All</string>
+
+    <string name="filterby">Filter By</string>
 </resources>

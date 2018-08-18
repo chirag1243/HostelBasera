@@ -79,7 +79,7 @@ public class AdapterHomePropertyDetail extends RecyclerView.Adapter<AdapterHomeP
             tvName.setTypeface(tvName.getTypeface(), Typeface.BOLD);
             tvPrice.setText("₹ " + mItem.price);
             tvPrice.setTypeface(tvPrice.getTypeface(), Typeface.BOLD);
-            tvLocation.setText("" + mItem.address);
+            tvLocation.setText("" + mItem.city_name);
 
             //TODO : Set As per required
             simpleRatingBar.setRating(3.5f);

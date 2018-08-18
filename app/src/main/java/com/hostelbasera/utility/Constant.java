@@ -1,5 +1,11 @@
 package com.hostelbasera.utility;
 
+import android.util.Property;
+
+import com.hostelbasera.model.FilterModel;
+
+import java.sql.Types;
+
 /**
  * Created by Chirag.
  */
@@ -70,5 +76,18 @@ public class Constant {
 
     public static final String ArrProductImages = "arrProductImages";
     public static final String Position = "Position";
+
+    public static final String ArrPropertyCategoryId = "arrPropertyCategoryId";
+    public static final String AddBookmarkData = "addBookmarkData";
+    public static final String FilterModel = "FilterModel";
+    public static final String IsClearAll = "IsClearAll";
+
+    public static final String Size = "Size";
+    public static final String Property_Types = "Property Types";
+    public static final String Types = "Types";
+
+
+
+
 
 }

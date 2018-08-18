@@ -25,5 +25,7 @@
 
     <color name="border_created_task">#d9d9d9</color>
     <color name="assignee_bg">#e1e3f5</color>
+    <color name="filter_name_bg">#ebebeb</color>
+
 
 </resources>
