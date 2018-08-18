@@ -28,13 +28,13 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class AdapterHomePropertyDetail extends RecyclerView.Adapter<AdapterHomePropertyDetail.ViewHolder> {
+public class AdapterCategoryList extends RecyclerView.Adapter<AdapterCategoryList.ViewHolder> {
 
     private ArrayList<GetPropertyDetailModel.PropertyDetail> mValues;
     private final Context mContext;
     private AdapterView.OnItemClickListener onItemClickListener;
 
-    AdapterHomePropertyDetail(Context context) {
+    AdapterCategoryList(Context context) {
         mContext = context;
     }
 
@@ -45,12 +45,12 @@ public class AdapterHomePropertyDetail extends RecyclerView.Adapter<AdapterHomeP
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.home_hostel_item, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.category_list_item, parent, false);
         return new ViewHolder(view, this);
     }
 
     class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        private AdapterHomePropertyDetail adapterhomepropertydetail;
+        private AdapterCategoryList adapterCategoryList;
 
         @BindView(R.id.img_product)
         ImageView imgProduct;
@@ -64,10 +64,14 @@ public class AdapterHomePropertyDetail extends RecyclerView.Adapter<AdapterHomeP
         RatingBar simpleRatingBar;
         @BindView(R.id.tv_location)
         TextView tvLocation;
+        @BindView(R.id.vw_right_border)
+        TextView vwRightBorder;
+        @BindView(R.id.vw_bottom_border)
+        TextView vwBottomBorder;
 
-        ViewHolder(View itemView, AdapterHomePropertyDetail adapterHomePropertyDetail) {
+        ViewHolder(View itemView, AdapterCategoryList adapterCategoryList) {
             super(itemView);
-            this.adapterhomepropertydetail = adapterHomePropertyDetail;
+            this.adapterCategoryList = adapterCategoryList;
             ButterKnife.bind(this, itemView);
             itemView.setOnClickListener(this);
         }
@@ -75,6 +79,11 @@ public class AdapterHomePropertyDetail extends RecyclerView.Adapter<AdapterHomeP
         @SuppressLint("SetTextI18n")
         void setDataToView(GetPropertyDetailModel.PropertyDetail mItem, ViewHolder holder, int position) {
 
+            if (position % 2 == 0) {
+                vwRightBorder.setVisibility(View.GONE);
+            } else {
+                vwRightBorder.setVisibility(View.VISIBLE);
+            }
             tvName.setText("" + mItem.property_name);
             tvName.setTypeface(tvName.getTypeface(), Typeface.BOLD);
             tvPrice.setText("₹ " + mItem.price);
@@ -106,7 +115,7 @@ public class AdapterHomePropertyDetail extends RecyclerView.Adapter<AdapterHomeP
 
         @Override
         public void onClick(View v) {
-            adapterhomepropertydetail.onItemHolderClick(ViewHolder.this);
+            adapterCategoryList.onItemHolderClick(ViewHolder.this);
         }
     }
 
@@ -129,7 +138,3 @@ public class AdapterHomePropertyDetail extends RecyclerView.Adapter<AdapterHomeP
             onItemClickListener.onItemClick(null, holder.itemView, holder.getAdapterPosition(), holder.getItemId());
     }
 }
-
-
-
-
