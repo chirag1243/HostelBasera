@@ -23,7 +23,7 @@ import butterknife.ButterKnife;
 
 public class AdapterFilter extends RecyclerView.Adapter<AdapterFilter.ViewHolder> {
 
-    private ArrayList<FilterModel.PropertySize> mValues;
+    private ArrayList<FilterModel.Data> mValues;
     private final Context mContext;
     private AdapterView.OnItemClickListener onItemClickListener;
     private int filterType;
@@ -32,7 +32,7 @@ public class AdapterFilter extends RecyclerView.Adapter<AdapterFilter.ViewHolder
         mContext = context;
     }
 
-    public void doRefresh(ArrayList<FilterModel.PropertySize> data, int filterType) {
+    public void doRefresh(ArrayList<FilterModel.Data> data, int filterType) {
         mValues = data;
         this.filterType = filterType;
         notifyDataSetChanged();
@@ -63,17 +63,17 @@ public class AdapterFilter extends RecyclerView.Adapter<AdapterFilter.ViewHolder
         @SuppressLint("SetTextI18n")
         void setDataToView(ViewHolder holder, int position) {
             holder.tv_filter.setText("" + mValues.get(position).property_size);
-            /*switch (filterType) {
-                case Constant.Fabric:
-                    holder.tv_filter.setText("" + mValues.get(position).property_size);
-                    break;
-                case Constant.Work:
-                    holder.tv_filter.setText("" + mValues.get(position).property_size);
-                    break;
+            switch (filterType) {
                 case Constant.Size:
                     holder.tv_filter.setText("" + mValues.get(position).property_size);
                     break;
-            }*/
+                case Constant.Property_Types:
+                    holder.tv_filter.setText("" + mValues.get(position).property_type);
+                    break;
+                case Constant.Types:
+                    holder.tv_filter.setText("" + mValues.get(position).type_name);
+                    break;
+            }
 
             if (mValues.get(position).isSelected)
                 holder.imgFilter.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.filter_seletet_fill));

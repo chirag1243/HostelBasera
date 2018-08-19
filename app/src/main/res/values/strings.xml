@@ -50,7 +50,7 @@
     <string name="price">Price</string>
     <string name="book_now">Book Now</string>
     <string name="bookmark">Bookmark</string>
-    <string name="review">Review</string>
+    <string name="review">Review &amp; Rating</string>
     <string name="rate">Rate</string>
     <string name="sort">Sort</string>
     <string name="filter">Filter</string>
@@ -58,4 +58,5 @@
     <string name="clear_all">Clear All</string>
 
     <string name="filterby">Filter By</string>
+    <string name="enquiry">Enquiry</string>
 </resources>

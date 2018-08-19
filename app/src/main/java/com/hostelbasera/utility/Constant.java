@@ -82,12 +82,12 @@ public class Constant {
     public static final String FilterModel = "FilterModel";
     public static final String IsClearAll = "IsClearAll";
 
-    public static final String Size = "Size";
-    public static final String Property_Types = "Property Types";
-    public static final String Types = "Types";
+    public static final int Size = 1;
+    public static final int Property_Types = 2;
+    public static final int Types = 3;
 
-
-
-
+    public static final String AddReviewData = "addReviewData";
+    public static final String Review = "review";
+    public static final String Rating = "rating";
 
 }

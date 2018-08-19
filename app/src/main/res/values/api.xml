@@ -14,5 +14,5 @@
     <string name="getPropertyDetails">user/getPropertyDetails</string>
     <string name="addBookmark">user/addBookmark</string>
     <string name="getFilterList">user/getFilterList</string>
-
+    <string name="addReview">user/addReview</string>
 </resources>

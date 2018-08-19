@@ -229,6 +229,42 @@ public class HttpRequestHandler {
         }
         return params;
     }
+
+    /*
+
+    {
+	"token":"si0d3lRh4Of7ld03l",
+	"deviceType":1,
+    "user_id":2,
+	"addReviewData":{
+			"property_id":13,
+			"review":'testing review',
+			"rating":3,
+			"user_id":1
+		}
+}
+
+     */
+
+    public JSONObject getAddReviewDataParam(int property_id,String review,int rating) {
+        JSONObject params = new JSONObject();
+        JSONObject jsonObject = new JSONObject();
+        try {
+            params = setDefaultParameters();
+
+            jsonObject.put(Constant.Property_id, property_id);
+            jsonObject.put(Constant.Review, review);
+            jsonObject.put(Constant.Rating, rating);
+            jsonObject.put(Constant.User_id, globals.getUserId());
+
+            params.put(Constant.AddReviewData, jsonObject);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return params;
+    }
+
+
     /*public JSONObject getLogoutUserParam() {
         JSONObject params = new JSONObject();
         JSONObject jsonObject = new JSONObject();

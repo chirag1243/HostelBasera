@@ -27,5 +27,7 @@
     <color name="assignee_bg">#e1e3f5</color>
     <color name="filter_name_bg">#ebebeb</color>
 
+    <color name="dialog_bg">#4d4772</color>
+
 
 </resources>

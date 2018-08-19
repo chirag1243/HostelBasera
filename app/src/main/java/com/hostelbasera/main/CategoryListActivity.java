@@ -104,6 +104,7 @@ public class CategoryListActivity extends BaseActivity implements Paginate.Callb
         arrPropertyTypeId = new ArrayList<>();
         arrTypeId = new ArrayList<>();
         arrPropertySizeId = new ArrayList<>();
+        arrPropertyCategoryId = new ArrayList<>();
 
         arrPropertyCategoryId = getIntent().getStringArrayListExtra(Constant.ArrPropertyCategoryId);
 
@@ -277,6 +278,7 @@ public class CategoryListActivity extends BaseActivity implements Paginate.Callb
 
     @OnClick(R.id.ll_sort)
     public void onLlSortClicked() {
+        Toaster.shortToast("Coming Soon");
     }
 
     @OnClick(R.id.ll_filter)
@@ -304,23 +306,24 @@ public class CategoryListActivity extends BaseActivity implements Paginate.Callb
     }
 
     public void doGetFilterData(boolean isClearAll) {
-        arrPropertyCategoryId.clear();
+        arrPropertyTypeId.clear();
         arrPropertySizeId.clear();
         arrTypeId.clear();
 
         if (!isClearAll) {
             for (int i = 0; i < filterModel.filterDetail.size(); i++) {
-                for (int j = 0; j < filterModel.filterDetail.get(i).propertySize.size(); j++) {
-                    if (filterModel.filterDetail.get(i).propertySize.get(j).isSelected) {
-                        switch (filterModel.filterDetail.get(i).name) {
+                for (int j = 0; j < filterModel.filterDetail.get(i).data.size(); j++) {
+
+                    if (filterModel.filterDetail.get(i).data.get(j).isSelected) {
+                        switch (filterModel.filterDetail.get(i).filterType) {
                             case Constant.Size:
-                                arrPropertySizeId.add("" + filterModel.filterDetail.get(i).propertySize.get(j).property_size_id);
+                                arrPropertySizeId.add("" + filterModel.filterDetail.get(i).data.get(j).property_size_id);
                                 break;
                             case Constant.Property_Types:
-                                arrPropertyTypeId.add("" + filterModel.filterDetail.get(i).propertySize.get(j).property_size_id);
+                                arrPropertyTypeId.add("" + filterModel.filterDetail.get(i).data.get(j).property_type_id);
                                 break;
                             case Constant.Types:
-                                arrPropertyCategoryId.add("" + filterModel.filterDetail.get(i).propertySize.get(j).property_size_id);
+                                arrTypeId.add("" + filterModel.filterDetail.get(i).data.get(j).type_id);
                                 break;
                         }
                     }

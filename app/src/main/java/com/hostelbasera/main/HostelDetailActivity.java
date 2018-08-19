@@ -23,17 +23,20 @@ import com.hostelbasera.utility.Constant;
 import com.hostelbasera.utility.DetailImagePagerAdapter;
 import com.hostelbasera.utility.Globals;
 import com.hostelbasera.utility.Toaster;
+import com.stepstone.apprating.AppRatingDialog;
+import com.stepstone.apprating.listener.RatingDialogListener;
 
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Timer;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class HostelDetailActivity extends BaseActivity {
+public class HostelDetailActivity extends BaseActivity implements RatingDialogListener {
 
     @BindView(R.id.toolbar_title)
     TextView toolbarTitle;
@@ -61,7 +64,7 @@ public class HostelDetailActivity extends BaseActivity {
     TextView tvBookmark;
     @BindView(R.id.tv_review)
     TextView tvReview;
-    @BindView(R.id.tv_rate)
+    @BindView(R.id.tv_enquiry)
     TextView tvRate;
     @BindView(R.id.img_back)
     ImageView imgBack;
@@ -244,15 +247,74 @@ public class HostelDetailActivity extends BaseActivity {
     }
 
 
-    @OnClick(R.id.tv_review)
-    public void onTvReviewClicked() {
-        Toaster.shortToast("Review");
+    @OnClick(R.id.tv_enquiry)
+    public void onTvRateClicked() {
+        Toaster.shortToast("Enquiry");
     }
 
-    @OnClick(R.id.tv_rate)
-    public void onTvRateClicked() {
-        Toaster.shortToast("Rate");
+    @OnClick(R.id.tv_review)
+    public void onTvReviewClicked() {
+        new AppRatingDialog.Builder()
+                .setPositiveButtonText("Submit")
+                .setNegativeButtonText("Cancel")
+//                .setNeutralButtonText("Later")
+                .setNoteDescriptions(Arrays.asList("Very Bad", "Not good", "Quite ok", "Very Good", "Excellent !!!"))
+                .setDefaultRating(4)
+                .setTitle("Rate this " + propertyDetails.property_name)
+                .setDescription("Please select some stars and give your feedback")
+                .setDefaultComment("This " + propertyDetails.property_name + " is pretty cool !")
+                .setStarColor(R.color.colorAccent)
+                .setNoteDescriptionTextColor(R.color.colorPrimary)
+                .setTitleTextColor(R.color.colorPrimary)
+                .setDescriptionTextColor(R.color.colorPrimary)
+                .setHint("Please write your comment here ...")
+                .setHintTextColor(R.color.border_gray)
+                .setCommentTextColor(R.color.colorPrimary)
+                .setCommentBackgroundColor(R.color.border_light_gray)
+//                .setWindowAnimation(R.style.MyDialogFadeAnimation)
+                .setWindowAnimation(R.style.MyDialogSlideVerticalAnimation)
+                .create(HostelDetailActivity.this)
+                .show();
+
     }
+
+    @Override
+    public void onNegativeButtonClicked() {
+        Toaster.shortToast("Cancel rating");
+    }
+
+    @Override
+    public void onNeutralButtonClicked() {
+
+    }
+
+    @Override
+    public void onPositiveButtonClicked(int rating, String review) {
+        if (!Globals.isNetworkAvailable(this)) {
+            Toaster.shortToast(R.string.no_internet_msg);
+            return;
+        }
+
+        JSONObject postData = HttpRequestHandler.getInstance().getAddReviewDataParam(property_id, review, rating);
+
+        if (postData != null) {
+
+            new PostRequest(this, getString(R.string.addReview), postData, true, new PostRequest.OnPostServiceCallListener() {
+                @Override
+                public void onSucceedToPostCall(JSONObject response) {
+                    PropertyDetailModel propertyDetailModel = new Gson().fromJson(response.toString(), PropertyDetailModel.class);
+                    Toaster.shortToast(propertyDetailModel.message);
+                }
+
+                @Override
+                public void onFailedToPostCall(int statusCode, String msg) {
+                    Toaster.shortToast(msg);
+                }
+            }).execute();
+        }
+        Globals.hideKeyboard(this);
+    }
+
 
     @OnClick(R.id.img_back)
     public void onImgBackClicked() {

@@ -335,14 +335,14 @@
             android:textSize="@dimen/dim_text13" />
 
         <TextView
-            android:id="@+id/tv_rate"
+            android:id="@+id/tv_enquiry"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:drawableTop="@drawable/footer_favourite"
+            android:drawableTop="@drawable/nav_feedback"
             android:gravity="center"
             android:padding="@dimen/dim_12dp"
-            android:text="@string/rate"
+            android:text="@string/enquiry"
             android:textColor="@color/colorPrimary"
             android:textSize="@dimen/dim_text13" />
 

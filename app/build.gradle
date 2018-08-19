@@ -49,6 +49,7 @@ dependencies {
     implementation 'com.bogdwellers:pinchtozoom:0.1'
     implementation 'com.victor:lib:1.0.4'
     implementation 'uk.co.chrisjenx:calligraphy:2.3.0'
+    implementation 'com.stepstone.apprating:app-rating:2.2.0'
     implementation 'gun0912.ted:tedpermission:1.0.3'
     implementation 'info.hoang8f:android-segmented:1.0.6'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.6.0'

@@ -53,7 +53,7 @@ public class FragmentHome extends Fragment implements Paginate.Callbacks, SwipeR
     TextView tvGirls;
     @BindView(R.id.tv_boys)
     TextView tvBoys;
-    @BindView(R.id.t_both)
+    @BindView(R.id.tv_both)
     TextView tBoth;
     @BindView(R.id.tv_near_me)
     TextView tvNearMe;
@@ -111,19 +111,27 @@ public class FragmentHome extends Fragment implements Paginate.Callbacks, SwipeR
     public void onTvSearchClicked() {
     }
 
+    ArrayList<String> arrCategoryId = new ArrayList<>();
+
     @OnClick(R.id.tv_girls)
     public void onTvGirlsClicked() {
-        startActivity(new Intent(getActivity(), CategoryListActivity.class).putExtra(Constant.ArrPropertyCategoryId, new ArrayList<>().add("2")));
+        doRedirectCategoryList("2");
     }
 
     @OnClick(R.id.tv_boys)
     public void onTvBoysClicked() {
-        startActivity(new Intent(getActivity(), CategoryListActivity.class).putExtra(Constant.ArrPropertyCategoryId, new ArrayList<>().add("1")));
+        doRedirectCategoryList("1");
     }
 
-    @OnClick(R.id.t_both)
+    @OnClick(R.id.tv_both)
     public void onTBothClicked() {
-        startActivity(new Intent(getActivity(), CategoryListActivity.class).putExtra(Constant.ArrPropertyCategoryId, new ArrayList<>().add("4")));
+        doRedirectCategoryList("4");
+    }
+
+    public void doRedirectCategoryList(String categoryId) {
+        arrCategoryId.clear();
+        arrCategoryId.add(categoryId);
+        startActivity(new Intent(getActivity(), CategoryListActivity.class).putExtra(Constant.ArrPropertyCategoryId, arrCategoryId));
     }
 
     @OnClick(R.id.tv_near_me)

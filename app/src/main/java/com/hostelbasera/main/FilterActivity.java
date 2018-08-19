@@ -59,14 +59,13 @@ public class FilterActivity extends BaseActivity {
             rvFilterName.setItemAnimator(new DefaultItemAnimator());
             rvFilterName.setAdapter(adapterFilterName);
         }
-
     }
 
     public void setFilterAdapter(int position) {
         if (adapterFilter == null) {
             adapterFilter = new AdapterFilter(this);
         }
-        adapterFilter.doRefresh(filterModel.filterDetail.get(position).propertySize, 0);//filterModel.filterDetail.get(position).type_id
+        adapterFilter.doRefresh(filterModel.filterDetail.get(position).data, filterModel.filterDetail.get(position).filterType);
 
         if (rvFilter.getAdapter() == null) {
             rvFilter.setHasFixedSize(false);
@@ -89,8 +88,8 @@ public class FilterActivity extends BaseActivity {
     @OnClick(R.id.tv_clear_all)
     public void onClearAllClicked() {
         for (int i = 0; i < filterModel.filterDetail.size(); i++) {
-            for (int j = 0; j < filterModel.filterDetail.get(i).propertySize.size(); j++) {
-                filterModel.filterDetail.get(i).propertySize.get(j).isSelected = false;
+            for (int j = 0; j < filterModel.filterDetail.get(i).data.size(); j++) {
+                filterModel.filterDetail.get(i).data.get(j).isSelected = false;
             }
         }
         setResult(Activity.RESULT_OK, new Intent(this, CategoryListActivity.class).putExtra(Constant.FilterModel, filterModel).putExtra(Constant.IsClearAll, true));
