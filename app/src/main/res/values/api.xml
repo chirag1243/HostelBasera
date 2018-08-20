@@ -15,4 +15,7 @@
     <string name="addBookmark">user/addBookmark</string>
     <string name="getFilterList">user/getFilterList</string>
     <string name="addReview">user/addReview</string>
+    <string name="addInquiry">user/addInquiry</string>
+    <string name="getBookmarkData">user/getBookmarkData</string>
+
 </resources>

@@ -59,4 +59,7 @@
 
     <string name="filterby">Filter By</string>
     <string name="enquiry">Enquiry</string>
+    <string name="user_reviews">User Reviews</string>
+    <string name="submit">Submit</string>
+    <string name="cancel">Cancel</string>
 </resources>

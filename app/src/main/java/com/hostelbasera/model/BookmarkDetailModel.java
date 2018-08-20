@@ -5,10 +5,10 @@ import com.google.gson.annotations.SerializedName;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-public class PropertyDetailModel implements Serializable {
+public class BookmarkDetailModel implements Serializable {
 
-    @SerializedName("propertyDetails")
-    public PropertyDetails propertyDetails;
+    @SerializedName("BookmarkDetails")
+    public ArrayList<BookmarkDetails> BookmarkDetails;
     @SerializedName("message")
     public String message;
     @SerializedName("status")
@@ -16,17 +16,9 @@ public class PropertyDetailModel implements Serializable {
     @SerializedName("is_valid_token")
     public boolean is_valid_token;
 
-    public static class PropertyDetails {
-        @SerializedName("propertyFacility")
-        public ArrayList<PropertyFacility> propertyFacility;
-        @SerializedName("productImages")
-        public ArrayList<String> productImages;
-        @SerializedName("city_name")
-        public String city_name;
+    public static class BookmarkDetails {
         @SerializedName("flag")
         public String flag;
-        @SerializedName("date")
-        public String date;
         @SerializedName("by_admin")
         public String by_admin;
         @SerializedName("seller_id")
@@ -66,43 +58,22 @@ public class PropertyDetailModel implements Serializable {
         @SerializedName("property_type_id")
         public String property_type_id;
         @SerializedName("property_category_id")
-        public int property_category_id;
+        public String property_category_id;
         @SerializedName("property_name")
         public String property_name;
-        @SerializedName("property_id")
-        public int property_id;
-        @SerializedName("property_size")
-        public String property_size;
-        @SerializedName("type_name")
-        public String type_name;
-        @SerializedName("property_type")
-        public String property_type;
-        @SerializedName("property_category_name")
-        public String property_category_name;
-
-        @SerializedName("propertyReviewdetails")
-        public ArrayList<PropertyReviewDetails> propertyReviewDetails;
-
-        @SerializedName("isBookMark")
-        public boolean isBookMark;
-    }
-
-    public static class PropertyReviewDetails {
-        @SerializedName("review")
-        public String review;
         @SerializedName("date")
         public String date;
-        @SerializedName("user_name")
-        public String user_name;
-        @SerializedName("rating")
-        public float rating;
+        @SerializedName("user_id")
+        public String user_id;
+        @SerializedName("property_id")
+        public int property_id;
+        @SerializedName("id")
+        public String id;
 
-    }
+        @SerializedName("city_name")
+        public String city_name;
+        @SerializedName("image")
+        public String image;
 
-    public static class PropertyFacility  {
-        @SerializedName("facility_icon_img")
-        public String facility_icon_img;
-        @SerializedName("facility_name")
-        public String facility_name;
     }
 }

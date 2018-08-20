@@ -1,23 +1,42 @@
 package com.hostelbasera.main;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.res.Resources;
+import android.graphics.PorterDuff;
 import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.DisplayMetrics;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.hostelbasera.R;
 import com.hostelbasera.apis.HttpRequestHandler;
 import com.hostelbasera.apis.PostRequest;
 import com.hostelbasera.model.PropertyDetailModel;
+import com.hostelbasera.model.PropertyReviewModel;
 import com.hostelbasera.utility.BaseActivity;
 import com.hostelbasera.utility.Constant;
 import com.hostelbasera.utility.DetailImagePagerAdapter;
@@ -28,8 +47,11 @@ import com.stepstone.apprating.listener.RatingDialogListener;
 
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
+import java.util.Locale;
 import java.util.Timer;
 
 import butterknife.BindView;
@@ -61,30 +83,41 @@ public class HostelDetailActivity extends BaseActivity implements RatingDialogLi
     @BindView(R.id.tv_price)
     TextView tvPrice;
     @BindView(R.id.tv_bookmark)
-    TextView tvBookmark;
+    AppCompatTextView tvBookmark;
     @BindView(R.id.tv_review_rating)
     TextView tvReview;
     @BindView(R.id.tv_enquiry)
-    TextView tvRate;
+    TextView tvEnquiry;
     @BindView(R.id.img_back)
     ImageView imgBack;
     @BindView(R.id.img_share)
     ImageView imgShare;
     int property_id;
 
+    @BindView(R.id.tv_verified_reviews)
+    TextView tvVerifiedReviews;
+    @BindView(R.id.rv_review)
+    RecyclerView rvReview;
+    @BindView(R.id.fl_review)
+    FrameLayout flReview;
+    Globals globals;
+
     PropertyDetailModel.PropertyDetails propertyDetails;
     Timer timer;
     final long DELAY_MS = 500;//delay in milliseconds before task is to be executed
     final long PERIOD_MS = 3000; // time in milliseconds between successive task executions.
     AdapterAmenities adapterAmenities;
+    AdapterReview adapterReview;
     @BindView(R.id.btn_book_now)
     Button btnBookNow;
+    boolean is_bookmark_remove;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_hostel_detail);
         ButterKnife.bind(this);
+        globals = ((Globals) getApplicationContext());
         init();
     }
 
@@ -112,7 +145,7 @@ public class HostelDetailActivity extends BaseActivity implements RatingDialogLi
                     PropertyDetailModel propertyDetailModel = new Gson().fromJson(response.toString(), PropertyDetailModel.class);
                     if (propertyDetailModel.status == 0 && propertyDetailModel.propertyDetails != null) {
                         propertyDetails = propertyDetailModel.propertyDetails;
-                        setPropertyDetials();
+                        setPropertyDetails();
                     } else {
                         Toaster.shortToast(propertyDetailModel.message);
                     }
@@ -128,15 +161,33 @@ public class HostelDetailActivity extends BaseActivity implements RatingDialogLi
     }
 
     @SuppressLint("SetTextI18n")
-    private void setPropertyDetials() {
+    private void setPropertyDetails() {
         toolbarTitle.setText(propertyDetails.property_name);
         tvAddress.setText(propertyDetails.address);
         tvTypeOfProperty.setText(propertyDetails.property_type);
         tvSizeOfProperty.setText(propertyDetails.property_size);
         tvPrice.setText("₹ " + propertyDetails.price);
+
+        is_bookmark_remove = propertyDetails.isBookMark;
+        tintViewDrawable();
+        if (propertyDetails.propertyReviewDetails != null && !propertyDetails.propertyReviewDetails.isEmpty()) {
+            tvVerifiedReviews.setText(propertyDetails.propertyReviewDetails.size() + " Verified Reviews");
+            setReViewAdapter();
+        } else {
+            flReview.setVisibility(View.GONE);
+        }
         setHostelFor();
         setImagePager();
         setAmenitiesAdapter();
+    }
+
+    private void tintViewDrawable() {
+        Drawable[] drawables = tvBookmark.getCompoundDrawables();
+        for (Drawable drawable : drawables) {
+            if (drawable != null) {
+                drawable.setColorFilter(getResources().getColor(is_bookmark_remove ? R.color.transparent : R.color.border_light_gray), PorterDuff.Mode.SRC_ATOP);
+            }
+        }
     }
 
     private void setAmenitiesAdapter() {
@@ -150,6 +201,20 @@ public class HostelDetailActivity extends BaseActivity implements RatingDialogLi
             rvAmenities.setLayoutManager(new GridLayoutManager(this, 4));
             rvAmenities.setItemAnimator(new DefaultItemAnimator());
             rvAmenities.setAdapter(adapterAmenities);
+        }
+    }
+
+    private void setReViewAdapter() {
+        if (adapterReview == null) {
+            adapterReview = new AdapterReview(this);
+        }
+        adapterReview.doRefresh(propertyDetails.propertyReviewDetails);
+
+        if (rvReview.getAdapter() == null) {
+            rvReview.setHasFixedSize(false);
+            rvReview.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, true));
+            rvReview.setItemAnimator(new DefaultItemAnimator());
+            rvReview.setAdapter(adapterReview);
         }
     }
 
@@ -217,11 +282,7 @@ public class HostelDetailActivity extends BaseActivity implements RatingDialogLi
 
     @OnClick(R.id.tv_bookmark)
     public void onTvBookmarkClicked() {
-        doAddBookmark();
-    }
-
-    public void doAddBookmark() {
-        JSONObject postData = HttpRequestHandler.getInstance().getAddBookmarkParam(property_id);
+        JSONObject postData = HttpRequestHandler.getInstance().getAddBookmarkParam(property_id, is_bookmark_remove);
 
         if (postData != null) {
 
@@ -229,12 +290,75 @@ public class HostelDetailActivity extends BaseActivity implements RatingDialogLi
                 @Override
                 public void onSucceedToPostCall(JSONObject response) {
                     PropertyDetailModel propertyDetailModel = new Gson().fromJson(response.toString(), PropertyDetailModel.class);
-                    /*if (propertyDetailModel.status == 0) {
-                        propertyDetails = propertyDetailModel.propertyDetails;
-                        setPropertyDetials();
-                    }*/
+                    if (propertyDetailModel.status == 0) {
+                        is_bookmark_remove = !is_bookmark_remove;
+                        tintViewDrawable();
+                    }
                     Toaster.shortToast(propertyDetailModel.message);
+                }
 
+                @Override
+                public void onFailedToPostCall(int statusCode, String msg) {
+                    Toaster.shortToast(msg);
+                }
+            }).execute();
+        }
+        Globals.hideKeyboard(this);
+    }
+
+    @SuppressLint("SetTextI18n")
+    @OnClick(R.id.tv_enquiry)
+    public void onTvRateClicked() {
+
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this, R.style.MyEnquiryAlertDialogStyle);
+        LayoutInflater inflater = this.getLayoutInflater();
+        View dialogView = inflater.inflate(R.layout.enquiry_dialog, null);
+        dialogBuilder.setView(dialogView);
+
+        TextView tvTitle = dialogView.findViewById(R.id.tv_title);
+        EditText edtDescription = dialogView.findViewById(R.id.edt_description);
+        TextView tvSubmit = dialogView.findViewById(R.id.tv_submit);
+        TextView tvCancel = dialogView.findViewById(R.id.tv_cancel);
+        AlertDialog alertDialog = dialogBuilder.create();
+
+        tvTitle.setTypeface(tvTitle.getTypeface(), Typeface.BOLD);
+        tvTitle.setText("Enquiry for " + propertyDetails.property_name);
+        tvSubmit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (edtDescription.getText().toString().trim().isEmpty()) {
+                    Toaster.shortToast("Please write your description here ...");
+                    return;
+                }
+                doAddEnquiry(edtDescription.getText().toString());
+                alertDialog.dismiss();
+            }
+        });
+
+        tvCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertDialog.dismiss();
+            }
+        });
+
+        alertDialog.show();
+    }
+
+    private void doAddEnquiry(String description) {
+        if (!Globals.isNetworkAvailable(this)) {
+            Toaster.shortToast(R.string.no_internet_msg);
+            return;
+        }
+
+        JSONObject postData = HttpRequestHandler.getInstance().getAddInquiryDataParam(property_id, description);
+        if (postData != null) {
+
+            new PostRequest(this, getString(R.string.addInquiry), postData, true, new PostRequest.OnPostServiceCallListener() {
+                @Override
+                public void onSucceedToPostCall(JSONObject response) {
+                    PropertyDetailModel propertyDetailModel = new Gson().fromJson(response.toString(), PropertyDetailModel.class);
+                    Toaster.shortToast(propertyDetailModel.message);
                 }
 
                 @Override
@@ -247,18 +371,13 @@ public class HostelDetailActivity extends BaseActivity implements RatingDialogLi
     }
 
 
-    @OnClick(R.id.tv_enquiry)
-    public void onTvRateClicked() {
-        Toaster.shortToast("Enquiry");
-    }
-
     @OnClick(R.id.tv_review_rating)
     public void onTvReviewClicked() {
         new AppRatingDialog.Builder()
                 .setPositiveButtonText("Submit")
                 .setNegativeButtonText("Cancel")
 //                .setNeutralButtonText("Later")
-                .setNoteDescriptions(Arrays.asList("Very Bad", "Not good", "Quite ok", "Very Good", "Excellent !!!"))
+                .setNoteDescriptions(Arrays.asList("Very Bad", "Not Good", "Quite Ok", "Very Good", "Excellent !!!"))
                 .setDefaultRating(4)
                 .setTitle("Rate this " + propertyDetails.property_name)
                 .setDescription("Please select some stars and give your feedback")
@@ -279,7 +398,7 @@ public class HostelDetailActivity extends BaseActivity implements RatingDialogLi
 
     @Override
     public void onNegativeButtonClicked() {
-        Toaster.shortToast("Cancel rating");
+//        Toaster.shortToast("Cancel rating");
     }
 
     @Override
@@ -293,9 +412,7 @@ public class HostelDetailActivity extends BaseActivity implements RatingDialogLi
             Toaster.shortToast(R.string.no_internet_msg);
             return;
         }
-
         JSONObject postData = HttpRequestHandler.getInstance().getAddReviewDataParam(property_id, review, rating);
-
         if (postData != null) {
 
             new PostRequest(this, getString(R.string.addReview), postData, true, new PostRequest.OnPostServiceCallListener() {
@@ -303,6 +420,10 @@ public class HostelDetailActivity extends BaseActivity implements RatingDialogLi
                 public void onSucceedToPostCall(JSONObject response) {
                     PropertyDetailModel propertyDetailModel = new Gson().fromJson(response.toString(), PropertyDetailModel.class);
                     Toaster.shortToast(propertyDetailModel.message);
+
+                    if (propertyDetailModel.status == 0) {
+                        getPropertyReview();
+                    }
                 }
 
                 @Override
@@ -314,6 +435,35 @@ public class HostelDetailActivity extends BaseActivity implements RatingDialogLi
         Globals.hideKeyboard(this);
     }
 
+    private void getPropertyReview() {
+        if (!Globals.isNetworkAvailable(this)) {
+            Toaster.shortToast(R.string.no_internet_msg);
+            return;
+        }
+        JSONObject postData = HttpRequestHandler.getInstance().getPropertyReviewDataParam(property_id);
+        if (postData != null) {
+
+            new PostRequest(this, getString(R.string.addReview), postData, true, new PostRequest.OnPostServiceCallListener() {
+                @Override
+                public void onSucceedToPostCall(JSONObject response) {
+                    PropertyReviewModel propertyReviewModel = new Gson().fromJson(response.toString(), PropertyReviewModel.class);
+//                    Toaster.shortToast(propertyReviewDetails.message);
+
+                    if (propertyReviewModel.status == 0 && propertyReviewModel.propertyReviewDetails != null && !propertyReviewModel.propertyReviewDetails.isEmpty()) {
+                        propertyDetails.propertyReviewDetails.clear();
+                        propertyDetails.propertyReviewDetails = propertyReviewModel.propertyReviewDetails;
+                        setReViewAdapter();
+                    }
+                }
+
+                @Override
+                public void onFailedToPostCall(int statusCode, String msg) {
+                    Toaster.shortToast(msg);
+                }
+            }).execute();
+        }
+        Globals.hideKeyboard(this);
+    }
 
     @OnClick(R.id.img_back)
     public void onImgBackClicked() {

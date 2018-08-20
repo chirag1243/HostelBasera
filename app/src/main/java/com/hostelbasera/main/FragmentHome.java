@@ -79,6 +79,7 @@ public class FragmentHome extends Fragment implements Paginate.Callbacks, SwipeR
     private Paginate paginate;
     private boolean loading = false;
 
+
     //   DashboardPagerAdapter mDashboardPagerAdapter;
     int currentPage = 0;
     int pageNo = 1;

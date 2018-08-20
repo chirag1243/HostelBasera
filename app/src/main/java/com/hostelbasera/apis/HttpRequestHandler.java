@@ -194,6 +194,7 @@ public class HttpRequestHandler {
             params = setDefaultParameters();
 
             jsonObject.put(Constant.Property_id, property_id);
+            jsonObject.put(Constant.User_id, globals.getUserId());
 
             params.put(Constant.GetPropertyData, jsonObject);
         } catch (Exception e) {
@@ -202,7 +203,7 @@ public class HttpRequestHandler {
         return params;
     }
 
-    public JSONObject getAddBookmarkParam(int property_id) {
+    public JSONObject getAddBookmarkParam(int property_id, boolean is_remove) {
         JSONObject params = new JSONObject();
         JSONObject jsonObject = new JSONObject();
         try {
@@ -210,6 +211,7 @@ public class HttpRequestHandler {
 
             jsonObject.put(Constant.Property_id, property_id);
             jsonObject.put(Constant.User_id, globals.getUserId());
+            jsonObject.put(Constant.Is_remove, is_remove);
 
             params.put(Constant.AddBookmarkData, jsonObject);
         } catch (Exception e) {
@@ -230,23 +232,7 @@ public class HttpRequestHandler {
         return params;
     }
 
-    /*
-
-    {
-	"token":"si0d3lRh4Of7ld03l",
-	"deviceType":1,
-    "user_id":2,
-	"addReviewData":{
-			"property_id":13,
-			"review":'testing review',
-			"rating":3,
-			"user_id":1
-		}
-}
-
-     */
-
-    public JSONObject getAddReviewDataParam(int property_id,String review,int rating) {
+    public JSONObject getAddReviewDataParam(int property_id, String review, int rating) {
         JSONObject params = new JSONObject();
         JSONObject jsonObject = new JSONObject();
         try {
@@ -264,6 +250,46 @@ public class HttpRequestHandler {
         return params;
     }
 
+    public JSONObject getAddInquiryDataParam(int property_id, String description) {
+        JSONObject params = new JSONObject();
+        JSONObject jsonObject = new JSONObject();
+        try {
+            params = setDefaultParameters();
+
+            jsonObject.put(Constant.Property_id, property_id);
+            jsonObject.put(Constant.Description, description);
+            jsonObject.put(Constant.User_id, globals.getUserId());
+
+            params.put(Constant.AddReviewData, jsonObject);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return params;
+    }
+
+    /*
+       {
+       "token":"si0d3lRh4Of7ld03l",
+       "deviceType":1,
+       "user_id":2,
+       "getPropertyReviewData":{
+               "property_id":13
+           }
+   }
+
+        */
+    public JSONObject getPropertyReviewDataParam(int property_id) {
+        JSONObject params = new JSONObject();
+        JSONObject jsonObject = new JSONObject();
+        try {
+            params = setDefaultParameters();
+            jsonObject.put(Constant.Property_id, property_id);
+            params.put(Constant.GetPropertyReviewData, jsonObject);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return params;
+    }
 
     /*public JSONObject getLogoutUserParam() {
         JSONObject params = new JSONObject();

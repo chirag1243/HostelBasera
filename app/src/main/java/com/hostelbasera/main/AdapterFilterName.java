@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class AdapterFilterName  extends RecyclerView.Adapter<AdapterFilterName.ViewHolder> {
+public class AdapterFilterName extends RecyclerView.Adapter<AdapterFilterName.ViewHolder> {
 
     private ArrayList<FilterModel.FilterDetail> mValues;
     private final FilterActivity filterActivity;
@@ -40,15 +40,15 @@ public class AdapterFilterName  extends RecyclerView.Adapter<AdapterFilterName.V
     }
 
     class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        private AdapterFilterName adapterStoreCatlogDetail;
+        private AdapterFilterName adapterFilterName;
         @BindView(R.id.tv_filter_name)
         TextView tvFilterName;
         @BindView(R.id.view_blue)
         View viewBlue;
 
-        public ViewHolder(View itemView, AdapterFilterName adapterStoreCatlogDetail) {
+        public ViewHolder(View itemView, AdapterFilterName adapterFilterName) {
             super(itemView);
-            this.adapterStoreCatlogDetail = adapterStoreCatlogDetail;
+            this.adapterFilterName = adapterFilterName;
             ButterKnife.bind(this, itemView);
             itemView.setOnClickListener(this);
         }
@@ -77,7 +77,7 @@ public class AdapterFilterName  extends RecyclerView.Adapter<AdapterFilterName.V
 
         @Override
         public void onClick(View v) {
-            adapterStoreCatlogDetail.onItemHolderClick(ViewHolder.this);
+            adapterFilterName.onItemHolderClick(ViewHolder.this);
         }
     }
 

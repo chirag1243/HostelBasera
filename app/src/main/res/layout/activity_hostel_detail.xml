@@ -28,15 +28,14 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="@dimen/dim_8dp">
+                android:orientation="vertical">
 
                 <android.support.v7.widget.CardView
                     cardCornerRadius="@dimen/dim_5dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/dim_12dp"
-                    android:layout_marginRight="@dimen/dim_12dp"
+                    android:layout_marginLeft="@dimen/dim_20dp"
+                    android:layout_marginRight="@dimen/dim_20dp"
                     android:layout_marginTop="@dimen/dim_200dp">
 
                     <LinearLayout
@@ -84,7 +83,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="@dimen/dim_5dp"
-                        android:layout_marginLeft="@dimen/dim_12dp"
+                        android:layout_marginLeft="@dimen/dim_20dp"
                         android:layout_marginRight="@dimen/dim_5dp"
                         android:layout_weight="1">
 
@@ -121,7 +120,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="@dimen/dim_5dp"
                         android:layout_marginLeft="@dimen/dim_5dp"
-                        android:layout_marginRight="@dimen/dim_12dp"
+                        android:layout_marginRight="@dimen/dim_20dp"
                         android:layout_weight="1">
 
                         <LinearLayout
@@ -155,8 +154,8 @@
                     cardCornerRadius="@dimen/dim_5dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/dim_12dp"
-                    android:layout_marginRight="@dimen/dim_12dp"
+                    android:layout_marginLeft="@dimen/dim_20dp"
+                    android:layout_marginRight="@dimen/dim_20dp"
                     android:layout_marginTop="@dimen/dim_12dp">
 
                     <LinearLayout
@@ -214,8 +213,8 @@
                     cardCornerRadius="@dimen/dim_5dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/dim_12dp"
-                    android:layout_marginRight="@dimen/dim_12dp"
+                    android:layout_marginLeft="@dimen/dim_20dp"
+                    android:layout_marginRight="@dimen/dim_20dp"
                     android:layout_marginTop="@dimen/dim_12dp">
 
                     <LinearLayout
@@ -253,8 +252,8 @@
                     cardCornerRadius="@dimen/dim_5dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/dim_12dp"
-                    android:layout_marginRight="@dimen/dim_12dp"
+                    android:layout_marginLeft="@dimen/dim_20dp"
+                    android:layout_marginRight="@dimen/dim_20dp"
                     android:layout_marginTop="@dimen/dim_12dp">
 
                     <LinearLayout
@@ -286,6 +285,7 @@
                 </android.support.v7.widget.CardView>
 
                 <FrameLayout
+                    android:id="@+id/fl_review"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/dim_12dp">
@@ -294,16 +294,16 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@color/white"
-                        android:paddingRight="@dimen/dim_12dp"
-                        android:paddingLeft="@dimen/dim_12dp"
-                        android:paddingTop="@dimen/dim_12dp"
+                        android:orientation="vertical"
                         android:paddingBottom="@dimen/dim_24dp"
-                        android:orientation="vertical">
+                        android:paddingLeft="@dimen/dim_12dp"
+                        android:paddingRight="@dimen/dim_12dp"
+                        android:paddingTop="@dimen/dim_12dp">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="User Reviews"
+                            android:text="@string/user_reviews"
                             android:textColor="@color/colorPrimary"
                             android:textSize="@dimen/dim_text16" />
 
@@ -313,72 +313,20 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/dim_5dp"
                             android:text="120 Verified Reviews"
-                            android:textStyle="bold"
                             android:textColor="@color/colorPrimary"
-                            android:textSize="@dimen/dim_text14" />
+                            android:textSize="@dimen/dim_text14"
+                            android:textStyle="bold" />
                     </LinearLayout>
 
-                    <android.support.v7.widget.CardView
-                        cardCornerRadius="@dimen/dim_8dp"
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/rv_review"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginRight="@dimen/dim_15dp"
-                        android:layout_marginLeft="@dimen/dim_15dp"
-                        android:layout_marginTop="@dimen/dim_70dp"
-                        android:layout_marginBottom="@dimen/dim_3dp">
+                        android:layout_height="match_parent"
+                        android:layout_marginTop="@dimen/dim_65dp"
+                        android:nestedScrollingEnabled="false"
+                        android:orientation="horizontal"
+                        android:visibility="visible" />
 
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:background="@color/white"
-                            android:orientation="vertical"
-                            android:padding="@dimen/dim_12dp">
-
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content">
-
-                                <TextView
-                                    android:id="@+id/tv_user_name"
-                                    android:layout_width="0dp"
-                                    android:layout_weight="1"
-                                    android:layout_height="wrap_content"
-                                    android:text="Chirag Gandhi"
-                                    android:textStyle="bold"
-                                    android:textColor="@color/colorAccent"
-                                    android:textSize="@dimen/dim_text13" />
-
-                                <TextView
-                                    android:id="@+id/tv_rating"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="4 / 5"
-                                    android:padding="@dimen/dim_5dp"
-                                    android:background="@drawable/rounded_rating"
-                                    android:textColor="@color/white"
-                                    android:textSize="@dimen/dim_text12" />
-                            </LinearLayout>
-
-
-                            <TextView
-                                android:id="@+id/tv_review"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="@dimen/dim_5dp"
-                                android:text="Awesome Hostel"
-                                android:textColor="@color/colorPrimary"
-                                android:textSize="@dimen/dim_text12" />
-
-                            <TextView
-                                android:id="@+id/tv_review_date"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="end"
-                                android:text="Aug 15, 2018"
-                                android:textColor="@color/colorPrimary"
-                                android:textSize="@dimen/dim_text12" />
-                        </LinearLayout>
-                    </android.support.v7.widget.CardView>
                 </FrameLayout>
 
                 <Button
@@ -388,15 +336,13 @@
                     android:layout_marginLeft="@dimen/dim_12dp"
                     android:layout_marginRight="@dimen/dim_12dp"
                     android:layout_marginTop="@dimen/dim_12dp"
+                    android:layout_marginBottom="@dimen/dim_12dp"
                     android:background="@color/colorAccent"
                     android:text="@string/book_now"
                     android:textAllCaps="true"
                     android:textColor="@color/white"
                     android:textSize="@dimen/dim_text16" />
-
             </LinearLayout>
-
-
         </FrameLayout>
     </android.support.v4.widget.NestedScrollView>
 
@@ -406,12 +352,14 @@
         android:background="@color/white"
         android:orientation="horizontal">
 
-        <TextView
+        <android.support.v7.widget.AppCompatTextView
             android:id="@+id/tv_bookmark"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:drawableTint="@color/border_light_gray"
             android:drawableTop="@drawable/footer_bookmark"
+            android:drawablePadding="@dimen/dim_5dp"
             android:gravity="center"
             android:padding="@dimen/dim_12dp"
             android:text="@string/bookmark"
@@ -424,6 +372,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:drawableTop="@drawable/footer_edit"
+            android:drawablePadding="@dimen/dim_5dp"
             android:gravity="center"
             android:padding="@dimen/dim_12dp"
             android:text="@string/review"
@@ -436,6 +385,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:drawableTop="@drawable/nav_feedback"
+            android:drawablePadding="@dimen/dim_5dp"
             android:gravity="center"
             android:padding="@dimen/dim_12dp"
             android:text="@string/enquiry"

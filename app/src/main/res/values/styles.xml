@@ -108,4 +108,9 @@
         <item name="android:windowExitAnimation">@android:anim/fade_out</item>
     </style>
 
+    <style name="MyEnquiryAlertDialogStyle" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="android:windowAnimationStyle">@style/MyDialogSlideVerticalAnimation</item>
+    </style>
+
+
 </resources>

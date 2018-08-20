@@ -89,5 +89,10 @@ public class Constant {
     public static final String AddReviewData = "addReviewData";
     public static final String Review = "review";
     public static final String Rating = "rating";
+    public static final String Description = "description";
+    public static final String Is_remove = "is_remove";
+
+    public static final String GetPropertyReviewData = "getPropertyReviewData";
+
 
 }

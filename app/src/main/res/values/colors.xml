@@ -2,7 +2,7 @@
 <resources>
     <color name="colorPrimary">#4d4772</color>
     <color name="colorPrimaryDark">#4d4772</color>
-    <color name="colorAccent">#b0db02</color> //BABAC7
+    <color name="colorAccent">#91b402</color> //#b0db02
 
     <!-- <color name="holo_red_dark">#ffcc0000</color>-->
 
@@ -28,6 +28,6 @@
     <color name="filter_name_bg">#ebebeb</color>
 
     <color name="dialog_bg">#4d4772</color>
-
+    <color name="transparent">#00000000</color>
 
 </resources>
