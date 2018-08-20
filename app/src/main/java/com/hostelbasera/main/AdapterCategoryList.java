@@ -92,7 +92,7 @@ public class AdapterCategoryList extends RecyclerView.Adapter<AdapterCategoryLis
             tvLocation.setText("" + mItem.city_name);
 
             //TODO : Set As per required
-            simpleRatingBar.setRating(3.5f);
+            simpleRatingBar.setRating(3);
 
             imgPlaceHolder.setVisibility(View.VISIBLE);
 

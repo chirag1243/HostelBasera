@@ -79,9 +79,24 @@ public class PropertyDetailModel implements Serializable {
         public String property_type;
         @SerializedName("property_category_name")
         public String property_category_name;
+
+        @SerializedName("propertyReviewdetails")
+        public ArrayList<PropertyReviewDetails> propertyReviewDetails;
     }
 
-    public static class PropertyFacility {
+    public static class PropertyReviewDetails {
+        @SerializedName("review")
+        public String review;
+        @SerializedName("date")
+        public String date;
+        @SerializedName("user_name")
+        public String user_name;
+        @SerializedName("rating")
+        public float rating;
+
+    }
+
+    public static class PropertyFacility  {
         @SerializedName("facility_icon_img")
         public String facility_icon_img;
         @SerializedName("facility_name")

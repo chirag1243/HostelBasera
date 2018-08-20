@@ -62,7 +62,7 @@ public class HostelDetailActivity extends BaseActivity implements RatingDialogLi
     TextView tvPrice;
     @BindView(R.id.tv_bookmark)
     TextView tvBookmark;
-    @BindView(R.id.tv_review)
+    @BindView(R.id.tv_review_rating)
     TextView tvReview;
     @BindView(R.id.tv_enquiry)
     TextView tvRate;
@@ -252,7 +252,7 @@ public class HostelDetailActivity extends BaseActivity implements RatingDialogLi
         Toaster.shortToast("Enquiry");
     }
 
-    @OnClick(R.id.tv_review)
+    @OnClick(R.id.tv_review_rating)
     public void onTvReviewClicked() {
         new AppRatingDialog.Builder()
                 .setPositiveButtonText("Submit")
@@ -275,7 +275,6 @@ public class HostelDetailActivity extends BaseActivity implements RatingDialogLi
                 .setWindowAnimation(R.style.MyDialogSlideVerticalAnimation)
                 .create(HostelDetailActivity.this)
                 .show();
-
     }
 
     @Override
