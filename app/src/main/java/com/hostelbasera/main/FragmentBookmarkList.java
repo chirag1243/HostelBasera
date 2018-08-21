@@ -39,7 +39,6 @@ public class FragmentBookmarkList extends Fragment {
     Globals globals;
 
     BookmarkDetailModel bookmarkDetailModel;
-    ArrayList<BookmarkDetailModel.BookmarkDetails> arrBookmarkDetailsArrayList;
     AdapterBookmarkList adapterBookmarkList;
 
     public static FragmentBookmarkList newInstance(/*AllCategoriesDetailModel model*/) {
@@ -59,7 +58,6 @@ public class FragmentBookmarkList extends Fragment {
     @SuppressLint("SetTextI18n")
     private void init() {
         globals = ((Globals) getContext().getApplicationContext());
-        arrBookmarkDetailsArrayList = new ArrayList<>();
 
         if (Globals.isNetworkAvailable(getActivity())) {
             getBookmarkData();
@@ -97,7 +95,7 @@ public class FragmentBookmarkList extends Fragment {
         if (adapterBookmarkList == null) {
             adapterBookmarkList = new AdapterBookmarkList(getActivity());
         }
-        adapterBookmarkList.doRefresh(arrBookmarkDetailsArrayList);
+        adapterBookmarkList.doRefresh(bookmarkDetailModel.BookmarkDetails);
 
         if (rvBookmarkList.getAdapter() == null) {
             rvBookmarkList.setHasFixedSize(false);
@@ -109,7 +107,7 @@ public class FragmentBookmarkList extends Fragment {
         adapterBookmarkList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                startActivity(new Intent(getActivity(), HostelDetailActivity.class).putExtra(Constant.Property_id, arrBookmarkDetailsArrayList.get(position).property_id));
+                startActivity(new Intent(getActivity(), HostelDetailActivity.class).putExtra(Constant.Property_id, bookmarkDetailModel.BookmarkDetails.get(position).property_id));
             }
         });
     }

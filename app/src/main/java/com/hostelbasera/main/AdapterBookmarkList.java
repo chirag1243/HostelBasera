@@ -20,9 +20,17 @@ import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
+import com.google.gson.Gson;
 import com.hostelbasera.R;
+import com.hostelbasera.apis.HttpRequestHandler;
+import com.hostelbasera.apis.PostRequest;
 import com.hostelbasera.model.BookmarkDetailModel;
 import com.hostelbasera.model.GetPropertyDetailModel;
+import com.hostelbasera.model.PropertyDetailModel;
+import com.hostelbasera.utility.Globals;
+import com.hostelbasera.utility.Toaster;
+
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 
@@ -46,7 +54,7 @@ public class AdapterBookmarkList extends RecyclerView.Adapter<AdapterBookmarkLis
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.category_list_item, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.bookmark_item, parent, false);
         return new ViewHolder(view, this);
     }
 
@@ -65,10 +73,10 @@ public class AdapterBookmarkList extends RecyclerView.Adapter<AdapterBookmarkLis
         RatingBar simpleRatingBar;
         @BindView(R.id.tv_location)
         TextView tvLocation;
-        @BindView(R.id.vw_right_border)
-        View vwRightBorder;
         @BindView(R.id.vw_bottom_border)
         View vwBottomBorder;
+        @BindView(R.id.img_delete)
+        ImageView imgDelete;
 
         ViewHolder(View itemView, AdapterBookmarkList adapterBookmarkList) {
             super(itemView);
@@ -80,18 +88,17 @@ public class AdapterBookmarkList extends RecyclerView.Adapter<AdapterBookmarkLis
         @SuppressLint("SetTextI18n")
         void setDataToView(BookmarkDetailModel.BookmarkDetails mItem, ViewHolder holder, int position) {
 
-            vwRightBorder.setVisibility(View.GONE);
-
             tvName.setText("" + mItem.property_name);
             tvName.setTypeface(tvName.getTypeface(), Typeface.BOLD);
-            tvPrice.setText("₹ " + mItem.price);
+            tvPrice.setText("₹ 1800" + mItem.price); //TODO : Remove price
             tvPrice.setTypeface(tvPrice.getTypeface(), Typeface.BOLD);
             tvLocation.setText("" + mItem.city_name);
 
             //TODO : Set As per required
             simpleRatingBar.setRating(3);
 
-            imgPlaceHolder.setVisibility(View.VISIBLE);
+            //TODO : Remove comment
+            /*imgPlaceHolder.setVisibility(View.VISIBLE);
 
             Glide.with(mContext)
                     .load(mContext.getString(R.string.image_url) + mItem.image).apply(new RequestOptions().dontAnimate())
@@ -107,13 +114,44 @@ public class AdapterBookmarkList extends RecyclerView.Adapter<AdapterBookmarkLis
                             return false;
                         }
                     })
-                    .into(holder.imgProduct);
+                    .into(holder.imgProduct);*/
+
+            imgDelete.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onRemoveBookmarkClicked(position);
+                }
+            });
 
         }
 
         @Override
         public void onClick(View v) {
             adapterBookmarkList.onItemHolderClick(ViewHolder.this);
+        }
+    }
+
+    private void onRemoveBookmarkClicked(int position) {
+        JSONObject postData = HttpRequestHandler.getInstance().getAddBookmarkParam(mValues.get(position).property_id, true);
+
+        if (postData != null) {
+
+            new PostRequest(mContext, mContext.getString(R.string.addBookmark), postData, true, new PostRequest.OnPostServiceCallListener() {
+                @Override
+                public void onSucceedToPostCall(JSONObject response) {
+                    PropertyDetailModel propertyDetailModel = new Gson().fromJson(response.toString(), PropertyDetailModel.class);
+                    if (propertyDetailModel.status == 0) {
+                        mValues.remove(position);
+                        notifyDataSetChanged();
+                    }
+                    Toaster.shortToast(propertyDetailModel.message);
+                }
+
+                @Override
+                public void onFailedToPostCall(int statusCode, String msg) {
+                    Toaster.shortToast(msg);
+                }
+            }).execute();
         }
     }
 

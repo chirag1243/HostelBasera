@@ -42,6 +42,7 @@
                         android:contentDescription="@string/app_name"
                         android:src="@drawable/logo"
                         android:visibility="gone" />
+
                 </FrameLayout>
 
                 <TextView
@@ -49,7 +50,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/dim_5dp"
-                    android:layout_marginTop="@dimen/dim_5dp"
                     android:text="₹ 1500"
                     android:textColor="@color/colorAccent"
                     android:textSize="@dimen/dim_text16"
