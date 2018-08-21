@@ -90,16 +90,14 @@ public class AdapterBookmarkList extends RecyclerView.Adapter<AdapterBookmarkLis
 
             tvName.setText("" + mItem.property_name);
             tvName.setTypeface(tvName.getTypeface(), Typeface.BOLD);
-            tvPrice.setText("₹ 1800" + mItem.price); //TODO : Remove price
+            tvPrice.setText("₹ " + mItem.price);
             tvPrice.setTypeface(tvPrice.getTypeface(), Typeface.BOLD);
             tvLocation.setText("" + mItem.city_name);
 
             //TODO : Set As per required
             simpleRatingBar.setRating(3);
 
-            //TODO : Remove comment
-            /*imgPlaceHolder.setVisibility(View.VISIBLE);
-
+            imgPlaceHolder.setVisibility(View.VISIBLE);
             Glide.with(mContext)
                     .load(mContext.getString(R.string.image_url) + mItem.image).apply(new RequestOptions().dontAnimate())
                     .listener(new RequestListener<Drawable>() {
@@ -114,7 +112,7 @@ public class AdapterBookmarkList extends RecyclerView.Adapter<AdapterBookmarkLis
                             return false;
                         }
                     })
-                    .into(holder.imgProduct);*/
+                    .into(holder.imgProduct);
 
             imgDelete.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -122,7 +120,6 @@ public class AdapterBookmarkList extends RecyclerView.Adapter<AdapterBookmarkLis
                     onRemoveBookmarkClicked(position);
                 }
             });
-
         }
 
         @Override
