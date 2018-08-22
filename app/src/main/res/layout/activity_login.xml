@@ -80,7 +80,7 @@
             android:hint="@string/email"
             android:inputType="textEmailAddress"
             android:backgroundTint="@android:color/white"
-            android:textColor="@color/colorAccent"
+            android:textColor="@color/white"
             android:textColorHint="@color/colorAccent" />
 
         <android.support.v7.widget.AppCompatEditText
@@ -95,7 +95,7 @@
             android:hint="@string/password"
             android:inputType="textPassword"
             android:backgroundTint="@android:color/white"
-            android:textColor="@color/colorAccent"
+            android:textColor="@color/white"
             android:textColorHint="@color/colorAccent" />
 
         <Button
@@ -108,6 +108,7 @@
             android:layout_marginTop="@dimen/dim_15dp"
             android:background="@drawable/rounded_sign_in_bg"
             android:padding="@dimen/dim_10dp"
+            android:textSize="@dimen/dim_text16"
             android:text="@string/sign_in"
             android:textAllCaps="true"
             android:textColor="@color/colorPrimary"

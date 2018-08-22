@@ -292,6 +292,7 @@ public class FragmentHome extends Fragment implements Paginate.Callbacks, SwipeR
                         .setLoadingListItemSpanSizeLookup(() -> Constant.GRID_SPAN)
                         .build();
             }
+            rvHostel.getLayoutManager().smoothScrollToPosition(rvHostel,new RecyclerView.State(), rvHostel.getAdapter().getItemCount());
         }
 
         adapterHomePropertyDetail.setOnItemClickListener(new AdapterView.OnItemClickListener() {

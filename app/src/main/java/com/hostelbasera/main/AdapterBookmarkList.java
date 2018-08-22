@@ -97,8 +97,7 @@ public class AdapterBookmarkList extends RecyclerView.Adapter<AdapterBookmarkLis
             //TODO : Set As per required
             simpleRatingBar.setRating(3);
 
-            //TODO : Remove comment
-            /*imgPlaceHolder.setVisibility(View.VISIBLE);
+            imgPlaceHolder.setVisibility(View.VISIBLE);
 
             Glide.with(mContext)
                     .load(mContext.getString(R.string.image_url) + mItem.image).apply(new RequestOptions().dontAnimate())
@@ -114,7 +113,7 @@ public class AdapterBookmarkList extends RecyclerView.Adapter<AdapterBookmarkLis
                             return false;
                         }
                     })
-                    .into(holder.imgProduct);*/
+                    .into(holder.imgProduct);
 
             imgDelete.setOnClickListener(new View.OnClickListener() {
                 @Override

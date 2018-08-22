@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v7.widget.AppCompatEditText;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
@@ -49,6 +50,8 @@ public class SignUpActivity extends BaseActivity {
 
     boolean isSeller;
     Globals globals;
+    @BindView(R.id.ll_sign_up)
+    LinearLayout llSignUp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -131,4 +134,10 @@ public class SignUpActivity extends BaseActivity {
         }
         Globals.hideKeyboard(this);
     }
+
+    @OnClick(R.id.ll_sign_up)
+    public void onViewClicked() {
+        Globals.hideKeyboard(this);
+    }
+
 }

@@ -163,7 +163,7 @@ public class DashboardActivity extends BaseActivity implements NavigationView.On
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.nav_pg_hostel:
-                setToolbarTitle(R.string.pg_hostel);
+                setToolbarTitle(R.string.find_your_hostel);
                 setFragment(new FragmentHome());
                 break;
             case R.id.nav_bookmarks:

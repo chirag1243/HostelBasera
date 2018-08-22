@@ -1,48 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/ll_sign_up"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/login_bg"
-    android:gravity="bottom"
+    android:background="@drawable/signup_bg"
     android:orientation="vertical"
     tools:context=".main.SignUpActivity">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="0.7"
-        android:gravity="bottom"
-        android:orientation="vertical">
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:src="@drawable/logo" />
-    </LinearLayout>
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="@dimen/dim_10dp"
+        android:src="@drawable/logo"
+        tools:ignore="ContentDescription" />
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1.3">
+        android:layout_marginLeft="@dimen/dim_30dp"
+        android:layout_marginRight="@dimen/dim_30dp"
+        android:layout_marginTop="@dimen/dim_30dp"
+        android:layout_weight="1"
+        android:scrollbars="none">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/dim_20dp"
-            android:layout_marginLeft="@dimen/dim_40dp"
-            android:layout_marginRight="@dimen/dim_40dp"
-            android:layout_marginTop="@dimen/dim_30dp"
-            android:gravity="top"
-            android:orientation="vertical"
-            android:paddingTop="@dimen/dim_20dp">
+            android:layout_gravity="center"
+            android:orientation="vertical">
 
             <info.hoang8f.android.segmented.SegmentedGroup xmlns:segmentedgroup="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/segmented_group"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dim_30dp"
                 android:background="@android:color/transparent"
                 android:gravity="center"
                 android:orientation="horizontal"
@@ -81,7 +74,7 @@
                 android:layout_marginTop="@dimen/dim_10dp"
                 android:backgroundTint="@color/white"
                 android:hint="@string/name"
-                android:textColor="@color/colorAccent"
+                android:textColor="@color/white"
                 android:textColorHint="@color/colorAccent">
 
                 <android.support.v7.widget.AppCompatEditText
@@ -90,7 +83,7 @@
                     android:layout_height="wrap_content"
                     android:backgroundTint="@color/white"
                     android:inputType="text"
-                    android:textColor="@color/colorAccent" />
+                    android:textColor="@color/white" />
             </android.support.design.widget.TextInputLayout>
 
             <android.support.design.widget.TextInputLayout
@@ -99,7 +92,7 @@
                 android:layout_marginTop="@dimen/dim_10dp"
                 android:backgroundTint="@color/white"
                 android:hint="@string/email"
-                android:textColor="@color/colorAccent"
+                android:textColor="@color/white"
                 android:textColorHint="@color/colorAccent">
 
                 <android.support.v7.widget.AppCompatEditText
@@ -108,7 +101,7 @@
                     android:layout_height="wrap_content"
                     android:backgroundTint="@android:color/white"
                     android:inputType="textEmailAddress"
-                    android:textColor="@color/colorAccent" />
+                    android:textColor="@color/white" />
             </android.support.design.widget.TextInputLayout>
 
             <android.support.design.widget.TextInputLayout
@@ -117,7 +110,7 @@
                 android:layout_marginTop="@dimen/dim_10dp"
                 android:backgroundTint="@color/white"
                 android:hint="@string/password"
-                android:textColor="@color/colorAccent"
+                android:textColor="@color/white"
                 android:textColorHint="@color/colorAccent">
 
                 <android.support.v7.widget.AppCompatEditText
@@ -126,7 +119,7 @@
                     android:layout_height="wrap_content"
                     android:backgroundTint="@android:color/white"
                     android:inputType="textPassword"
-                    android:textColor="@color/colorAccent" />
+                    android:textColor="@color/white" />
             </android.support.design.widget.TextInputLayout>
 
             <android.support.design.widget.TextInputLayout
@@ -135,7 +128,7 @@
                 android:layout_marginTop="@dimen/dim_10dp"
                 android:backgroundTint="@color/white"
                 android:hint="@string/mobile_no"
-                android:textColor="@color/colorAccent"
+                android:textColor="@color/white"
                 android:textColorHint="@color/colorAccent">
 
                 <android.support.v7.widget.AppCompatEditText
@@ -144,7 +137,7 @@
                     android:layout_height="wrap_content"
                     android:backgroundTint="@android:color/white"
                     android:inputType="phone"
-                    android:textColor="@color/colorAccent" />
+                    android:textColor="@color/white" />
             </android.support.design.widget.TextInputLayout>
 
             <android.support.design.widget.TextInputLayout
@@ -153,7 +146,7 @@
                 android:layout_marginTop="@dimen/dim_10dp"
                 android:backgroundTint="@color/white"
                 android:hint="@string/address"
-                android:textColor="@color/colorAccent"
+                android:textColor="@color/white"
                 android:textColorHint="@color/colorAccent">
 
                 <android.support.v7.widget.AppCompatEditText
@@ -162,7 +155,7 @@
                     android:layout_height="wrap_content"
                     android:backgroundTint="@android:color/white"
                     android:inputType="textMultiLine"
-                    android:textColor="@color/colorAccent" />
+                    android:textColor="@color/white" />
             </android.support.design.widget.TextInputLayout>
 
             <Button
@@ -177,6 +170,7 @@
                 android:text="@string/sign_up"
                 android:textAllCaps="true"
                 android:textColor="@color/colorPrimary"
+                android:textSize="@dimen/dim_text16"
                 android:textStyle="bold" />
         </LinearLayout>
     </ScrollView>
