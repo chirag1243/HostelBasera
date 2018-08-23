@@ -52,6 +52,7 @@ dependencies {
     implementation 'com.stepstone.apprating:app-rating:2.2.0'
     implementation 'gun0912.ted:tedpermission:1.0.3'
     implementation 'info.hoang8f:android-segmented:1.0.6'
+    implementation 'com.google.android.gms:play-services:12.0.1'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.6.0'
     implementation 'com.android.support:design:26.1.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.0.0'

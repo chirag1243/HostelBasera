@@ -31,6 +31,14 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.gson.Gson;
 import com.hostelbasera.R;
 import com.hostelbasera.apis.HttpRequestHandler;
@@ -58,7 +66,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class HostelDetailActivity extends BaseActivity implements RatingDialogListener {
+public class HostelDetailActivity extends BaseActivity implements RatingDialogListener, OnMapReadyCallback {
 
     @BindView(R.id.toolbar_title)
     TextView toolbarTitle;
@@ -168,6 +176,7 @@ public class HostelDetailActivity extends BaseActivity implements RatingDialogLi
         tvSizeOfProperty.setText(propertyDetails.property_size);
         tvPrice.setText("₹ " + propertyDetails.price);
 
+
         is_bookmark_remove = propertyDetails.isBookMark;
         tintViewDrawable();
         if (propertyDetails.propertyReviewDetails != null && !propertyDetails.propertyReviewDetails.isEmpty()) {
@@ -179,6 +188,32 @@ public class HostelDetailActivity extends BaseActivity implements RatingDialogLi
         setHostelFor();
         setImagePager();
         setAmenitiesAdapter();
+        if (propertyDetails.latitude != null && !propertyDetails.latitude.isEmpty()) {
+            SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
+            mapFragment.getMapAsync(this);
+        }
+    }
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        try {
+            LatLng latLng = new LatLng(Double.parseDouble(propertyDetails.latitude), Double.parseDouble(propertyDetails.longitude));
+            googleMap.addMarker(new MarkerOptions().position(latLng)
+                    .title(propertyDetails.property_name)
+                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.location)));
+
+
+            googleMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+
+            CameraPosition cameraPosition = new CameraPosition.Builder().target(latLng).zoom(15).build();
+
+            googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+
+            googleMap.getUiSettings().setZoomControlsEnabled(true);
+            googleMap.getUiSettings().setZoomGesturesEnabled(false);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void tintViewDrawable() {
@@ -485,4 +520,6 @@ public class HostelDetailActivity extends BaseActivity implements RatingDialogLi
     public void onViewClicked() {
         Toaster.shortToast("Book Now");
     }
+
+
 }

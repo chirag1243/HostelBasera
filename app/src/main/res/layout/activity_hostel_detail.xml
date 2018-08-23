@@ -50,6 +50,13 @@
                             android:layout_width="match_parent"
                             android:layout_height="@dimen/dim_220dp"/>-->
 
+                        <fragment
+                            android:id="@+id/map"
+                            android:name="com.google.android.gms.maps.SupportMapFragment"
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/dim_220dp"
+                            android:layout_gravity="center" />
+
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -333,10 +340,10 @@
                     android:id="@+id/btn_book_now"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/dim_12dp"
                     android:layout_marginLeft="@dimen/dim_12dp"
                     android:layout_marginRight="@dimen/dim_12dp"
                     android:layout_marginTop="@dimen/dim_12dp"
-                    android:layout_marginBottom="@dimen/dim_12dp"
                     android:background="@color/colorAccent"
                     android:text="@string/book_now"
                     android:textAllCaps="true"
@@ -357,9 +364,9 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:drawablePadding="@dimen/dim_5dp"
             android:drawableTint="@color/border_light_gray"
             android:drawableTop="@drawable/footer_bookmark"
-            android:drawablePadding="@dimen/dim_5dp"
             android:gravity="center"
             android:padding="@dimen/dim_12dp"
             android:text="@string/bookmark"
@@ -371,8 +378,8 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:drawableTop="@drawable/footer_edit"
             android:drawablePadding="@dimen/dim_5dp"
+            android:drawableTop="@drawable/footer_edit"
             android:gravity="center"
             android:padding="@dimen/dim_12dp"
             android:text="@string/review"
@@ -384,8 +391,8 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:drawableTop="@drawable/nav_feedback"
             android:drawablePadding="@dimen/dim_5dp"
+            android:drawableTop="@drawable/nav_feedback"
             android:gravity="center"
             android:padding="@dimen/dim_12dp"
             android:text="@string/enquiry"
