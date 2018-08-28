@@ -75,5 +75,7 @@ public class BookmarkDetailModel implements Serializable {
         @SerializedName("image")
         public String image;
 
+        @SerializedName("rating")
+        public int rating;
     }
 }

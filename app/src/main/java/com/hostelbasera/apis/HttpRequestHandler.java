@@ -267,17 +267,7 @@ public class HttpRequestHandler {
         return params;
     }
 
-    /*
-       {
-       "token":"si0d3lRh4Of7ld03l",
-       "deviceType":1,
-       "user_id":2,
-       "getPropertyReviewData":{
-               "property_id":13
-           }
-   }
 
-        */
     public JSONObject getPropertyReviewDataParam(int property_id) {
         JSONObject params = new JSONObject();
         JSONObject jsonObject = new JSONObject();
@@ -285,6 +275,21 @@ public class HttpRequestHandler {
             params = setDefaultParameters();
             jsonObject.put(Constant.Property_id, property_id);
             params.put(Constant.GetPropertyReviewData, jsonObject);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return params;
+    }
+
+
+    public JSONObject getAddOrderDataParam(int property_id) {
+        JSONObject params = new JSONObject();
+        JSONObject jsonObject = new JSONObject();
+        try {
+            params = setDefaultParameters();
+            jsonObject.put(Constant.Property_id, property_id);
+            jsonObject.put(Constant.User_id, globals.getUserId());
+            params.put(Constant.AddOrderData, jsonObject);
         } catch (Exception e) {
             e.printStackTrace();
         }

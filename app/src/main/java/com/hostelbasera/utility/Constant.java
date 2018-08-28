@@ -94,5 +94,7 @@ public class Constant {
 
     public static final String GetPropertyReviewData = "getPropertyReviewData";
 
+    public static final String AddOrderData = "addOrderData";
+
 
 }

@@ -174,8 +174,12 @@ public class HostelDetailActivity extends BaseActivity implements RatingDialogLi
         tvAddress.setText(propertyDetails.address);
         tvTypeOfProperty.setText(propertyDetails.property_type);
         tvSizeOfProperty.setText(propertyDetails.property_size);
-        tvPrice.setText("₹ " + propertyDetails.price);
 
+        if (propertyDetails.price != null && !propertyDetails.price.isEmpty() && !propertyDetails.price.equals("0")) {
+            tvPrice.setText("₹ " + propertyDetails.price);
+        } else {
+            btnBookNow.setVisibility(View.GONE);
+        }
 
         is_bookmark_remove = propertyDetails.isBookMark;
         tintViewDrawable();
@@ -518,8 +522,31 @@ public class HostelDetailActivity extends BaseActivity implements RatingDialogLi
 
     @OnClick(R.id.btn_book_now)
     public void onViewClicked() {
-        Toaster.shortToast("Book Now");
-    }
+        if (!Globals.isNetworkAvailable(this)) {
+            Toaster.shortToast(R.string.no_internet_msg);
+            return;
+        }
+        JSONObject postData = HttpRequestHandler.getInstance().getAddOrderDataParam(property_id);
+        if (postData != null) {
 
+            new PostRequest(this, getString(R.string.addOrder), postData, true, new PostRequest.OnPostServiceCallListener() {
+                @Override
+                public void onSucceedToPostCall(JSONObject response) {
+                    PropertyReviewModel propertyReviewModel = new Gson().fromJson(response.toString(), PropertyReviewModel.class);
+                    Toaster.shortToast(propertyReviewModel.message);
+
+                    if (propertyReviewModel.status == 0) {
+                        finish();
+                    }
+                }
+
+                @Override
+                public void onFailedToPostCall(int statusCode, String msg) {
+                    Toaster.shortToast(msg);
+                }
+            }).execute();
+        }
+        Globals.hideKeyboard(this);
+    }
 
 }

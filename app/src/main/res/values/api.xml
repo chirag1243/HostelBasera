@@ -18,4 +18,6 @@
     <string name="addInquiry">user/addInquiry</string>
     <string name="getBookmarkData">user/getBookmarkData</string>
 
+    <string name="addOrder">user/addOrder</string>
+
 </resources>

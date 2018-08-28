@@ -46,6 +46,7 @@ dependencies {
     implementation 'com.orhanobut:logger:2.1.1'
     implementation 'me.shaohui:bottomdialog:1.1.9'
     implementation 'de.hdodenhof:circleimageview:2.2.0'
+    implementation 'com.github.alirezaashrafi:GoogleMapView:1.0.4'
     implementation 'com.bogdwellers:pinchtozoom:0.1'
     implementation 'com.victor:lib:1.0.4'
     implementation 'uk.co.chrisjenx:calligraphy:2.3.0'

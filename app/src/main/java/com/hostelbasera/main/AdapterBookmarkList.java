@@ -94,8 +94,7 @@ public class AdapterBookmarkList extends RecyclerView.Adapter<AdapterBookmarkLis
             tvPrice.setTypeface(tvPrice.getTypeface(), Typeface.BOLD);
             tvLocation.setText("" + mItem.city_name);
 
-            //TODO : Set As per required
-            simpleRatingBar.setRating(3);
+            simpleRatingBar.setRating(mItem.rating);
 
             imgPlaceHolder.setVisibility(View.VISIBLE);
 
