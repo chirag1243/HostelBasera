@@ -81,8 +81,7 @@ public class AdapterHomePropertyDetail extends RecyclerView.Adapter<AdapterHomeP
             tvPrice.setTypeface(tvPrice.getTypeface(), Typeface.BOLD);
             tvLocation.setText("" + mItem.city_name);
 
-            //TODO : Set As per required
-            simpleRatingBar.setRating(3.5f);
+            simpleRatingBar.setRating(mItem.rating);
 
             imgPlaceHolder.setVisibility(View.VISIBLE);
 

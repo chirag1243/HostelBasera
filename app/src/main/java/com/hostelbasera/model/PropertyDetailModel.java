@@ -16,7 +16,7 @@ public class PropertyDetailModel implements Serializable {
     @SerializedName("is_valid_token")
     public boolean is_valid_token;
 
-    public static class PropertyDetails {
+    public static class PropertyDetails implements Serializable{
         @SerializedName("propertyFacility")
         public ArrayList<PropertyFacility> propertyFacility;
         @SerializedName("productImages")
@@ -85,9 +85,12 @@ public class PropertyDetailModel implements Serializable {
 
         @SerializedName("isBookMark")
         public boolean isBookMark;
+
+        @SerializedName("rating")
+        public int rating;
     }
 
-    public static class PropertyReviewDetails {
+    public static class PropertyReviewDetails implements Serializable{
         @SerializedName("review")
         public String review;
         @SerializedName("date")
@@ -99,7 +102,7 @@ public class PropertyDetailModel implements Serializable {
 
     }
 
-    public static class PropertyFacility  {
+    public static class PropertyFacility  implements Serializable{
         @SerializedName("facility_icon_img")
         public String facility_icon_img;
         @SerializedName("facility_name")

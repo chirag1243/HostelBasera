@@ -78,5 +78,8 @@ public class GetPropertyDetailModel implements Serializable {
 
         @SerializedName("city_name")
         public String city_name;
+
+        @SerializedName("rating")
+        public int rating;
     }
 }
