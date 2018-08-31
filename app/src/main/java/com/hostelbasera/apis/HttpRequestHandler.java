@@ -296,6 +296,19 @@ public class HttpRequestHandler {
         return params;
     }
 
+    public JSONObject getSearchDataParam(String search_text) {
+        JSONObject params = new JSONObject();
+        JSONObject jsonObject = new JSONObject();
+        try {
+            params = setDefaultParameters();
+            jsonObject.put(Constant.Searchtext, search_text);
+            params.put(Constant.GetSearchData, jsonObject);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return params;
+    }
+
     /*public JSONObject getLogoutUserParam() {
         JSONObject params = new JSONObject();
         JSONObject jsonObject = new JSONObject();

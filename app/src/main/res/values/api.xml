@@ -19,5 +19,5 @@
     <string name="getBookmarkData">user/getBookmarkData</string>
 
     <string name="addOrder">user/addOrder</string>
-
+    <string name="searchProperty">user/searchProperty</string>
 </resources>

@@ -96,5 +96,7 @@ public class Constant {
 
     public static final String AddOrderData = "addOrderData";
 
+    public static final String GetSearchData = "getSearchData";
+    public static final String Searchtext = "searchtext";
 
 }
