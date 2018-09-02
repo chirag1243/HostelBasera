@@ -172,15 +172,13 @@ public class DashboardActivity extends BaseActivity implements NavigationView.On
                 break;
             case R.id.nav_my_pg_hostel:
                 setToolbarTitle(R.string.my_pg_hostel);
-//                setFragment(new FragmentTransportList());
+                setFragment(new FragmentOrderList());
                 break;
             case R.id.nav_feedback:
                 setToolbarTitle(R.string.feedback);
-//                setFragment(new FragmentOrderList());
                 break;
             case R.id.nav_share_app:
                 setToolbarTitle(R.string.share_app);
-//                setFragment(new FragmentStockList());
                 break;
             case R.id.nav_sign_out:
                 doLogout();

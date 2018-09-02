@@ -50,10 +50,10 @@
                             android:layout_width="match_parent"
                             android:layout_height="@dimen/dim_220dp" />-->
 
-                        <com.alirezaashrafi.library.GoogleMapView
+                        <!--<com.alirezaashrafi.library.GoogleMapView
                             android:id="@+id/googleMapView"
                             android:layout_width="match_parent"
-                            android:layout_height="@dimen/dim_220dp" />
+                            android:layout_height="@dimen/dim_220dp" />-->
 
                        <!-- <com.google.android.maps.MapView
                             android:id="@+id/mapView"

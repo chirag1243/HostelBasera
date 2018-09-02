@@ -20,4 +20,6 @@
 
     <string name="addOrder">user/addOrder</string>
     <string name="searchProperty">user/searchProperty</string>
+
+    <string name="getOrderData">user/getOrderData</string>
 </resources>

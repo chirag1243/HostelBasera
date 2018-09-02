@@ -21,36 +21,36 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
 import com.hostelbasera.R;
-import com.hostelbasera.model.GetPropertyDetailModel;
+import com.hostelbasera.model.OrderDetailModel;
 
 import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class AdapterCategoryList extends RecyclerView.Adapter<AdapterCategoryList.ViewHolder> {
+public class AdapterOrderList extends RecyclerView.Adapter<AdapterOrderList.ViewHolder> {
 
-    private ArrayList<GetPropertyDetailModel.PropertyDetail> mValues;
+    private ArrayList<OrderDetailModel.OrderDetails> mValues;
     private final Context mContext;
     private AdapterView.OnItemClickListener onItemClickListener;
 
-    AdapterCategoryList(Context context) {
+    AdapterOrderList(Context context) {
         mContext = context;
     }
 
-    public void doRefresh(ArrayList<GetPropertyDetailModel.PropertyDetail> arrPropertyDetails) {
+    public void doRefresh(ArrayList<OrderDetailModel.OrderDetails> arrPropertyDetails) {
         mValues = arrPropertyDetails;
         notifyDataSetChanged();
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.category_list_item, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.order_item, parent, false);
         return new ViewHolder(view, this);
     }
 
     class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        private AdapterCategoryList adapterCategoryList;
+        private AdapterOrderList adapterOrderList;
 
         @BindView(R.id.img_product)
         ImageView imgProduct;
@@ -58,32 +58,22 @@ public class AdapterCategoryList extends RecyclerView.Adapter<AdapterCategoryLis
         ImageView imgPlaceHolder;
         @BindView(R.id.tv_name)
         TextView tvName;
-        @BindView(R.id.tv_price)
-        TextView tvPrice;
         @BindView(R.id.simpleRatingBar)
         RatingBar simpleRatingBar;
         @BindView(R.id.tv_location)
         TextView tvLocation;
-        @BindView(R.id.vw_right_border)
-        View vwRightBorder;
-        @BindView(R.id.vw_bottom_border)
-        View vwBottomBorder;
+        @BindView(R.id.tv_price)
+        TextView tvPrice;
 
-        ViewHolder(View itemView, AdapterCategoryList adapterCategoryList) {
+        ViewHolder(View itemView, AdapterOrderList adapterOrderList) {
             super(itemView);
-            this.adapterCategoryList = adapterCategoryList;
+            this.adapterOrderList = adapterOrderList;
             ButterKnife.bind(this, itemView);
             itemView.setOnClickListener(this);
         }
 
         @SuppressLint("SetTextI18n")
-        void setDataToView(GetPropertyDetailModel.PropertyDetail mItem, ViewHolder holder, int position) {
-
-            if (position % 2 == 0) {
-                vwRightBorder.setVisibility(View.VISIBLE);
-            } else {
-                vwRightBorder.setVisibility(View.GONE);
-            }
+        void setDataToView(OrderDetailModel.OrderDetails mItem, ViewHolder holder, int position) {
 
             tvName.setText("" + mItem.property_name);
             tvName.setTypeface(tvName.getTypeface(), Typeface.BOLD);
@@ -115,7 +105,7 @@ public class AdapterCategoryList extends RecyclerView.Adapter<AdapterCategoryLis
 
         @Override
         public void onClick(View v) {
-            adapterCategoryList.onItemHolderClick(ViewHolder.this);
+            adapterOrderList.onItemHolderClick(ViewHolder.this);
         }
     }
 
@@ -138,3 +128,4 @@ public class AdapterCategoryList extends RecyclerView.Adapter<AdapterCategoryLis
             onItemClickListener.onItemClick(null, holder.itemView, holder.getAdapterPosition(), holder.getItemId());
     }
 }
+

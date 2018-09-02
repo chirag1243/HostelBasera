@@ -309,6 +309,16 @@ public class HttpRequestHandler {
         return params;
     }
 
+    public JSONObject getOrderDataParam() {
+        JSONObject params = new JSONObject();
+        try {
+            params = setDefaultParameters();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return params;
+    }
+
     /*public JSONObject getLogoutUserParam() {
         JSONObject params = new JSONObject();
         JSONObject jsonObject = new JSONObject();
