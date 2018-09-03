@@ -2,11 +2,11 @@ package com.hostelbasera.main;
 
 import android.content.Intent;
 import android.graphics.PorterDuff;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -14,24 +14,29 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
-import com.bumptech.glide.load.DataSource;
-import com.bumptech.glide.load.engine.GlideException;
-import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
-import com.bumptech.glide.request.target.Target;
+import com.google.gson.Gson;
 import com.hostelbasera.R;
+import com.hostelbasera.apis.HttpRequestHandler;
+import com.hostelbasera.apis.PostRequest;
+import com.hostelbasera.model.PropertyDetailModel;
 import com.hostelbasera.utility.BaseActivity;
 import com.hostelbasera.utility.Globals;
 import com.hostelbasera.utility.Toaster;
+
+import org.json.JSONObject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -175,10 +180,12 @@ public class DashboardActivity extends BaseActivity implements NavigationView.On
                 setFragment(new FragmentOrderList());
                 break;
             case R.id.nav_feedback:
-                setToolbarTitle(R.string.feedback);
-                break;
+                onFeedbackClicked();
+                doCloseDrawer();
+                return false;
             case R.id.nav_share_app:
-                setToolbarTitle(R.string.share_app);
+//                setToolbarTitle(R.string.share_app);
+                Toaster.shortToast("Coming Soon");
                 break;
             case R.id.nav_sign_out:
                 doLogout();
@@ -189,6 +196,73 @@ public class DashboardActivity extends BaseActivity implements NavigationView.On
         doCloseDrawer();
         return true;
     }
+
+    public void onFeedbackClicked() {
+
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this, R.style.MyEnquiryAlertDialogStyle);
+        LayoutInflater inflater = this.getLayoutInflater();
+        View dialogView = inflater.inflate(R.layout.feedback_dialog, null);
+        dialogBuilder.setView(dialogView);
+
+        TextView tvTitle = dialogView.findViewById(R.id.tv_title);
+        EditText edtTitle = dialogView.findViewById(R.id.edt_title);
+        EditText edtDescription = dialogView.findViewById(R.id.edt_description);
+        TextView tvSubmit = dialogView.findViewById(R.id.tv_submit);
+        TextView tvCancel = dialogView.findViewById(R.id.tv_cancel);
+        AlertDialog alertDialog = dialogBuilder.create();
+
+        tvTitle.setTypeface(tvTitle.getTypeface(), Typeface.BOLD);
+        tvSubmit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (edtTitle.getText().toString().trim().isEmpty()) {
+                    Toaster.shortToast("Please write your title here ...");
+                    return;
+                }
+                if (edtDescription.getText().toString().trim().isEmpty()) {
+                    Toaster.shortToast("Please write your description here ...");
+                    return;
+                }
+                doGiveFeedback(edtTitle.getText().toString(), edtDescription.getText().toString());
+                alertDialog.dismiss();
+            }
+        });
+
+        tvCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertDialog.dismiss();
+            }
+        });
+
+        alertDialog.show();
+    }
+
+    private void doGiveFeedback(String title, String description) {
+        if (!Globals.isNetworkAvailable(this)) {
+            Toaster.shortToast(R.string.no_internet_msg);
+            return;
+        }
+
+        JSONObject postData = HttpRequestHandler.getInstance().getAddFeedbackDataParam(title, description);
+        if (postData != null) {
+
+            new PostRequest(this, getString(R.string.addFeedback), postData, true, new PostRequest.OnPostServiceCallListener() {
+                @Override
+                public void onSucceedToPostCall(JSONObject response) {
+                    PropertyDetailModel propertyDetailModel = new Gson().fromJson(response.toString(), PropertyDetailModel.class);
+                    Toaster.shortToast(propertyDetailModel.message);
+                }
+
+                @Override
+                public void onFailedToPostCall(int statusCode, String msg) {
+                    Toaster.shortToast(msg);
+                }
+            }).execute();
+        }
+        Globals.hideKeyboard(this);
+    }
+
 
     public void doLogout() {
         globals.setUserDetails(null);

@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.AdapterView;
@@ -19,11 +18,13 @@ import com.google.gson.Gson;
 import com.hostelbasera.R;
 import com.hostelbasera.apis.HttpRequestHandler;
 import com.hostelbasera.apis.PostRequest;
-import com.hostelbasera.model.OrderDetailModel;
+import com.hostelbasera.model.GetPropertyDetailModel;
 import com.hostelbasera.utility.BaseActivity;
 import com.hostelbasera.utility.Constant;
 import com.hostelbasera.utility.Globals;
+import com.hostelbasera.utility.PaginationProgressBarAdapter;
 import com.hostelbasera.utility.Toaster;
+import com.paginate.Paginate;
 import com.victor.loading.rotate.RotateLoading;
 
 import org.json.JSONObject;
@@ -34,14 +35,14 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class OrderListActivity extends BaseActivity implements SwipeRefreshLayout.OnRefreshListener {
+public class SearchListActivity extends BaseActivity implements Paginate.Callbacks, SwipeRefreshLayout.OnRefreshListener {
 
     @BindView(R.id.toolbar_title)
     TextView toolbarTitle;
     @BindView(R.id.img_back)
     ImageView imgBack;
-    @BindView(R.id.rv_order_list)
-    RecyclerView rvOrderList;
+    @BindView(R.id.rv_hostel_list)
+    RecyclerView rvHostelList;
     @BindView(R.id.progressBar)
     ProgressBar progressBar;
     @BindView(R.id.rotate_loading)
@@ -55,16 +56,23 @@ public class OrderListActivity extends BaseActivity implements SwipeRefreshLayou
     @BindView(R.id.swipe_refresh_layout)
     SwipeRefreshLayout swipeRefreshLayout;
 
+    private Paginate paginate;
     private boolean loading = false;
-
     Globals globals;
-    ArrayList<OrderDetailModel.OrderDetails> arOrderDetailsArrayList;
-    AdapterOrderList adapterOrderList;
+
+    int pageNo = 1;
+    String searchText = "";
+
+    GetPropertyDetailModel getPropertyDetailModel;
+    ArrayList<GetPropertyDetailModel.PropertyDetail> arrPropertyDetailArrayList;
+
+    AdapterCategoryList adapterCategoryList;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_order_list);
+        setContentView(R.layout.activity_search_list);
         ButterKnife.bind(this);
         init();
     }
@@ -73,21 +81,24 @@ public class OrderListActivity extends BaseActivity implements SwipeRefreshLayou
     private void init() {
         globals = ((Globals) this.getApplicationContext());
         progressBar.setVisibility(View.GONE);
+        searchText = getIntent().getStringExtra(Constant.Searchtext);
+        toolbarTitle.setText(searchText);
 
         swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary);
         swipeRefreshLayout.setOnRefreshListener(this);
         imgBack.setVisibility(View.VISIBLE);
 
-        arOrderDetailsArrayList = new ArrayList<>();
+        arrPropertyDetailArrayList = new ArrayList<>();
         tvNoDataFound.setText("");
+
         if (Globals.isNetworkAvailable(this)) {
-            getOrderListData(true);
+            getPropertyListData(true);
         } else {
             showNoRecordFound(getString(R.string.no_data_found));
             Toaster.shortToast(R.string.no_internet_msg);
         }
 
-        rvOrderList.addOnScrollListener(new RecyclerView.OnScrollListener() {
+        rvHostelList.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
@@ -95,41 +106,44 @@ public class OrderListActivity extends BaseActivity implements SwipeRefreshLayou
 
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                if (rvOrderList.getChildAt(0) != null) {
-                    swipeRefreshLayout.setEnabled(rvOrderList.getChildAt(0).getTop() == 0);
+                if (rvHostelList.getChildAt(0) != null) {
+                    swipeRefreshLayout.setEnabled(rvHostelList.getChildAt(0).getTop() == 0);
                 }
                 super.onScrolled(recyclerView, dx, dy);
             }
         });
     }
 
-    public void getOrderListData(boolean showProgress) {
-        JSONObject postData = HttpRequestHandler.getInstance().getOrderDataParam();
+    public void getPropertyListData(boolean showProgress) {
+        JSONObject postData = HttpRequestHandler.getInstance().getSearchListDataParam(pageNo, searchText);
 
         if (postData != null) {
             if (!swipeRefreshLayout.isRefreshing() && showProgress)
                 progressBar.setVisibility(View.VISIBLE);
+//            startLoader();
 
-            new PostRequest(this, getString(R.string.getOrderData), postData, false, new PostRequest.OnPostServiceCallListener() {
+            new PostRequest(this, getString(R.string.searchPropertyList),
+                    postData, false, new PostRequest.OnPostServiceCallListener() {
                 @Override
                 public void onSucceedToPostCall(JSONObject response) {
                     if (progressBar.getVisibility() == View.VISIBLE)
                         progressBar.setVisibility(View.GONE);
-
-                    OrderDetailModel orderDetailModel = new Gson().fromJson(response.toString(), OrderDetailModel.class);
-                    if (orderDetailModel.status == 0 && orderDetailModel.OrderDetails != null) {
-                        arOrderDetailsArrayList = orderDetailModel.OrderDetails;
+//                    stopLoader();
+                    getPropertyDetailModel = new Gson().fromJson(response.toString(), GetPropertyDetailModel.class);
+                    if (getPropertyDetailModel.propertyDetail != null && !getPropertyDetailModel.propertyDetail.isEmpty()) {
                         if (swipeRefreshLayout.isRefreshing()) {
                             stopRefreshing();
-                            rvOrderList.setAdapter(null);
-                            arOrderDetailsArrayList.clear();
-                            adapterOrderList.notifyDataSetChanged();
+                            rvHostelList.setAdapter(null);
+                            arrPropertyDetailArrayList.clear();
+                            adapterCategoryList.notifyDataSetChanged();
                         }
-                        setupList(orderDetailModel.OrderDetails);
+                        setupList(getPropertyDetailModel.propertyDetail);
                     } else {
                         stopRefreshing();
-                        showNoRecordFound("");
-                        Toaster.shortToast(orderDetailModel.message);
+                        if (pageNo == 1) {
+                            showNoRecordFound("");
+                            Toaster.shortToast(getPropertyDetailModel.message);
+                        }
                     }
                 }
 
@@ -137,6 +151,8 @@ public class OrderListActivity extends BaseActivity implements SwipeRefreshLayou
                 public void onFailedToPostCall(int statusCode, String msg) {
                     if (progressBar.getVisibility() == View.VISIBLE)
                         progressBar.setVisibility(View.GONE);
+                    if (paginate != null)
+                        paginate.unbind();
                     Toaster.shortToast(msg);
                 }
             }).execute();
@@ -146,7 +162,7 @@ public class OrderListActivity extends BaseActivity implements SwipeRefreshLayou
 
     private void showNoRecordFound(String no_data_found) {
         loading = false;
-        rvOrderList.setVisibility(View.GONE);
+        rvHostelList.setVisibility(View.GONE);
         if (tvNoDataFound.getVisibility() == View.GONE) {
             tvNoDataFound.setVisibility(View.VISIBLE);
             tvNoDataFound.setText(no_data_found);
@@ -154,7 +170,7 @@ public class OrderListActivity extends BaseActivity implements SwipeRefreshLayou
     }
 
     private void hideNoRecordFound() {
-        rvOrderList.setVisibility(View.VISIBLE);
+        rvHostelList.setVisibility(View.VISIBLE);
         if (tvNoDataFound.getVisibility() == View.VISIBLE)
             tvNoDataFound.setVisibility(View.GONE);
     }
@@ -165,9 +181,9 @@ public class OrderListActivity extends BaseActivity implements SwipeRefreshLayou
         }
     }
 
-    private void setupList(ArrayList<OrderDetailModel.OrderDetails> orderDetailsArrayList) {
-        if (orderDetailsArrayList != null && !orderDetailsArrayList.isEmpty()) {
-            arOrderDetailsArrayList.addAll(orderDetailsArrayList);
+    private void setupList(ArrayList<GetPropertyDetailModel.PropertyDetail> homePageStoresDetailArrayList) {
+        if (homePageStoresDetailArrayList != null && !homePageStoresDetailArrayList.isEmpty()) {
+            arrPropertyDetailArrayList.addAll(homePageStoresDetailArrayList);
             setAdapter();
         } else
             showNoRecordFound(getString(R.string.no_data_found));
@@ -175,26 +191,36 @@ public class OrderListActivity extends BaseActivity implements SwipeRefreshLayou
 
     private void setAdapter() {
         hideNoRecordFound();
-        if (adapterOrderList == null) {
-            adapterOrderList = new AdapterOrderList(this);
+        if (adapterCategoryList == null) {
+            if (paginate != null) {
+                paginate.unbind();
+            }
+            adapterCategoryList = new AdapterCategoryList(this);
         }
         loading = false;
-        adapterOrderList.doRefresh(arOrderDetailsArrayList);
+        adapterCategoryList.doRefresh(arrPropertyDetailArrayList);
 
-        if (rvOrderList.getAdapter() == null) {
-            rvOrderList.setHasFixedSize(false);
-            rvOrderList.setLayoutManager(new LinearLayoutManager(this));
-            rvOrderList.setItemAnimator(new DefaultItemAnimator());
-            rvOrderList.setAdapter(adapterOrderList);
-
+        if (rvHostelList.getAdapter() == null) {
+            rvHostelList.setHasFixedSize(false);
+            rvHostelList.setLayoutManager(new GridLayoutManager(this, Constant.GRID_SPAN));
+            rvHostelList.setItemAnimator(new DefaultItemAnimator());
+            rvHostelList.setAdapter(adapterCategoryList);
+            if (arrPropertyDetailArrayList.size() < getPropertyDetailModel.total_properties && rvHostelList != null) {
+                paginate = Paginate.with(rvHostelList, this)
+                        .setLoadingTriggerThreshold(Constant.progress_threshold_2)
+                        .addLoadingListItem(Constant.addLoadingRow)
+                        .setLoadingListItemCreator(new PaginationProgressBarAdapter())
+                        .setLoadingListItemSpanSizeLookup(() -> Constant.GRID_SPAN)
+                        .build();
+            }
         }
 
-        adapterOrderList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        adapterCategoryList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                startActivity(new Intent(OrderListActivity.this, HostelDetailActivity.class)
-                        .putExtra(Constant.Property_id, arOrderDetailsArrayList.get(position).property_id)
-                        .putExtra(Constant.Property_name, arOrderDetailsArrayList.get(position).property_name));
+                startActivity(new Intent(SearchListActivity.this, HostelDetailActivity.class)
+                        .putExtra(Constant.Property_id, arrPropertyDetailArrayList.get(position).property_id)
+                        .putExtra(Constant.Property_name, arrPropertyDetailArrayList.get(position).property_name));
             }
         });
     }
@@ -213,9 +239,27 @@ public class OrderListActivity extends BaseActivity implements SwipeRefreshLayou
     @Override
     public void onRefresh() {
         if (Globals.isNetworkAvailable(this)) {
-            getOrderListData(true);
+            pageNo = 1;
+            getPropertyListData(true);
         } else {
             Toaster.shortToast(R.string.no_internet_msg);
         }
+    }
+
+    @Override
+    public void onLoadMore() {
+        loading = true;
+        pageNo++;
+        getPropertyListData(false);
+    }
+
+    @Override
+    public boolean isLoading() {
+        return loading;
+    }
+
+    @Override
+    public boolean hasLoadedAllItems() {
+        return arrPropertyDetailArrayList.size() >= getPropertyDetailModel.total_properties;
     }
 }

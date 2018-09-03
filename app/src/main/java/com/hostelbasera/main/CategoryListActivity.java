@@ -93,6 +93,7 @@ public class CategoryListActivity extends BaseActivity implements Paginate.Callb
     private void init() {
         globals = ((Globals) this.getApplicationContext());
         progressBar.setVisibility(View.GONE);
+        toolbarTitle.setText(getIntent().getStringExtra(Constant.Category_name));
 
         swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary);
         swipeRefreshLayout.setOnRefreshListener(this);
@@ -260,7 +261,9 @@ public class CategoryListActivity extends BaseActivity implements Paginate.Callb
         adapterCategoryList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                startActivity(new Intent(CategoryListActivity.this, HostelDetailActivity.class).putExtra(Constant.Property_id, arrPropertyDetailArrayList.get(position).property_id));
+                startActivity(new Intent(CategoryListActivity.this, HostelDetailActivity.class)
+                        .putExtra(Constant.Property_id, arrPropertyDetailArrayList.get(position).property_id)
+                        .putExtra(Constant.Property_name, arrPropertyDetailArrayList.get(position).property_name));
             }
         });
     }

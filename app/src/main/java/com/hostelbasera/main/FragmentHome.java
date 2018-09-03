@@ -114,23 +114,24 @@ public class FragmentHome extends Fragment implements Paginate.Callbacks, SwipeR
 
     @OnClick(R.id.tv_girls)
     public void onTvGirlsClicked() {
-        doRedirectCategoryList("2");
+        doRedirectCategoryList("2",getString(R.string.girls));
     }
 
     @OnClick(R.id.tv_boys)
     public void onTvBoysClicked() {
-        doRedirectCategoryList("1");
+        doRedirectCategoryList("1",getString(R.string.boys));
     }
 
     @OnClick(R.id.tv_both)
     public void onTBothClicked() {
-        doRedirectCategoryList("4");
+        doRedirectCategoryList("4",getString(R.string.both));
     }
 
-    public void doRedirectCategoryList(String categoryId) {
+    public void doRedirectCategoryList(String categoryId,String category_name) {
         arrCategoryId.clear();
         arrCategoryId.add(categoryId);
-        startActivity(new Intent(getActivity(), CategoryListActivity.class).putExtra(Constant.ArrPropertyCategoryId, arrCategoryId));
+        startActivity(new Intent(getActivity(), CategoryListActivity.class).putExtra(Constant.ArrPropertyCategoryId, arrCategoryId)
+        .putExtra(Constant.Category_name, category_name));
     }
 
     @OnClick(R.id.tv_near_me)
@@ -166,9 +167,7 @@ public class FragmentHome extends Fragment implements Paginate.Callbacks, SwipeR
 
     @OnClick(R.id.tv_search)
     public void onSearchClick() {
-        //TODO : Remove comment once Search Activity ready
-//        startActivity(new Intent(getActivity(), SearchActivity.class));
-        Toaster.shortToast("Search");
+        startActivity(new Intent(getActivity(), SearchActivity.class));
     }
 
 
@@ -296,7 +295,8 @@ public class FragmentHome extends Fragment implements Paginate.Callbacks, SwipeR
         adapterHomePropertyDetail.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                startActivity(new Intent(getActivity(), HostelDetailActivity.class).putExtra(Constant.Property_id, arrPropertyDetailArrayList.get(position).property_id));
+                startActivity(new Intent(getActivity(), HostelDetailActivity.class).putExtra(Constant.Property_id, arrPropertyDetailArrayList.get(position).property_id)
+                        .putExtra(Constant.Property_name, arrPropertyDetailArrayList.get(position).property_name));
             }
         });
     }

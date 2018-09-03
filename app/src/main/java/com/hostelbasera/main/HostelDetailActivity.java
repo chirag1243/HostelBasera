@@ -131,6 +131,7 @@ public class HostelDetailActivity extends BaseActivity implements RatingDialogLi
 
     private void init() {
         property_id = getIntent().getIntExtra(Constant.Property_id, 0);
+        toolbarTitle.setText(getIntent().getStringExtra(Constant.Property_name));
         imgBack.setVisibility(View.VISIBLE);
         imgShare.setVisibility(View.VISIBLE);
         btnBookNow.setTypeface(btnBookNow.getTypeface(), Typeface.BOLD);
@@ -170,7 +171,6 @@ public class HostelDetailActivity extends BaseActivity implements RatingDialogLi
 
     @SuppressLint("SetTextI18n")
     private void setPropertyDetails() {
-        toolbarTitle.setText(propertyDetails.property_name);
         tvAddress.setText(propertyDetails.address);
         tvTypeOfProperty.setText(propertyDetails.property_type);
         tvSizeOfProperty.setText(propertyDetails.property_size);

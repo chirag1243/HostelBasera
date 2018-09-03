@@ -99,4 +99,11 @@ public class Constant {
     public static final String GetSearchData = "getSearchData";
     public static final String Searchtext = "searchtext";
 
+    public static final String Property_name = "property_name";
+    public static final String Category_name = "category_name";
+
+    public static final String Full_name = "full_name";
+    public static final String Cont_no = "cont_no";
+    public static final String Subject = "subject";
+
 }

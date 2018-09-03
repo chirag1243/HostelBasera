@@ -107,7 +107,9 @@ public class FragmentBookmarkList extends Fragment {
         adapterBookmarkList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                startActivity(new Intent(getActivity(), HostelDetailActivity.class).putExtra(Constant.Property_id, bookmarkDetailModel.BookmarkDetails.get(position).property_id));
+                startActivity(new Intent(getActivity(), HostelDetailActivity.class)
+                        .putExtra(Constant.Property_id, bookmarkDetailModel.BookmarkDetails.get(position).property_id)
+                        .putExtra(Constant.Property_name, bookmarkDetailModel.BookmarkDetails.get(position).property_name));
             }
         });
     }

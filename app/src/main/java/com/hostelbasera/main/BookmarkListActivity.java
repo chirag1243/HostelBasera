@@ -109,7 +109,9 @@ public class BookmarkListActivity extends BaseActivity {
         adapterBookmarkList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                startActivity(new Intent(BookmarkListActivity.this, HostelDetailActivity.class).putExtra(Constant.Property_id, arrBookmarkDetailsArrayList.get(position).property_id));
+                startActivity(new Intent(BookmarkListActivity.this, HostelDetailActivity.class)
+                        .putExtra(Constant.Property_id, arrBookmarkDetailsArrayList.get(position).property_id)
+                        .putExtra(Constant.Property_name, arrBookmarkDetailsArrayList.get(position).property_name));
             }
         });
     }

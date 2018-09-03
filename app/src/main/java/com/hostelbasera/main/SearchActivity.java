@@ -142,11 +142,9 @@ public class SearchActivity extends BaseActivity {
         adapterSearchList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                startActivity(new Intent(SearchActivity.this, CatalogDetailActivity.class)
-//                        .putExtra(Constant.ToolbarTitle, "Search")
-//                        .putExtra(Constant.Catalog_Id, arrCatalogsDetail.get(position).catalog_Id)
-//                        .putExtra(Constant.Sub_catalog_Id, arrCatalogsDetail.get(position).sub_catalog_Id));
-
+                startActivity(new Intent(SearchActivity.this, HostelDetailActivity.class)
+                        .putExtra(Constant.Property_id, searchModel.propertyDetail.get(position).property_id)
+                        .putExtra(Constant.Property_name, searchModel.propertyDetail.get(position).property_name));
             }
         });
     }
@@ -175,11 +173,8 @@ public class SearchActivity extends BaseActivity {
             Toaster.shortToast("Please enter text");
             return;
         }
-        /*startActivity(new Intent(SearchActivity.this, CategoryCatalogListActivity.class)
-                .putExtra(Constant.Catagory_Id, 0)
-                .putExtra(Constant.Sub_catagory_Id, 0)
-                .putExtra(Constant.Catagory_name, edsearchView.getText().toString().trim())
-                .putExtra(Constant.SearchText, edsearchView.getText().toString().trim()));*/
+        startActivity(new Intent(SearchActivity.this, SearchListActivity.class)
+                .putExtra(Constant.Searchtext, edsearchView.getText().toString()));
     }
 
 }

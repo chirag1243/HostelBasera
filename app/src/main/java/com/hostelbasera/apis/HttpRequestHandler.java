@@ -319,6 +319,38 @@ public class HttpRequestHandler {
         return params;
     }
 
+    public JSONObject getSearchListDataParam(int page,String search_text) {
+        JSONObject params = new JSONObject();
+        JSONObject jsonObject = new JSONObject();
+        try {
+            params = setDefaultParameters();
+            jsonObject.put(Constant.Page, page);
+            jsonObject.put(Constant.Limit, 0);
+            jsonObject.put(Constant.Searchtext, search_text);
+            params.put(Constant.GetSearchData, jsonObject);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return params;
+    }
+
+    public JSONObject getAddFeedbackDataParam(String subject,String message) {
+        JSONObject params = new JSONObject();
+        JSONObject jsonObject = new JSONObject();
+        try {
+            params = setDefaultParameters();
+            jsonObject.put(Constant.Full_name, globals.getUserDetails().loginUserDetail.name);
+            jsonObject.put(Constant.Email, globals.getUserDetails().loginUserDetail.email);
+            jsonObject.put(Constant.Cont_no, globals.getUserDetails().loginUserDetail.contact_no);
+            jsonObject.put(Constant.Subject, subject);
+            jsonObject.put(Constant.Message, message);
+            params.put(Constant.GetSearchData, jsonObject);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return params;
+    }
+
     /*public JSONObject getLogoutUserParam() {
         JSONObject params = new JSONObject();
         JSONObject jsonObject = new JSONObject();

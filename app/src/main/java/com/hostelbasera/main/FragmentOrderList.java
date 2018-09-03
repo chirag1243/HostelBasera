@@ -106,7 +106,9 @@ public class FragmentOrderList extends Fragment {
         adapterOrderList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                startActivity(new Intent(getActivity(), HostelDetailActivity.class).putExtra(Constant.Property_id, arOrderDetailsArrayList.get(position).property_id));
+                startActivity(new Intent(getActivity(), HostelDetailActivity.class)
+                        .putExtra(Constant.Property_id, arOrderDetailsArrayList.get(position).property_id)
+                        .putExtra(Constant.Property_name, arOrderDetailsArrayList.get(position).property_name));
             }
         });
     }
