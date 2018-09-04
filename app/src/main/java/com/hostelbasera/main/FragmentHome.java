@@ -136,6 +136,7 @@ public class FragmentHome extends Fragment implements Paginate.Callbacks, SwipeR
 
     @OnClick(R.id.tv_near_me)
     public void onTvNearMeClicked() {
+        Toaster.shortToast("Coming soon");
     }
 
     @SuppressLint("SetTextI18n")

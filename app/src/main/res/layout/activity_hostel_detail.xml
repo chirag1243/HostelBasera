@@ -45,23 +45,6 @@
                         android:orientation="vertical"
                         android:padding="@dimen/dim_8dp">
 
-                        <!--<com.google.android.maps.MapView
-                            android:id="@+id/map_view"
-                            android:layout_width="match_parent"
-                            android:layout_height="@dimen/dim_220dp" />-->
-
-                        <!--<com.alirezaashrafi.library.GoogleMapView
-                            android:id="@+id/googleMapView"
-                            android:layout_width="match_parent"
-                            android:layout_height="@dimen/dim_220dp" />-->
-
-                       <!-- <com.google.android.maps.MapView
-                            android:id="@+id/mapView"
-                            android:layout_width="match_parent"
-                            android:layout_height="@dimen/dim_220dp"
-                            android:apiKey="05M-7qOGbEjYduPPUdQgJt9ysL8HToawGdvu_ow"
-                            android:clickable="true" />-->
-
                         <fragment
                             android:id="@+id/map"
                             android:name="com.google.android.gms.maps.SupportMapFragment"
@@ -273,6 +256,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/dim_20dp"
                     android:layout_marginRight="@dimen/dim_20dp"
+                    android:layout_marginBottom="@dimen/dim_12dp"
                     android:layout_marginTop="@dimen/dim_12dp">
 
                     <LinearLayout
@@ -307,8 +291,7 @@
                     android:id="@+id/fl_review"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/dim_12dp"
-                    android:layout_marginTop="@dimen/dim_12dp">
+                    android:layout_marginBottom="@dimen/dim_12dp">
 
                     <LinearLayout
                         android:layout_width="match_parent"

@@ -70,7 +70,7 @@ public class SearchActivity extends BaseActivity {
                 } else
                     imgClose.setVisibility(View.VISIBLE);
 
-                if (edsearchView.getText().length() > 3) {
+                if (edsearchView.getText().length() > 1) {
                     rvSearch.setVisibility(View.GONE);
                     tvNoDataFound.setVisibility(View.VISIBLE);
                     getSearchData();

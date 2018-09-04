@@ -260,7 +260,7 @@ public class HttpRequestHandler {
             jsonObject.put(Constant.Description, description);
             jsonObject.put(Constant.User_id, globals.getUserId());
 
-            params.put(Constant.AddReviewData, jsonObject);
+            params.put(Constant.AddInquiryData, jsonObject);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -344,7 +344,7 @@ public class HttpRequestHandler {
             jsonObject.put(Constant.Cont_no, globals.getUserDetails().loginUserDetail.contact_no);
             jsonObject.put(Constant.Subject, subject);
             jsonObject.put(Constant.Message, message);
-            params.put(Constant.GetSearchData, jsonObject);
+            params.put(Constant.AddFeedbackData, jsonObject);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -365,7 +365,6 @@ public class HttpRequestHandler {
         }
         return params;
     }*/
-
 
     private JSONObject mParams;
 

@@ -30,7 +30,6 @@ public class Constant {
 
     public static final int MAX_FILE_SIZE = 5; //mb
 
-
     public static final String Token = "token";
     public static final String Limit = "limit";
     public static final String Page = "page";
@@ -105,5 +104,9 @@ public class Constant {
     public static final String Full_name = "full_name";
     public static final String Cont_no = "cont_no";
     public static final String Subject = "subject";
+    public static final String AddFeedbackData = "addFeedbackData";
+
+    public static final String AddInquiryData = "addInquiryData";
+
 
 }
