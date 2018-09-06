@@ -15,6 +15,9 @@
     <string name="back_again">Please click BACK again to exit</string>
     <string name="ok">OK</string>
 
+    <string name="location_message">we need permission for <b>Near Me</b></string>
+    <string name="location_denied_message">If you reject permission, you can not use this near me feature.</string>
+
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 

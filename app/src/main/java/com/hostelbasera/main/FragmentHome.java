@@ -1,5 +1,6 @@
 package com.hostelbasera.main;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Typeface;
@@ -21,8 +22,13 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.example.easywaylocation.EasyWayLocation;
+import com.example.easywaylocation.Listener;
 import com.google.gson.Gson;
+import com.gun0912.tedpermission.PermissionListener;
+import com.gun0912.tedpermission.TedPermission;
 import com.hostelbasera.R;
 import com.hostelbasera.apis.HttpRequestHandler;
 import com.hostelbasera.apis.PostRequest;
@@ -43,7 +49,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class FragmentHome extends Fragment implements Paginate.Callbacks, SwipeRefreshLayout.OnRefreshListener {
+public class FragmentHome extends Fragment implements Paginate.Callbacks, SwipeRefreshLayout.OnRefreshListener, PermissionListener, Listener {
 
     Globals globals;
     View view;
@@ -92,6 +98,9 @@ public class FragmentHome extends Fragment implements Paginate.Callbacks, SwipeR
     AdapterHomePropertyDetail adapterHomePropertyDetail;
     DashboardActivity activity;
 
+    EasyWayLocation easyWayLocation;
+    private Double lati, longi;
+
     public static FragmentHome newInstance(/*AllCategoriesDetailModel model*/) {
         FragmentHome fragment = new FragmentHome();
 //        fragment.allCategoriesModel = model;
@@ -114,33 +123,54 @@ public class FragmentHome extends Fragment implements Paginate.Callbacks, SwipeR
 
     @OnClick(R.id.tv_girls)
     public void onTvGirlsClicked() {
-        doRedirectCategoryList("2",getString(R.string.girls));
+        doRedirectCategoryList("2", getString(R.string.girls));
     }
 
     @OnClick(R.id.tv_boys)
     public void onTvBoysClicked() {
-        doRedirectCategoryList("1",getString(R.string.boys));
+        doRedirectCategoryList("1", getString(R.string.boys));
     }
 
     @OnClick(R.id.tv_both)
     public void onTBothClicked() {
-        doRedirectCategoryList("4",getString(R.string.both));
+        doRedirectCategoryList("4", getString(R.string.both));
     }
 
-    public void doRedirectCategoryList(String categoryId,String category_name) {
+    public void doRedirectCategoryList(String categoryId, String category_name) {
         arrCategoryId.clear();
         arrCategoryId.add(categoryId);
         startActivity(new Intent(getActivity(), CategoryListActivity.class).putExtra(Constant.ArrPropertyCategoryId, arrCategoryId)
-        .putExtra(Constant.Category_name, category_name));
+                .putExtra(Constant.Category_name, category_name));
     }
 
     @OnClick(R.id.tv_near_me)
     public void onTvNearMeClicked() {
+        new TedPermission(getContext())
+                .setPermissionListener(this)
+                .setRationaleMessage(R.string.location_message)
+                .setDeniedMessage(R.string.location_denied_message)
+                .setGotoSettingButtonText(R.string.ok)
+                .setPermissions(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)
+                .check();
         Toaster.shortToast("Coming soon");
+    }
+
+    @Override
+    public void onPermissionGranted() {
+        Toaster.shortToast("Location permission granted");
+    }
+
+    @Override
+    public void onPermissionDenied(ArrayList<String> deniedPermissions) {
+        Toaster.shortToast("Location permission denied");
     }
 
     @SuppressLint("SetTextI18n")
     private void init() {
+
+        easyWayLocation = new EasyWayLocation(getContext());
+        easyWayLocation.setListener(this);
+
         Globals.hideKeyboard(getActivity());
         globals = ((Globals) getActivity().getApplicationContext());
         activity = (DashboardActivity) getActivity();
@@ -290,7 +320,7 @@ public class FragmentHome extends Fragment implements Paginate.Callbacks, SwipeR
                         .setLoadingListItemSpanSizeLookup(() -> Constant.GRID_SPAN)
                         .build();
             }
-            rvHostel.getLayoutManager().smoothScrollToPosition(rvHostel,new RecyclerView.State(), rvHostel.getAdapter().getItemCount());
+            rvHostel.getLayoutManager().smoothScrollToPosition(rvHostel, new RecyclerView.State(), rvHostel.getAdapter().getItemCount());
         }
 
         adapterHomePropertyDetail.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -332,6 +362,33 @@ public class FragmentHome extends Fragment implements Paginate.Callbacks, SwipeR
     @Override
     public void onResume() {
         super.onResume();
+        easyWayLocation.beginUpdates();
     }
+
+    @Override
+    public void locationOn() {
+        Toaster.shortToast("Location ON");
+        easyWayLocation.beginUpdates();
+        lati = easyWayLocation.getLatitude();
+        longi = easyWayLocation.getLongitude();
+    }
+
+    @Override
+    public void onPositionChanged() {
+        Toaster.shortToast(String.valueOf(easyWayLocation.getLongitude()) + "," + String.valueOf(easyWayLocation.getLatitude()));
+    }
+
+    @Override
+    public void locationCancelled() {
+        easyWayLocation.showAlertDialog("Cancelled", "Cancelled Location", null);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        easyWayLocation.endUpdates();
+    }
+
+
 }
 
