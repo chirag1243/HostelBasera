@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
@@ -115,9 +116,6 @@ public class FragmentHome extends Fragment implements Paginate.Callbacks, SwipeR
         return view;
     }
 
-    @OnClick(R.id.tv_search)
-    public void onTvSearchClicked() {
-    }
 
     ArrayList<String> arrCategoryId = new ArrayList<>();
 
@@ -158,6 +156,8 @@ public class FragmentHome extends Fragment implements Paginate.Callbacks, SwipeR
     @Override
     public void onPermissionGranted() {
         Toaster.shortToast("Location permission granted");
+        easyWayLocation = new EasyWayLocation(getContext());
+        easyWayLocation.setListener(this);
     }
 
     @Override
@@ -167,9 +167,6 @@ public class FragmentHome extends Fragment implements Paginate.Callbacks, SwipeR
 
     @SuppressLint("SetTextI18n")
     private void init() {
-
-        easyWayLocation = new EasyWayLocation(getContext());
-        easyWayLocation.setListener(this);
 
         Globals.hideKeyboard(getActivity());
         globals = ((Globals) getActivity().getApplicationContext());
@@ -200,7 +197,6 @@ public class FragmentHome extends Fragment implements Paginate.Callbacks, SwipeR
     public void onSearchClick() {
         startActivity(new Intent(getActivity(), SearchActivity.class));
     }
-
 
     private void showNoRecordFound(String no_data_found) {
         loading = false;
@@ -362,7 +358,8 @@ public class FragmentHome extends Fragment implements Paginate.Callbacks, SwipeR
     @Override
     public void onResume() {
         super.onResume();
-        easyWayLocation.beginUpdates();
+        if (easyWayLocation != null)
+            easyWayLocation.beginUpdates();
     }
 
     @Override
@@ -386,7 +383,8 @@ public class FragmentHome extends Fragment implements Paginate.Callbacks, SwipeR
     @Override
     public void onDestroy() {
         super.onDestroy();
-        easyWayLocation.endUpdates();
+        if (easyWayLocation != null)
+            easyWayLocation.endUpdates();
     }
 
 

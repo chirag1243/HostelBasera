@@ -94,7 +94,6 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@color/home_bg"
                 android:orientation="vertical">
 
                 <LinearLayout
@@ -103,16 +102,16 @@
                     android:layout_height="0dp"
                     android:layout_marginTop="@dimen/dim_20dp"
                     android:layout_weight="1"
-                    android:background="@drawable/rounded_hostel_list_bg"
                     android:orientation="vertical"
                     android:visibility="gone">
 
                     <TextView
                         android:id="@+id/tv_hostel_suggestion"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_marginTop="@dimen/dim_20dp"
+                        android:background="@drawable/rounded_hostel_list_bg"
+                        android:gravity="center"
+                        android:padding="@dimen/dim_20dp"
                         android:text="@string/hostel_pg_suggestion"
                         android:textAllCaps="true"
                         android:textColor="@color/colorAccent"
@@ -124,7 +123,7 @@
                         android:id="@+id/rv_hostel"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_marginTop="@dimen/dim_20dp"
+                        android:background="@color/white"
                         android:nestedScrollingEnabled="false"
                         android:orientation="horizontal"
                         android:padding="@dimen/dim_8dp"
