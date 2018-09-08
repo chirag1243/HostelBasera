@@ -14,6 +14,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.AppCompatTextView;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -108,7 +109,15 @@ public class HostelDetailActivity extends BaseActivity implements RatingDialogLi
     RecyclerView rvReview;
     @BindView(R.id.fl_review)
     FrameLayout flReview;
+    @BindView(R.id.cv_price)
+    CardView cvPrice;
+    @BindView(R.id.cv_rooms)
+    CardView cvRooms;
+    @BindView(R.id.rv_room_price)
+    RecyclerView rvRoomPrice;
     Globals globals;
+    @BindView(R.id.tv_rooms)
+    TextView tvRooms;
 
     PropertyDetailModel.PropertyDetails propertyDetails;
     Timer timer;
@@ -119,6 +128,8 @@ public class HostelDetailActivity extends BaseActivity implements RatingDialogLi
     @BindView(R.id.btn_book_now)
     Button btnBookNow;
     boolean is_bookmark_remove;
+
+    AdapterRoom adapterRoom;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -175,10 +186,18 @@ public class HostelDetailActivity extends BaseActivity implements RatingDialogLi
         tvTypeOfProperty.setText(propertyDetails.property_type);
         tvSizeOfProperty.setText(propertyDetails.property_size);
 
-        if (propertyDetails.price != null && !propertyDetails.price.isEmpty() && !propertyDetails.price.equals("0")) {
-            tvPrice.setText("₹ " + propertyDetails.price);
+        if (propertyDetails.propertyrooms != null && !propertyDetails.propertyrooms.isEmpty()) {
+            cvPrice.setVisibility(View.GONE);
+            cvRooms.setVisibility(View.VISIBLE);
+            tvRooms.setTypeface(tvRooms.getTypeface(), Typeface.BOLD);
+            propertyDetails.propertyrooms.get(0).isSelected = true;
+            setRoomAdapter();
         } else {
-            btnBookNow.setVisibility(View.GONE);
+            if (propertyDetails.price != null && !propertyDetails.price.isEmpty() && !propertyDetails.price.equals("0")) {
+                tvPrice.setText("₹ " + propertyDetails.price);
+            } else {
+                btnBookNow.setVisibility(View.GONE);
+            }
         }
 
         is_bookmark_remove = propertyDetails.isBookMark;
@@ -195,6 +214,20 @@ public class HostelDetailActivity extends BaseActivity implements RatingDialogLi
         if (propertyDetails.latitude != null && !propertyDetails.latitude.isEmpty()) {
             SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
             mapFragment.getMapAsync(this);
+        }
+    }
+
+    private void setRoomAdapter() {
+        if (adapterRoom == null) {
+            adapterRoom = new AdapterRoom(this);
+        }
+        adapterRoom.doRefresh(propertyDetails.propertyrooms);
+
+        if (rvRoomPrice.getAdapter() == null) {
+            rvRoomPrice.setHasFixedSize(false);
+            rvRoomPrice.setLayoutManager(new LinearLayoutManager(this));
+            rvRoomPrice.setItemAnimator(new DefaultItemAnimator());
+            rvRoomPrice.setAdapter(adapterRoom);
         }
     }
 
