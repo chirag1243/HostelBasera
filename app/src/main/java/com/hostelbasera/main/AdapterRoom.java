@@ -34,6 +34,7 @@ public class AdapterRoom extends RecyclerView.Adapter<AdapterRoom.ViewHolder> {
     private ArrayList<PropertyDetailModel.Propertyrooms> mValues;
     private final Context mContext;
     private AdapterView.OnItemClickListener onItemClickListener;
+    public int room_id = 0;
 
     AdapterRoom(Context context) {
         mContext = context;
@@ -79,6 +80,7 @@ public class AdapterRoom extends RecyclerView.Adapter<AdapterRoom.ViewHolder> {
             cvRooms.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    room_id = mItem.id;
                     doResetSelection();
                     mValues.get(position).isSelected = true;
                     notifyDataSetChanged();

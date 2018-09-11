@@ -282,12 +282,13 @@ public class HttpRequestHandler {
     }
 
 
-    public JSONObject getAddOrderDataParam(int property_id) {
+    public JSONObject getAddOrderDataParam(int property_id, int room_id) {
         JSONObject params = new JSONObject();
         JSONObject jsonObject = new JSONObject();
         try {
             params = setDefaultParameters();
             jsonObject.put(Constant.Property_id, property_id);
+            jsonObject.put(Constant.Room_id, room_id);
             jsonObject.put(Constant.User_id, globals.getUserId());
             params.put(Constant.AddOrderData, jsonObject);
         } catch (Exception e) {

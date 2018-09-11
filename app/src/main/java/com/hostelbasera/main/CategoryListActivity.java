@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
@@ -62,6 +63,9 @@ public class CategoryListActivity extends BaseActivity implements Paginate.Callb
     TextView tvNoDataFound;
     @BindView(R.id.swipe_refresh_layout)
     SwipeRefreshLayout swipeRefreshLayout;
+
+    @BindView(R.id.floating_action_button)
+    FloatingActionButton floatingActionButton;
 
     private Paginate paginate;
     private boolean loading = false;
@@ -127,6 +131,11 @@ public class CategoryListActivity extends BaseActivity implements Paginate.Callb
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 if (rvHostelList.getChildAt(0) != null) {
                     swipeRefreshLayout.setEnabled(rvHostelList.getChildAt(0).getTop() == 0);
+                }
+                if (dy > 0 && floatingActionButton.getVisibility() == View.VISIBLE) {
+                    floatingActionButton.hide();
+                } else if (dy < 0 && floatingActionButton.getVisibility() != View.VISIBLE) {
+                    floatingActionButton.show();
                 }
                 super.onScrolled(recyclerView, dx, dy);
             }
@@ -284,7 +293,7 @@ public class CategoryListActivity extends BaseActivity implements Paginate.Callb
         Toaster.shortToast("Coming Soon");
     }
 
-    @OnClick(R.id.ll_filter)
+    @OnClick(R.id.floating_action_button)//ll_filter
     public void onLlFilterClicked() {
         if (filterModel != null) {
             if (filterModel.status == 0 && filterModel.filterDetail != null) {

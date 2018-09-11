@@ -107,6 +107,6 @@ public class Constant {
     public static final String AddFeedbackData = "addFeedbackData";
 
     public static final String AddInquiryData = "addInquiryData";
-
+    public static final String Room_id = "room_id";
 
 }

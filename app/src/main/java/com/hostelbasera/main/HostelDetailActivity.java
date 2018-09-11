@@ -145,6 +145,8 @@ public class HostelDetailActivity extends BaseActivity implements RatingDialogLi
 
     AdapterRoom adapterRoom;
 
+    int room_id = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -634,7 +636,10 @@ public class HostelDetailActivity extends BaseActivity implements RatingDialogLi
             Toaster.shortToast(R.string.no_internet_msg);
             return;
         }
-        JSONObject postData = HttpRequestHandler.getInstance().getAddOrderDataParam(property_id);
+        if (adapterRoom != null) {
+            room_id = adapterRoom.room_id;
+        }
+        JSONObject postData = HttpRequestHandler.getInstance().getAddOrderDataParam(property_id, room_id);
         if (postData != null) {
 
             new PostRequest(this, getString(R.string.addOrder), postData, true, new PostRequest.OnPostServiceCallListener() {

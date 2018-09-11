@@ -143,16 +143,16 @@ public class FragmentHome extends Fragment implements Paginate.Callbacks, SwipeR
 
     @OnClick(R.id.tv_near_me)
     public void onTvNearMeClicked() {
-        if (lati!=0 && longi!=0){
+        if (lati != 0 && longi != 0) {
 //            ToDo : Api Call
-        }else {
+        } else {
             Toaster.shortToast("Not getting your Location.");
         }
     }
 
     @Override
     public void onPermissionGranted() {
-        Toaster.shortToast("Location permission granted");
+//        Toaster.shortToast("Location permission granted");
         easyWayLocation = new EasyWayLocation(getContext());
         easyWayLocation.setListener(this);
     }
