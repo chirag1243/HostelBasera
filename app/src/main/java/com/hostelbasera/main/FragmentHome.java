@@ -143,14 +143,11 @@ public class FragmentHome extends Fragment implements Paginate.Callbacks, SwipeR
 
     @OnClick(R.id.tv_near_me)
     public void onTvNearMeClicked() {
-        new TedPermission(getContext())
-                .setPermissionListener(this)
-                .setRationaleMessage(R.string.location_message)
-                .setDeniedMessage(R.string.location_denied_message)
-                .setGotoSettingButtonText(R.string.ok)
-                .setPermissions(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)
-                .check();
-        Toaster.shortToast("Coming soon");
+        if (lati!=0 && longi!=0){
+//            ToDo : Api Call
+        }else {
+            Toaster.shortToast("Not getting your Location.");
+        }
     }
 
     @Override
@@ -182,6 +179,14 @@ public class FragmentHome extends Fragment implements Paginate.Callbacks, SwipeR
         tvHostelSuggestion.setTypeface(tvHostelSuggestion.getTypeface(), Typeface.BOLD);
         arrPropertyDetailArrayList = new ArrayList<>();
         tvNoDataFound.setText("");
+
+        new TedPermission(getContext())
+                .setPermissionListener(this)
+                .setRationaleMessage(R.string.location_message)
+                .setDeniedMessage(R.string.location_denied_message)
+                .setGotoSettingButtonText(R.string.ok)
+                .setPermissions(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)
+                .check();
 
         if (Globals.isNetworkAvailable(getActivity())) {
 //            vpBanner.setVisibility(View.GONE);
@@ -364,7 +369,7 @@ public class FragmentHome extends Fragment implements Paginate.Callbacks, SwipeR
 
     @Override
     public void locationOn() {
-        Toaster.shortToast("Location ON");
+//        Toaster.shortToast("Location ON");
         easyWayLocation.beginUpdates();
         lati = easyWayLocation.getLatitude();
         longi = easyWayLocation.getLongitude();
@@ -372,7 +377,9 @@ public class FragmentHome extends Fragment implements Paginate.Callbacks, SwipeR
 
     @Override
     public void onPositionChanged() {
-        Toaster.shortToast(String.valueOf(easyWayLocation.getLongitude()) + "," + String.valueOf(easyWayLocation.getLatitude()));
+        lati = easyWayLocation.getLatitude();
+        longi = easyWayLocation.getLongitude();
+//        Toaster.shortToast(String.valueOf(easyWayLocation.getLongitude()) + "," + String.valueOf(easyWayLocation.getLatitude()));
     }
 
     @Override

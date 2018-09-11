@@ -48,6 +48,7 @@ dependencies {
     implementation 'de.hdodenhof:circleimageview:2.2.0'
     implementation 'com.github.alirezaashrafi:GoogleMapView:1.0.4'
     implementation 'com.bogdwellers:pinchtozoom:0.1'
+    implementation 'com.squareup.picasso:picasso:2.71828'
     implementation 'com.victor:lib:1.0.4'
     implementation 'uk.co.chrisjenx:calligraphy:2.3.0'
     implementation 'com.stepstone.apprating:app-rating:2.2.0'
