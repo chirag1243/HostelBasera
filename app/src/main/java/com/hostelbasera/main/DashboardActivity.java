@@ -10,6 +10,7 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.ShareCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -185,8 +186,15 @@ public class DashboardActivity extends BaseActivity implements NavigationView.On
                 return false;
             case R.id.nav_share_app:
 //                setToolbarTitle(R.string.share_app);
-                Toaster.shortToast("Coming Soon");
-                break;
+//                Toaster.shortToast("Coming Soon");
+                ShareCompat.IntentBuilder.from(this)
+                        .setType("text/plain")
+                        .setChooserTitle("Share via")
+                        .setText("Check out the App at: \n http://play.google.com/store/apps/details?id=" + this.getPackageName())
+                        .startChooser();
+                doCloseDrawer();
+                return false;
+//                break;
             case R.id.nav_sign_out:
                 doLogout();
                 break;

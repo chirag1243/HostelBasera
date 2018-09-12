@@ -84,6 +84,8 @@ public class CategoryListActivity extends BaseActivity implements Paginate.Callb
     ArrayList<String> arrPropertySizeId;
     FilterModel filterModel;
     private static final int filterCode = 1005;
+    double latitude = 0, longitude = 0;
+    boolean isNearMe;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -111,7 +113,15 @@ public class CategoryListActivity extends BaseActivity implements Paginate.Callb
         arrPropertySizeId = new ArrayList<>();
         arrPropertyCategoryId = new ArrayList<>();
 
-        arrPropertyCategoryId = getIntent().getStringArrayListExtra(Constant.ArrPropertyCategoryId);
+        if (getIntent().hasExtra(Constant.ArrPropertyCategoryId)) {
+            arrPropertyCategoryId = getIntent().getStringArrayListExtra(Constant.ArrPropertyCategoryId);
+        }
+
+        if (getIntent().hasExtra(Constant.Latitude) && getIntent().hasExtra(Constant.Longitude)) {
+            latitude = getIntent().getDoubleExtra(Constant.Latitude, 0);
+            longitude = getIntent().getDoubleExtra(Constant.Longitude, 0);
+            isNearMe = true;
+        }
 
         if (Globals.isNetworkAvailable(this)) {
             getPropertyListData(true);
@@ -143,14 +153,19 @@ public class CategoryListActivity extends BaseActivity implements Paginate.Callb
     }
 
     public void getPropertyListData(boolean showProgress) {
-        JSONObject postData = HttpRequestHandler.getInstance().getPropertyListDataParam(pageNo, arrPropertyCategoryId, arrPropertyTypeId, arrTypeId, arrPropertySizeId);
+        JSONObject postData;
+        if (isNearMe) {
+            postData = HttpRequestHandler.getInstance().getNearbyPropertyDataParam(pageNo, arrPropertyCategoryId, arrPropertyTypeId, arrTypeId, arrPropertySizeId, latitude, longitude);
+        } else {
+            postData = HttpRequestHandler.getInstance().getPropertyListDataParam(pageNo, arrPropertyCategoryId, arrPropertyTypeId, arrTypeId, arrPropertySizeId);
+        }
 
         if (postData != null) {
             if (!swipeRefreshLayout.isRefreshing() && showProgress)
                 progressBar.setVisibility(View.VISIBLE);
 //            startLoader();
 
-            new PostRequest(this, getString(R.string.getPropertyList),
+            new PostRequest(this, isNearMe ? getString(R.string.getNearbyProperty) : getString(R.string.getPropertyList),
                     postData, false, new PostRequest.OnPostServiceCallListener() {
                 @Override
                 public void onSucceedToPostCall(JSONObject response) {

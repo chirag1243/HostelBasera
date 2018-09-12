@@ -186,6 +186,51 @@ public class HttpRequestHandler {
         return params;
     }
 
+    public JSONObject getNearbyPropertyDataParam(int pageNo, ArrayList<String> arrPropertyCategoryId, ArrayList<String> arrPropertyTypeId, ArrayList<String> arrTypeId, ArrayList<String> arrPropertySizeId, double latitude, double longitude) {
+        JSONObject params = new JSONObject();
+        JSONObject jsonObject = new JSONObject();
+        try {
+            params = setDefaultParameters();
+
+            JSONObject jsonFilters = new JSONObject();
+            JSONArray jsonArray = new JSONArray();
+            for (int i = 0; i < arrPropertyCategoryId.size(); i++) {
+                jsonArray.put(arrPropertyCategoryId.get(i));
+            }
+            jsonFilters.put(Constant.Property_category_id, jsonArray);
+
+            jsonArray = new JSONArray();
+            for (int i = 0; i < arrPropertyTypeId.size(); i++) {
+                jsonArray.put(arrPropertyTypeId.get(i));
+            }
+            jsonFilters.put(Constant.Property_type_id, jsonArray);
+
+            jsonArray = new JSONArray();
+            for (int i = 0; i < arrTypeId.size(); i++) {
+                jsonArray.put(arrTypeId.get(i));
+            }
+            jsonFilters.put(Constant.Type_id, jsonArray);
+
+            jsonArray = new JSONArray();
+            for (int i = 0; i < arrPropertySizeId.size(); i++) {
+                jsonArray.put(arrPropertySizeId.get(i));
+            }
+            jsonFilters.put(Constant.Property_size_id, jsonArray);
+
+            jsonFilters.put(Constant.Latitude, "" + latitude);
+            jsonFilters.put(Constant.Longitude, "" + longitude);
+            jsonFilters.put(Constant.Distance, "" + 400);
+
+            jsonObject.put(Constant.Filters, jsonFilters);
+            jsonObject.put(Constant.Limit, 0);
+            jsonObject.put(Constant.Page, pageNo);
+
+            params.put(Constant.GetNearbyPropertyData, jsonObject);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return params;
+    }
 
     public JSONObject getPropertyDetailsParam(int property_id) {
         JSONObject params = new JSONObject();
@@ -320,7 +365,7 @@ public class HttpRequestHandler {
         return params;
     }
 
-    public JSONObject getSearchListDataParam(int page,String search_text) {
+    public JSONObject getSearchListDataParam(int page, String search_text) {
         JSONObject params = new JSONObject();
         JSONObject jsonObject = new JSONObject();
         try {
@@ -335,7 +380,7 @@ public class HttpRequestHandler {
         return params;
     }
 
-    public JSONObject getAddFeedbackDataParam(String subject,String message) {
+    public JSONObject getAddFeedbackDataParam(String subject, String message) {
         JSONObject params = new JSONObject();
         JSONObject jsonObject = new JSONObject();
         try {

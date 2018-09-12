@@ -24,5 +24,6 @@
     <string name="getOrderData">user/getOrderData</string>
     <string name="searchPropertyList">user/searchPropertyList</string>
     <string name="addFeedback">user/addFeedback</string>
+    <string name="getNearbyProperty">user/getNearbyProperty</string>
 
 </resources>

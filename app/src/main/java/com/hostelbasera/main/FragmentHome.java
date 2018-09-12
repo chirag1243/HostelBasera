@@ -100,7 +100,8 @@ public class FragmentHome extends Fragment implements Paginate.Callbacks, SwipeR
     DashboardActivity activity;
 
     EasyWayLocation easyWayLocation;
-    private Double lati, longi;
+    private double lati = 0, longi = 0;
+    boolean isGranted;
 
     public static FragmentHome newInstance(/*AllCategoriesDetailModel model*/) {
         FragmentHome fragment = new FragmentHome();
@@ -143,10 +144,23 @@ public class FragmentHome extends Fragment implements Paginate.Callbacks, SwipeR
 
     @OnClick(R.id.tv_near_me)
     public void onTvNearMeClicked() {
-        if (lati != 0 && longi != 0) {
-//            ToDo : Api Call
+        if (!isGranted) {
+            new TedPermission(getContext())
+                    .setPermissionListener(this)
+                    .setRationaleMessage(R.string.location_message)
+                    .setDeniedMessage(R.string.location_denied_message)
+                    .setGotoSettingButtonText(R.string.ok)
+                    .setPermissions(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)
+                    .check();
         } else {
-            Toaster.shortToast("Not getting your Location.");
+            if (lati != 0 && longi != 0) {
+                startActivity(new Intent(getActivity(), CategoryListActivity.class)
+                        .putExtra(Constant.Category_name, getString(R.string.near_me))
+                        .putExtra(Constant.Latitude, lati)
+                        .putExtra(Constant.Longitude, longi));
+            } else {
+                Toaster.shortToast("Not getting your Location.");
+            }
         }
     }
 
@@ -155,11 +169,13 @@ public class FragmentHome extends Fragment implements Paginate.Callbacks, SwipeR
 //        Toaster.shortToast("Location permission granted");
         easyWayLocation = new EasyWayLocation(getContext());
         easyWayLocation.setListener(this);
+        isGranted = true;
     }
 
     @Override
     public void onPermissionDenied(ArrayList<String> deniedPermissions) {
         Toaster.shortToast("Location permission denied");
+        isGranted = false;
     }
 
     @SuppressLint("SetTextI18n")

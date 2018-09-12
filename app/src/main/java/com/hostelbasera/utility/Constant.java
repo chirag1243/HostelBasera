@@ -109,4 +109,11 @@ public class Constant {
     public static final String AddInquiryData = "addInquiryData";
     public static final String Room_id = "room_id";
 
+    public static final String Latitude = "latitude";
+    public static final String Longitude = "longitude";
+    public static final String Distance = "distance";
+    public static final String GetNearbyPropertyData = "getNearbyPropertyData";
+
+
+
 }

@@ -26,18 +26,23 @@ public class AdapterReview extends RecyclerView.Adapter<AdapterReview.ViewHolder
     private Context mContext;
     private AdapterView.OnItemClickListener onItemClickListener;
 
-    AdapterReview(Context context) {
+    AdapterReview(Context context, ArrayList<PropertyDetailModel.PropertyReviewDetails> arrPropertyReviewDetails) {
         mContext = context;
+        mValues = arrPropertyReviewDetails;
     }
 
-    public void doRefresh(ArrayList<PropertyDetailModel.PropertyReviewDetails> arrPropertyReviewDetails) {
-        mValues = arrPropertyReviewDetails;
+    public void doRefresh() {
         notifyDataSetChanged();
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.review_item, parent, false);
+        if (mValues.size() > 1) {
+            ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
+            layoutParams.width = (int) (parent.getWidth() * 0.9);
+            view.setLayoutParams(layoutParams);
+        }
         return new ViewHolder(view, this);
     }
 

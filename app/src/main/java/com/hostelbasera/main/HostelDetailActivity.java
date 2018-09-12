@@ -160,7 +160,7 @@ public class HostelDetailActivity extends BaseActivity implements RatingDialogLi
         property_id = getIntent().getIntExtra(Constant.Property_id, 0);
         toolbarTitle.setText(getIntent().getStringExtra(Constant.Property_name));
         imgBack.setVisibility(View.VISIBLE);
-        imgShare.setVisibility(View.VISIBLE);
+        imgShare.setVisibility(View.GONE);
         btnBookNow.setTypeface(btnBookNow.getTypeface(), Typeface.BOLD);
         if (Globals.isNetworkAvailable(this)) {
             getPropertyListData();
@@ -355,9 +355,9 @@ public class HostelDetailActivity extends BaseActivity implements RatingDialogLi
 
     private void setReViewAdapter() {
         if (adapterReview == null) {
-            adapterReview = new AdapterReview(this);
+            adapterReview = new AdapterReview(this, propertyDetails.propertyReviewDetails);
         }
-        adapterReview.doRefresh(propertyDetails.propertyReviewDetails);
+        adapterReview.doRefresh();
 
         if (rvReview.getAdapter() == null) {
             rvReview.setHasFixedSize(false);
