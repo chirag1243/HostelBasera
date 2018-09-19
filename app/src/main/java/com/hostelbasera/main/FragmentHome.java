@@ -64,8 +64,8 @@ public class FragmentHome extends Fragment implements Paginate.Callbacks, SwipeR
     TextView tBoth;
     @BindView(R.id.tv_near_me)
     TextView tvNearMe;
-    @BindView(R.id.tv_hostel_suggestion)
-    TextView tvHostelSuggestion;
+    //    @BindView(R.id.tvHostelSuggestion)
+//    TextView tvHostelSuggestion;
     @BindView(R.id.rv_hostel)
     RecyclerView rvHostel;
     @BindView(R.id.swipe_refresh_layout)
@@ -80,8 +80,8 @@ public class FragmentHome extends Fragment implements Paginate.Callbacks, SwipeR
     FrameLayout flRotateLoading;
     @BindView(R.id.tv_no_data_found)
     TextView tvNoDataFound;
-    @BindView(R.id.ll_hostel)
-    LinearLayout llHostel;
+//    @BindView(R.id.ll_hostel)
+//    LinearLayout llHostel;
 
     private Paginate paginate;
     private boolean loading = false;
@@ -192,7 +192,8 @@ public class FragmentHome extends Fragment implements Paginate.Callbacks, SwipeR
 //        searchView.setQuery("", false);
 //        searchView.setIconified(false);
 //        searchView.clearFocus();
-        tvHostelSuggestion.setTypeface(tvHostelSuggestion.getTypeface(), Typeface.BOLD);
+
+//        tvHostelSuggestion.setTypeface(tvHostelSuggestion.getTypeface(), Typeface.BOLD);
         arrPropertyDetailArrayList = new ArrayList<>();
         tvNoDataFound.setText("");
 
@@ -221,7 +222,7 @@ public class FragmentHome extends Fragment implements Paginate.Callbacks, SwipeR
 
     private void showNoRecordFound(String no_data_found) {
         loading = false;
-        llHostel.setVisibility(View.GONE);
+        rvHostel.setVisibility(View.GONE);
         if (tvNoDataFound.getVisibility() == View.GONE) {
             tvNoDataFound.setVisibility(View.VISIBLE);
             tvNoDataFound.setText(no_data_found);
@@ -229,7 +230,7 @@ public class FragmentHome extends Fragment implements Paginate.Callbacks, SwipeR
     }
 
     private void hideNoRecordFound() {
-        llHostel.setVisibility(View.VISIBLE);
+        rvHostel.setVisibility(View.VISIBLE);
         if (tvNoDataFound.getVisibility() == View.VISIBLE)
             tvNoDataFound.setVisibility(View.GONE);
     }
@@ -320,13 +321,31 @@ public class FragmentHome extends Fragment implements Paginate.Callbacks, SwipeR
                 paginate.unbind();
             }
             adapterHomePropertyDetail = new AdapterHomePropertyDetail(getActivity());
+            arrPropertyDetailArrayList.add(0, new GetPropertyDetailModel.PropertyDetail());
         }
         loading = false;
+
         adapterHomePropertyDetail.doRefresh(arrPropertyDetailArrayList);
 
         if (rvHostel.getAdapter() == null) {
             rvHostel.setHasFixedSize(false);
-            rvHostel.setLayoutManager(new GridLayoutManager(getContext(), Constant.GRID_SPAN));
+            GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(),Constant.GRID_SPAN);
+            gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+                @Override
+                public int getSpanSize(int position) {
+                    switch(adapterHomePropertyDetail.getItemViewType(position)){
+                        case 0:
+                            return 2;
+                        case 1:
+                            return 1;
+
+                        default:
+                            return 1;
+                    }
+                }
+            });
+
+            rvHostel.setLayoutManager(gridLayoutManager);
             rvHostel.setItemAnimator(new DefaultItemAnimator());
             rvHostel.setAdapter(adapterHomePropertyDetail);
             if (arrPropertyDetailArrayList.size() < getPropertyDetailModel.total_properties && rvHostel != null) {

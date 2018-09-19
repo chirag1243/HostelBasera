@@ -2,9 +2,11 @@ package com.hostelbasera.main;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,17 +24,21 @@ import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
 import com.hostelbasera.R;
 import com.hostelbasera.model.GetPropertyDetailModel;
+import com.hostelbasera.utility.Constant;
 
 import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class AdapterHomePropertyDetail extends RecyclerView.Adapter<AdapterHomePropertyDetail.ViewHolder> {
+public class AdapterHomePropertyDetail extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private ArrayList<GetPropertyDetailModel.PropertyDetail> mValues;
     private final Context mContext;
     private AdapterView.OnItemClickListener onItemClickListener;
+
+    public int TYPE_HEADER = 0;
+    public int TYPE_ITEM = 1;
 
     AdapterHomePropertyDetail(Context context) {
         mContext = context;
@@ -44,12 +50,20 @@ public class AdapterHomePropertyDetail extends RecyclerView.Adapter<AdapterHomeP
     }
 
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.home_hostel_item, parent, false);
-        return new ViewHolder(view, this);
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
+        RecyclerView.ViewHolder viewHolder = null;
+        LayoutInflater inflater = LayoutInflater.from(viewGroup.getContext());
+        if (viewType == TYPE_HEADER) {
+            View v1 = inflater.inflate(R.layout.header_layout, viewGroup, false);
+            viewHolder = new HeaderViewHolder(v1);
+        } else {
+            View v1 = inflater.inflate(R.layout.home_hostel_item, viewGroup, false);
+            viewHolder = new ItemViewHolder(v1);
+        }
+        return viewHolder;
     }
 
-    class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    class ItemViewHolder extends RecyclerView.ViewHolder implements AdapterView.OnItemClickListener {
         private AdapterHomePropertyDetail adapterhomepropertydetail;
 
         @BindView(R.id.img_product)
@@ -64,16 +78,16 @@ public class AdapterHomePropertyDetail extends RecyclerView.Adapter<AdapterHomeP
         RatingBar simpleRatingBar;
         @BindView(R.id.tv_location)
         TextView tvLocation;
+        @BindView(R.id.card_view1)
+        CardView cardView1;
 
-        ViewHolder(View itemView, AdapterHomePropertyDetail adapterHomePropertyDetail) {
+        ItemViewHolder(View itemView) {
             super(itemView);
-            this.adapterhomepropertydetail = adapterHomePropertyDetail;
             ButterKnife.bind(this, itemView);
-            itemView.setOnClickListener(this);
         }
 
         @SuppressLint("SetTextI18n")
-        void setDataToView(GetPropertyDetailModel.PropertyDetail mItem, ViewHolder holder, int position) {
+        void setDataToView(GetPropertyDetailModel.PropertyDetail mItem, ItemViewHolder holder, int position) {
 
             tvName.setText("" + mItem.property_name);
             tvName.setTypeface(tvName.getTypeface(), Typeface.BOLD);
@@ -101,17 +115,52 @@ public class AdapterHomePropertyDetail extends RecyclerView.Adapter<AdapterHomeP
                     })
                     .into(holder.imgProduct);
 
+            cardView1.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mContext.startActivity(new Intent(mContext, HostelDetailActivity.class).putExtra(Constant.Property_id, mValues.get(position).property_id)
+                            .putExtra(Constant.Property_name, mValues.get(position).property_name));
+                }
+            });
+
         }
 
         @Override
-        public void onClick(View v) {
-            adapterhomepropertydetail.onItemHolderClick(ViewHolder.this);
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+        }
+    }
+
+    class HeaderViewHolder extends RecyclerView.ViewHolder implements AdapterView.OnItemClickListener {
+
+        @BindView(R.id.tv_hostel_suggestion)
+        TextView tvHostelSuggestion;
+
+        HeaderViewHolder(View itemView) {
+            super(itemView);
+            ButterKnife.bind(this, itemView);
+        }
+
+        @SuppressLint("SetTextI18n")
+        void setDataToView(GetPropertyDetailModel.PropertyDetail mItem, HeaderViewHolder holder, int position) {
+            tvHostelSuggestion.setTypeface(tvHostelSuggestion.getTypeface(), Typeface.BOLD);
+        }
+
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
         }
     }
 
     @Override
-    public void onBindViewHolder(final ViewHolder holder, int position) {
-        holder.setDataToView(mValues.get(position), holder, position);
+    public void onBindViewHolder(final RecyclerView.ViewHolder holder, int position) {
+        if (holder.getItemViewType() == TYPE_HEADER) {
+            HeaderViewHolder vh1 = (HeaderViewHolder) holder;
+            vh1.setDataToView(mValues.get(position), vh1, position);
+        } else {
+            ItemViewHolder vh1 = (ItemViewHolder) holder;
+            vh1.setDataToView(mValues.get(position), vh1, position);
+        }
     }
 
     @Override
@@ -123,9 +172,14 @@ public class AdapterHomePropertyDetail extends RecyclerView.Adapter<AdapterHomeP
         this.onItemClickListener = onItemClickListener;
     }
 
-    private void onItemHolderClick(ViewHolder holder) {
+    private void onItemHolderClick(ItemViewHolder holder) {
         if (onItemClickListener != null)
             onItemClickListener.onItemClick(null, holder.itemView, holder.getAdapterPosition(), holder.getItemId());
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        return (position == 0) ? TYPE_HEADER : TYPE_ITEM;
     }
 }
 

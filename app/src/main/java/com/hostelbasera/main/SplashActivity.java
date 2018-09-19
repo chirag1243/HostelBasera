@@ -3,12 +3,14 @@ package com.hostelbasera.main;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Handler;
 import android.provider.Settings;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.hostelbasera.R;
@@ -36,6 +38,8 @@ public class SplashActivity extends Activity {
     Button btnRetry;
     @BindView(R.id.fl_rotate_loading)
     FrameLayout flRotateLoading;
+    @BindView(R.id.tv_powered_by)
+    TextView tvPoweredBy;
     //    @BindView(R.id.img_icon)
 //    ImageView imgIcon;
     boolean isSeller;
@@ -47,6 +51,7 @@ public class SplashActivity extends Activity {
         setContentView(R.layout.activity_splash);
         globals = ((Globals) getApplicationContext());
         ButterKnife.bind(this);
+        tvPoweredBy.setTypeface(tvPoweredBy.getTypeface(), Typeface.BOLD);
         Logger.addLogAdapter(new AndroidLogAdapter());
         isSeller = globals.getIsSeller();
         userModel = globals.getUserDetails();

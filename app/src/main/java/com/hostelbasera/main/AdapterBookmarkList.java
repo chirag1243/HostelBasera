@@ -90,7 +90,7 @@ public class AdapterBookmarkList extends RecyclerView.Adapter<AdapterBookmarkLis
 
             tvName.setText("" + mItem.property_name);
             tvName.setTypeface(tvName.getTypeface(), Typeface.BOLD);
-            tvPrice.setText("₹ 1800" + mItem.price); //TODO : Remove price
+            tvPrice.setText("₹ " + mItem.price); //TODO : Remove price
             tvPrice.setTypeface(tvPrice.getTypeface(), Typeface.BOLD);
             tvLocation.setText("" + mItem.city_name);
 

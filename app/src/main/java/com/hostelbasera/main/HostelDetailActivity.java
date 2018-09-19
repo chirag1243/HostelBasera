@@ -1,19 +1,23 @@
 package com.hostelbasera.main;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
@@ -53,6 +57,8 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.gson.Gson;
+import com.gun0912.tedpermission.PermissionListener;
+import com.gun0912.tedpermission.TedPermission;
 import com.hostelbasera.R;
 import com.hostelbasera.apis.HttpRequestHandler;
 import com.hostelbasera.apis.PostRequest;
@@ -81,7 +87,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class HostelDetailActivity extends BaseActivity implements RatingDialogListener, OnMapReadyCallback {
+public class HostelDetailActivity extends BaseActivity implements RatingDialogListener, OnMapReadyCallback, PermissionListener {
 
     @BindView(R.id.toolbar_title)
     TextView toolbarTitle;
@@ -311,6 +317,7 @@ public class HostelDetailActivity extends BaseActivity implements RatingDialogLi
         }
     }
 
+
     public class InfoWindowRefresher implements Callback {
         private Marker markerToRefresh;
 
@@ -453,6 +460,39 @@ public class HostelDetailActivity extends BaseActivity implements RatingDialogLi
             }).execute();
         }
         Globals.hideKeyboard(this);
+    }
+
+    @OnClick(R.id.tv_call)
+    public void onTvCallClicked() {
+        new TedPermission(this)
+                .setPermissionListener(this)
+                .setRationaleMessage(R.string.call_message)
+                .setDeniedMessage(R.string.call_denied_message)
+                .setGotoSettingButtonText(R.string.ok)
+                .setPermissions(Manifest.permission.CALL_PHONE)
+                .check();
+    }
+
+    @Override
+    public void onPermissionGranted() {
+        Intent callIntent = new Intent(Intent.ACTION_CALL);
+        callIntent.setData(Uri.parse("tel:7622885409"));
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        startActivity(callIntent);
+    }
+
+    @Override
+    public void onPermissionDenied(ArrayList<String> deniedPermissions) {
+
     }
 
     @SuppressLint("SetTextI18n")

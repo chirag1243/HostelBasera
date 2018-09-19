@@ -66,7 +66,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/dim_5dp"
-                            android:text="Nakshatra Embassy , Opp Palanpore Fire Station, Gauravpath, Palanpore, Surat, Gujarat 395009"
+                            android:text=""
                             android:textColor="@color/colorAccent"
                             android:textSize="@dimen/dim_text16" />
 
@@ -110,7 +110,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="@dimen/dim_5dp"
-                                android:text="Studio Apartment"
+                                android:text=""
                                 android:textColor="@color/colorAccent"
                                 android:textSize="@dimen/dim_text16" />
                         </LinearLayout>
@@ -145,7 +145,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="@dimen/dim_5dp"
-                                android:text="3 or More BHK"
+                                android:text=""
                                 android:textColor="@color/colorAccent"
                                 android:textSize="@dimen/dim_text16" />
                         </LinearLayout>
@@ -353,7 +353,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/dim_5dp"
-                            android:text="120 Verified Reviews"
+                            android:text=""
                             android:textColor="@color/colorPrimary"
                             android:textSize="@dimen/dim_text14"
                             android:textStyle="bold" />
@@ -416,8 +416,20 @@
             android:drawablePadding="@dimen/dim_5dp"
             android:drawableTop="@drawable/footer_edit"
             android:gravity="center"
-            android:padding="@dimen/dim_12dp"
             android:text="@string/review"
+            android:textColor="@color/colorPrimary"
+            android:textSize="@dimen/dim_text13" />
+
+        <TextView
+            android:id="@+id/tv_call"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:drawablePadding="@dimen/dim_5dp"
+            android:drawableTop="@drawable/footer_contact"
+            android:gravity="center"
+            android:padding="@dimen/dim_12dp"
+            android:text="@string/call"
             android:textColor="@color/colorPrimary"
             android:textSize="@dimen/dim_text13" />
 

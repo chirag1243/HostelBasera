@@ -176,7 +176,7 @@ public class HttpRequestHandler {
             jsonFilters.put(Constant.Property_size_id, jsonArray);
 
             jsonObject.put(Constant.Filters, jsonFilters);
-            jsonObject.put(Constant.Limit, 0);
+            jsonObject.put(Constant.Limit, 5);
             jsonObject.put(Constant.Page, pageNo);
 
             params.put(Constant.GetPropertyListData, jsonObject);
@@ -219,7 +219,7 @@ public class HttpRequestHandler {
 
             jsonFilters.put(Constant.Latitude, "" + latitude);
             jsonFilters.put(Constant.Longitude, "" + longitude);
-            jsonFilters.put(Constant.Distance, "" + 400);
+            jsonFilters.put(Constant.Distance, "0");
 
             jsonObject.put(Constant.Filters, jsonFilters);
             jsonObject.put(Constant.Limit, 0);

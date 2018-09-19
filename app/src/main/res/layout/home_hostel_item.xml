@@ -27,8 +27,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:scaleType="centerCrop"
-                    android:contentDescription="@string/app_name"
-                    android:src="@drawable/image17" />
+                    android:contentDescription="@string/app_name" />
 
                 <ImageView
                     android:id="@+id/img_place_holder"
@@ -46,7 +45,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/dim_5dp"
                 android:layout_marginTop="@dimen/dim_5dp"
-                android:text="₹ 1500"
+                android:text="₹"
                 android:textColor="@color/colorAccent"
                 android:textSize="@dimen/dim_text16"
                 android:textStyle="bold" />
@@ -59,7 +58,7 @@
                 android:layout_marginTop="@dimen/dim_10dp"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:text="Hotel Dreamland Lonavala"
+                android:text=""
                 android:textColor="@color/colorPrimary"
                 android:textSize="@dimen/dim_text16" />
 
@@ -80,7 +79,7 @@
                 android:layout_marginBottom="@dimen/dim_10dp"
                 android:layout_marginLeft="@dimen/dim_5dp"
                 android:layout_marginTop="@dimen/dim_5dp"
-                android:text="Lonavala"
+                android:text=""
                 android:maxLines="1"
                 android:ellipsize="end"
                 android:textColor="@color/colorPrimary"

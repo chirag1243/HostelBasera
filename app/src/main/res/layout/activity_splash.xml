@@ -25,7 +25,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        android:layout_marginBottom="@dimen/dim_10dp"
         android:gravity="center"
         android:orientation="vertical">
 
@@ -67,6 +66,18 @@
                 android:src="@drawable/logo"
                 android:visibility="gone" />
         </FrameLayout>
+
+        <TextView
+            android:id="@+id/tv_powered_by"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorAccent"
+            android:textSize="@dimen/text_size_large"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:padding="@dimen/dim_5dp"
+            android:background="@drawable/rounded_price_bg"
+            android:text="Powered by : CG 3D World" />
 
     </LinearLayout>
 </LinearLayout>

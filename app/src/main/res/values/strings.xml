@@ -18,6 +18,9 @@
     <string name="location_message">we need permission for <b>Near Me</b></string>
     <string name="location_denied_message">If you reject permission, you can not use this near me feature.</string>
 
+    <string name="call_message">we need permission for <b>Call</b></string>
+    <string name="call_denied_message">If you reject permission, you can not use this call feature.</string>
+
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
@@ -69,4 +72,5 @@
     <string name="cancel">Cancel</string>
     <string name="search_for_hostel_pg">Search for Hostel / PG</string>
     <string name="rooms">Rooms</string>
+    <string name="call">Call</string>
 </resources>

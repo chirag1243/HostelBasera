@@ -62,6 +62,7 @@ public class SignUpActivity extends BaseActivity {
     }
 
     public void init() {
+        globals = ((Globals) this.getApplicationContext());
         btnSignUp.setTypeface(btnSignUp.getTypeface(), Typeface.BOLD);
         segmentedGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
