@@ -17,6 +17,7 @@ import com.hostelbasera.R;
 import com.hostelbasera.apis.HttpRequestHandler;
 import com.hostelbasera.apis.PostRequest;
 import com.hostelbasera.model.UserDetailModel;
+import com.hostelbasera.seller.SellerDashboardActivity;
 import com.hostelbasera.utility.Globals;
 import com.hostelbasera.utility.Toaster;
 import com.orhanobut.logger.AndroidLogAdapter;
@@ -99,7 +100,7 @@ public class SplashActivity extends Activity {
                         globals.setIsSeller(isSeller);
                         globals.setUserDetails(userDetailModel);
 
-                        startActivity(new Intent(SplashActivity.this, DashboardActivity.class));
+                        startActivity(new Intent(SplashActivity.this, isSeller ? SellerDashboardActivity.class : DashboardActivity.class));
                     } else {
                         Toaster.shortToast(userDetailModel.message);
                         startActivity(new Intent(SplashActivity.this, LoginActivity.class));
