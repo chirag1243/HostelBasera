@@ -73,4 +73,5 @@
     <string name="search_for_hostel_pg">Search for Hostel / PG</string>
     <string name="rooms">Rooms</string>
     <string name="call">Call</string>
+    <string name="booked_hostel_pg">Booked Hostel/PG</string>
 </resources>

@@ -9,17 +9,13 @@
             android:icon="@drawable/nav_pg_hostels"
             android:title="@string/pg_hostel" />
         <item
-            android:id="@+id/nav_bookmarks"
-            android:icon="@drawable/nav_bookmark"
-            android:title="@string/bookmarks" />
-        <item
-            android:id="@+id/nav_my_pg_hostel"
+            android:id="@+id/nav_booked_hostel_pg"
             android:icon="@drawable/nav_my_pg_hostel"
-            android:title="@string/my_pg_hostel" />
+            android:title="@string/booked_hostel_pg" />
         <item
-            android:id="@+id/nav_feedback"
+            android:id="@+id/nav_enquiry"
             android:icon="@drawable/nav_feedback"
-            android:title="@string/feedback" />
+            android:title="@string/enquiry" />
         <item
             android:id="@+id/nav_share_app"
             android:icon="@drawable/nav_share"
@@ -29,5 +25,4 @@
             android:icon="@drawable/nav_signout"
             android:title="@string/sign_out" />
     </group>
-
 </menu>
