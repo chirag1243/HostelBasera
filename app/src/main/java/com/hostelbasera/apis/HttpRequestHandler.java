@@ -397,6 +397,27 @@ public class HttpRequestHandler {
         return params;
     }
 
+    /*
+    {
+	"token":"si0d3lRh4Of7ld03l",
+	"deviceType":1,
+	"seller_id":12
+}
+
+    */
+
+
+    public JSONObject getSellerPropertyListParam() {
+        JSONObject params = new JSONObject();
+        try {
+            params = setDefaultParameters();
+            params.put(Constant.Seller_id, globals.getUserId());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return params;
+    }
+
     /*public JSONObject getLogoutUserParam() {
         JSONObject params = new JSONObject();
         JSONObject jsonObject = new JSONObject();

@@ -189,11 +189,6 @@ public class FragmentHome extends Fragment implements Paginate.Callbacks, SwipeR
         swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary);
         swipeRefreshLayout.setOnRefreshListener(this);
 
-//        searchView.setQuery("", false);
-//        searchView.setIconified(false);
-//        searchView.clearFocus();
-
-//        tvHostelSuggestion.setTypeface(tvHostelSuggestion.getTypeface(), Typeface.BOLD);
         arrPropertyDetailArrayList = new ArrayList<>();
         tvNoDataFound.setText("");
 
@@ -206,8 +201,6 @@ public class FragmentHome extends Fragment implements Paginate.Callbacks, SwipeR
                 .check();
 
         if (Globals.isNetworkAvailable(getActivity())) {
-//            vpBanner.setVisibility(View.GONE);
-//            getSliderImages();
             getPropertyListData(true);
         } else {
             showNoRecordFound(getString(R.string.no_data_found));

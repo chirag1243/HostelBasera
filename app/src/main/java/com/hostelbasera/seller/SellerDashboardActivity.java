@@ -176,7 +176,7 @@ public class SellerDashboardActivity extends BaseActivity implements NavigationV
         switch (item.getItemId()) {
             case R.id.nav_pg_hostel:
                 setToolbarTitle(R.string.pg_hostel);
-                setFragment(new FragmentHome());
+                setFragment(new FragmentSellerHome());
                 break;
             case R.id.nav_booked_hostel_pg:
                 setToolbarTitle(R.string.booked_hostel_pg);

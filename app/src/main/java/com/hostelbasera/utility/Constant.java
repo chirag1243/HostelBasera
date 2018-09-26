@@ -114,6 +114,6 @@ public class Constant {
     public static final String Distance = "distance";
     public static final String GetNearbyPropertyData = "getNearbyPropertyData";
 
-
+    public static final String Seller_id = "seller_id";
 
 }
