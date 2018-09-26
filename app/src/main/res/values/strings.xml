@@ -74,4 +74,7 @@
     <string name="rooms">Rooms</string>
     <string name="call">Call</string>
     <string name="booked_hostel_pg">Booked Hostel/PG</string>
+    <string name="property">Property</string>
+    <string name="seller">Seller</string>
+    <string name="enter_name">Enter Name</string>
 </resources>

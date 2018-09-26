@@ -100,6 +100,26 @@ public class FragmentSellerHome extends Fragment implements Paginate.Callbacks, 
             showNoRecordFound(getString(R.string.no_data_found));
             Toaster.shortToast(R.string.no_internet_msg);
         }
+
+        rvHostel.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+            }
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                if (rvHostel.getChildAt(0) != null) {
+                    swipeRefreshLayout.setEnabled(rvHostel.getChildAt(0).getTop() == 0);
+                }
+               /* if (dy > 0 && floatingActionButton.getVisibility() == View.VISIBLE) {
+                    floatingActionButton.hide();
+                } else if (dy < 0 && floatingActionButton.getVisibility() != View.VISIBLE) {
+                    floatingActionButton.show();
+                }*/
+                super.onScrolled(recyclerView, dx, dy);
+            }
+        });
     }
 
     public void getPropertyListData(boolean showProgress) {
@@ -110,7 +130,7 @@ public class FragmentSellerHome extends Fragment implements Paginate.Callbacks, 
                 progressBar.setVisibility(View.VISIBLE);
 //            startLoader();
 
-            new PostRequest(getActivity(), getString(R.string.getPropertyList), postData, false, new PostRequest.OnPostServiceCallListener() {
+            new PostRequest(getActivity(), getString(R.string.getSellerPropertyList), postData, false, new PostRequest.OnPostServiceCallListener() {
                 @Override
                 public void onSucceedToPostCall(JSONObject response) {
                     if (progressBar.getVisibility() == View.VISIBLE)

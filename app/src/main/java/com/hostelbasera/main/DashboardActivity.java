@@ -94,7 +94,7 @@ public class DashboardActivity extends BaseActivity implements NavigationView.On
         imgProfile = headerView.findViewById(R.id.img_profile);
 
         Glide.with(this)
-                .load(getString(R.string.image_url) + globals.getUserDetails().loginUserDetail.name)//TODO : Add Image
+                .load(getString(R.string.image_url) /*+ globals.getUserDetails().loginUserDetail.name*/)//TODO : Add Image
                 .apply(new RequestOptions()
                         .fitCenter()
                         .placeholder(R.mipmap.ic_launcher)

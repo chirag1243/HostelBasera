@@ -24,8 +24,9 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/dim_10dp"
-        android:src="@drawable/logo"
-        android:visibility="visible"
+        android:src="@drawable/ic_add"
+        app:backgroundTint="@color/colorPrimary"
+        android:visibility="gone"
         app:pressedTranslationZ="12dp" />
 
 </android.support.design.widget.CoordinatorLayout>

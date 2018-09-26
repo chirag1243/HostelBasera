@@ -7,7 +7,7 @@
         <item
             android:id="@+id/nav_pg_hostel"
             android:icon="@drawable/nav_pg_hostels"
-            android:title="@string/pg_hostel" />
+            android:title="@string/my_pg_hostel" />
         <item
             android:id="@+id/nav_booked_hostel_pg"
             android:icon="@drawable/nav_my_pg_hostel"

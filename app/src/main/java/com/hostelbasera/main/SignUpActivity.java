@@ -16,6 +16,7 @@ import com.hostelbasera.R;
 import com.hostelbasera.apis.HttpRequestHandler;
 import com.hostelbasera.apis.PostRequest;
 import com.hostelbasera.model.UserDetailModel;
+import com.hostelbasera.seller.SellerDashboardActivity;
 import com.hostelbasera.utility.BaseActivity;
 import com.hostelbasera.utility.Globals;
 import com.hostelbasera.utility.Toaster;
@@ -121,7 +122,7 @@ public class SignUpActivity extends BaseActivity {
                                 }
                                 globals.setIsSeller(isSeller);
                                 globals.setUserDetails(userDetailModel);
-                                startActivity(new Intent(SignUpActivity.this, DashboardActivity.class));
+                                startActivity(new Intent(SignUpActivity.this, isSeller ? SellerDashboardActivity.class : DashboardActivity.class));
                                 finish();
                             }
                             Toaster.shortToast(userDetailModel.message);

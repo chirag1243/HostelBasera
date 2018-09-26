@@ -119,6 +119,7 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateAlwaysHidden|adjustResize" />
+        <activity android:name=".seller.AddHostelPGActivity"></activity>
     </application>
 
 </manifest>

@@ -6,6 +6,7 @@ import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -47,6 +48,7 @@ import org.json.JSONObject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class SellerDashboardActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -62,6 +64,8 @@ public class SellerDashboardActivity extends BaseActivity implements NavigationV
     NavigationView navView;
     @BindView(R.id.drawer_layout)
     DrawerLayout drawer;
+    @BindView(R.id.fb_add_hostel)
+    FloatingActionButton fbAddHostel;
     Globals globals;
     AppCompatImageView img_menu;
     CircleImageView imgProfile;
@@ -77,7 +81,7 @@ public class SellerDashboardActivity extends BaseActivity implements NavigationV
 
     public void init() {
         globals = ((Globals) getApplicationContext());
-
+        fbAddHostel.setVisibility(View.VISIBLE);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close) {
             @Override
             public void onDrawerOpened(View drawerView) {
@@ -100,7 +104,7 @@ public class SellerDashboardActivity extends BaseActivity implements NavigationV
         imgProfile = headerView.findViewById(R.id.img_profile);
 
         Glide.with(this)
-                .load(getString(R.string.image_url) + globals.getUserDetails().loginUserDetail.name)//TODO : Add Image
+                .load(getString(R.string.image_url) /*+ globals.getUserDetails().loginUserDetail.name*/)//TODO : Add Image
                 .apply(new RequestOptions()
                         .fitCenter()
                         .placeholder(R.mipmap.ic_launcher)
@@ -109,13 +113,14 @@ public class SellerDashboardActivity extends BaseActivity implements NavigationV
                 .into(imgProfile);
 
         img_menu.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View v) {
                 doCloseDrawer();
             }
         });
 
-        setToolbarTitle(R.string.find_your_hostel);
+        setToolbarTitle(R.string.my_pg_hostel);
 
         tvNavTitle.setText(globals.getIsSeller() ? globals.getUserDetails().loginSellerDetail.name : globals.getUserDetails().loginUserDetail.name);
 
@@ -124,7 +129,7 @@ public class SellerDashboardActivity extends BaseActivity implements NavigationV
         navigationView.setNavigationItemSelectedListener(this);
         navigationView.getMenu().getItem(0).setChecked(true);
 
-        setFragment(new FragmentHome());
+        setFragment(new FragmentSellerHome());
     }
 
     public void setToolbarTitle(int title) {
@@ -175,7 +180,7 @@ public class SellerDashboardActivity extends BaseActivity implements NavigationV
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.nav_pg_hostel:
-                setToolbarTitle(R.string.pg_hostel);
+                setToolbarTitle(R.string.my_pg_hostel);
                 setFragment(new FragmentSellerHome());
                 break;
             case R.id.nav_booked_hostel_pg:
@@ -211,5 +216,10 @@ public class SellerDashboardActivity extends BaseActivity implements NavigationV
         globals.clearAllSharedPreferences();
         startActivity(new Intent(SellerDashboardActivity.this, LoginActivity.class));
         finish();
+    }
+
+    @OnClick(R.id.fb_add_hostel)
+    public void doAddHostel(){
+        startActivity(new Intent(SellerDashboardActivity.this, AddHostelPGActivity.class));
     }
 }
