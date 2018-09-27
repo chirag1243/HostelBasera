@@ -77,4 +77,21 @@
     <string name="property">Property</string>
     <string name="seller">Seller</string>
     <string name="enter_name">Enter Name</string>
+    <string name="category">Category</string>
+    <string name="enter_email">Enter Email</string>
+    <string name="enter_address">Enter Address</string>
+    <string name="description">Description</string>
+    <string name="enter_description">Enter Description</string>
+    <string name="state">State</string>
+    <string name="city">City</string>
+    <string name="facility">Facility</string>
+    <string name="water_timings">Water Timings</string>
+    <string name="enter_water_timings">Enter Water Timings</string>
+    <string name="contact">Contact</string>
+    <string name="open_hours">Open Hours</string>
+    <string name="enter_open_hours">Enter Open Hours</string>
+    <string name="images">Images</string>
+    <string name="add">Add</string>
+    <string name="enter_price">Enter Price</string>
+    <string name="add_hostel_pg">Add Hostel/PG</string>
 </resources>
