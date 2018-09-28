@@ -27,5 +27,6 @@
     <string name="getNearbyProperty">user/getNearbyProperty</string>
 
     <string name="getSellerPropertyList">user/getSellerPropertyList</string>
+    <string name="getSellerDropdown">user/getSellerDropdown</string>
 
 </resources>
