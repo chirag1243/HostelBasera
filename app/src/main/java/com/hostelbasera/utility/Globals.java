@@ -29,6 +29,7 @@ import com.hostelbasera.R;
 import com.hostelbasera.model.UserDetailModel;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
@@ -307,7 +308,7 @@ public class Globals extends CoreApp {
     }
 
     public int getUserId() {
-        return getSharedPref().getInt(Constant.User_id,0);
+        return getSharedPref().getInt(Constant.User_id, 0);
     }
 
     public void setIsSeller(boolean isSeller) {
@@ -366,6 +367,17 @@ public class Globals extends CoreApp {
 
     public static String getFileExt(String fileName) {
         return fileName.substring(fileName.lastIndexOf(".") + 1, fileName.length());
+    }
+
+    public static boolean checkFileSize(String path) {
+
+// Get length of file in bytes
+        double fileSizeInBytes = new File(path).length();
+// Convert the bytes to Kilobytes (1 KB = 1024 Bytes)
+        double fileSizeInKB = fileSizeInBytes / 1024;
+// Convert the KB to MegaBytes (1 MB = 1024 KBytes)
+        double fileSizeInMB = fileSizeInKB / 1024;
+        return fileSizeInMB > Constant.MAX_FILE_SIZE;
     }
 
 }

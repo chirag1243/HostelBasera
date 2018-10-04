@@ -1,8 +1,12 @@
 package com.hostelbasera.seller;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.RequiresApi;
 import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -35,6 +39,11 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import droidninja.filepicker.FilePickerBuilder;
+import droidninja.filepicker.FilePickerConst;
+import droidninja.filepicker.utils.Orientation;
+
+import static com.hostelbasera.utility.Globals.checkFileSize;
 
 public class AddHostelPGActivity extends BaseActivity {
 
@@ -108,6 +117,8 @@ public class AddHostelPGActivity extends BaseActivity {
 
     int type_id = 0, property_category_id = 0, property_type_id = 0, property_size_id = 0, state_id = 0, city_id = 0, facility_id = 0;
     AdapterContact adapterContact;
+    AdapterRoom adapterRoom;
+    ArrayList<String> arrFile;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -136,6 +147,14 @@ public class AddHostelPGActivity extends BaseActivity {
             finish();
         }
     }
+    /*
+TODO :
+    Paying Guest Id = 2 Then show property size 1,2,3 BHK
+    Facility Id = 15 Then laundry_fees textbox need to show / if not available then null
+    Facility Id = 18 Then water_timing textbox need to hide / if not available then null
+    Facility Id = 16 Then cooking_menu image need to upload / if not available then null
+
+     */
 
     public void getSellerDropdownData() {
         JSONObject postData = HttpRequestHandler.getInstance().getSellerDropdownParam();
@@ -171,24 +190,94 @@ public class AddHostelPGActivity extends BaseActivity {
         setSpFacility();
 
         setContactAdapter();
+        setRoomsAdapter();
     }
 
     @OnClick(R.id.tv_add_contact)
     public void doAddContact() {
-        setContactAdapter();
+        if (adapterContact != null) {
+            adapterContact.doAdd();
+        } else {
+            setContactAdapter();
+        }
+    }
+
+    @OnClick(R.id.tv_add_room)
+    public void doAddRoom() {
+        if (adapterRoom != null) {
+            adapterRoom.doAdd();
+        } else {
+            setRoomsAdapter();
+        }
     }
 
     public void setContactAdapter() {
         if (adapterContact == null) {
             adapterContact = new AdapterContact(this);
         }
-        adapterContact.doAdd();
+//        adapterContact.doAdd();
 
         if (rvContact.getAdapter() == null) {
             rvContact.setLayoutManager(new LinearLayoutManager(this));
             rvContact.setItemAnimator(new DefaultItemAnimator());
             rvContact.setAdapter(adapterContact);
         }
+    }
+
+    public void setRoomsAdapter() {
+        if (adapterRoom == null) {
+            adapterRoom = new AdapterRoom(this);
+        }
+//        adapterContact.doAdd();
+
+        if (rvRooms.getAdapter() == null) {
+            rvRooms.setLayoutManager(new LinearLayoutManager(this));
+            rvRooms.setItemAnimator(new DefaultItemAnimator());
+            rvRooms.setAdapter(adapterRoom);
+        }
+    }
+
+
+    @OnClick(R.id.tv_add_image)
+    public void doAddImage() {
+        FilePickerBuilder.getInstance()
+                .setMaxCount(10)
+//                    .setSelectedFiles(photoPaths)
+                .setActivityTheme(R.style.LibAppTheme)
+                .enableVideoPicker(false)
+                .enableCameraSupport(true)
+                .showGifs(false)
+                .showFolderView(true)
+                .enableImagePicker(true)
+                .enableDocSupport(true)
+                .withOrientation(Orientation.UNSPECIFIED)
+                .pickPhoto(this);
+
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == FilePickerConst.REQUEST_CODE_PHOTO) {
+            if (resultCode == Activity.RESULT_OK && data != null) {
+                arrFile = new ArrayList<>();
+                arrFile = data.getStringArrayListExtra(FilePickerConst.KEY_SELECTED_MEDIA);
+                doAttachment();
+            }
+        }
+    }
+
+    public void doAttachment() {
+        for (int i = 0; i < arrFile.size(); i++) {
+            if (checkFileSize(arrFile.get(i))) {
+                Toaster.shortToast("Max 5mb file allowed.");
+                return;
+            }
+        }
+        //TODO : Add Attachment Changes
+//        setAttachment();
     }
 
     public void setSpProperty() {

@@ -94,4 +94,5 @@
     <string name="enter_price">Enter Price</string>
     <string name="add_hostel_pg">Add Hostel/PG</string>
     <string name="enter_contact">Enter Contact</string>
+    <string name="room_details">Room Details</string>
 </resources>

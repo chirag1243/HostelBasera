@@ -1,45 +1,32 @@
 package com.hostelbasera.seller;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.hostelbasera.R;
-import com.hostelbasera.model.SellerPropertyModel;
-import com.hostelbasera.utility.Toaster;
 
 import java.util.ArrayList;
-import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class AdapterContact extends RecyclerView.Adapter<AdapterContact.ViewHolder> {
+public class AdapterAddAttachment  extends RecyclerView.Adapter<AdapterAddAttachment.ViewHolder> {
 
     public ArrayList<String> mValues = new ArrayList<>();
     private final Context mContext;
     private AdapterView.OnItemClickListener onItemClickListener;
 
-    AdapterContact(Context context) {
+    AdapterAddAttachment(Context context) {
         mContext = context;
     }
 
     public void doAdd() {
-        showContactDialog(mValues.size(), true);
         notifyDataSetChanged();
     }
 
@@ -50,7 +37,7 @@ public class AdapterContact extends RecyclerView.Adapter<AdapterContact.ViewHold
     }
 
     class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        private AdapterContact adapterContact;
+        private AdapterAddAttachment adapterAddAttachment;
 
         @BindView(R.id.tv_contact)
         TextView tvContact;
@@ -59,9 +46,9 @@ public class AdapterContact extends RecyclerView.Adapter<AdapterContact.ViewHold
         @BindView(R.id.tv_remove)
         TextView tvRemove;
 
-        ViewHolder(View itemView, AdapterContact adapterContact) {
+        ViewHolder(View itemView, AdapterAddAttachment adapterAddAttachment) {
             super(itemView);
-            this.adapterContact = adapterContact;
+            this.adapterAddAttachment = adapterAddAttachment;
             ButterKnife.bind(this, itemView);
             itemView.setOnClickListener(this);
         }
@@ -78,7 +65,6 @@ public class AdapterContact extends RecyclerView.Adapter<AdapterContact.ViewHold
             imgEdit.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    showContactDialog(position, false);
                 }
             });
             holder.tvContact.setText(mValues.get(position));
@@ -87,48 +73,8 @@ public class AdapterContact extends RecyclerView.Adapter<AdapterContact.ViewHold
 
         @Override
         public void onClick(View v) {
-            adapterContact.onItemHolderClick(ViewHolder.this);
+            adapterAddAttachment.onItemHolderClick(ViewHolder.this);
         }
-    }
-
-    private void showContactDialog(int position, boolean isAdd) {
-        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(mContext);
-        LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        final View dialogView;
-        if (inflater != null) {
-            dialogView = inflater.inflate(R.layout.edit_contact_dialog, null);
-
-            dialogBuilder.setView(dialogView);
-            final AlertDialog dialog = dialogBuilder.create();
-            Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-            dialog.setCancelable(true);
-            dialog.setCanceledOnTouchOutside(true);
-
-            EditText edtContact = dialogView.findViewById(R.id.edt_contact);
-            Button btnSubmit = dialogView.findViewById(R.id.btn_submit);
-
-            if (!isAdd)
-                edtContact.setText(mValues.get(position));
-
-            btnSubmit.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (edtContact.getText().toString().trim().isEmpty()) {
-                        Toaster.shortToast("Please enter contact.");
-                        return;
-                    }
-                    if (isAdd) {
-                        mValues.add(edtContact.getText().toString().trim());
-                    } else {
-                        mValues.set(position, edtContact.getText().toString().trim());
-                    }
-                    notifyDataSetChanged();
-                    dialog.dismiss();
-                }
-            });
-            dialog.show();
-        }
-
     }
 
 

@@ -43,6 +43,7 @@ dependencies {
     implementation 'com.android.support:multidex:1.0.3'
     implementation 'cc.cloudist.acplibrary:library:1.2.1'
     implementation 'com.github.markomilos:paginate:0.5.1'
+    implementation 'com.droidninja:filepicker:2.0.8'
     implementation 'com.orhanobut:logger:2.1.1'
     implementation 'me.shaohui:bottomdialog:1.1.9'
     implementation 'de.hdodenhof:circleimageview:2.2.0'
