@@ -669,8 +669,6 @@ TODO :
     Facility Id = 15 Then laundry_fees textbox need to show / if not available then null
     Facility Id = 18 Then water_timing textbox need to hide / if not available then null
     Facility Id = 16 Then cooking_menu image need to upload / if not available then null
-
-
      */
                 if (arrFacilityList.get(i).facility_id == 15) {
                     edtLaundryFees.setText("");
