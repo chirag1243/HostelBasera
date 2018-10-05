@@ -42,6 +42,8 @@ public class SellerDropdownModel implements Serializable {
         @SerializedName("facility_id")
         public int facility_id;
 
+        public boolean isSelected;
+
         @Override
         public String toString() {
             return facility_name;

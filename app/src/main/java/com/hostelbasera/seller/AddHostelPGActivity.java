@@ -2,12 +2,14 @@ package com.hostelbasera.seller;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -32,6 +34,7 @@ import com.hostelbasera.apis.HttpRequestHandler;
 import com.hostelbasera.apis.PostRequest;
 import com.hostelbasera.model.AddImageAttachmentModel;
 import com.hostelbasera.model.SellerDropdownModel;
+import com.hostelbasera.model.UserDetailModel;
 import com.hostelbasera.utility.BaseActivity;
 import com.hostelbasera.utility.Globals;
 import com.hostelbasera.utility.Toaster;
@@ -81,8 +84,8 @@ public class AddHostelPGActivity extends BaseActivity implements PermissionListe
     Spinner spState;
     @BindView(R.id.sp_city)
     Spinner spCity;
-    @BindView(R.id.sp_facility)
-    Spinner spFacility;
+    @BindView(R.id.btn_facility)
+    Button btnFacility;
     @BindView(R.id.edt_water_timings)
     EditText edtWaterTimings;
     @BindView(R.id.edt_open_hours)
@@ -100,6 +103,19 @@ public class AddHostelPGActivity extends BaseActivity implements PermissionListe
     LinearLayout llCity;
     @BindView(R.id.tv_add_contact)
     AppCompatTextView tvAddContact;
+
+    @BindView(R.id.ll_type_of_property)
+    LinearLayout llTypeOfProperty;
+    @BindView(R.id.ll_size_of_property)
+    LinearLayout llSizeOfProperty;
+
+    @BindView(R.id.ll_water_timings)
+    LinearLayout llWaterTimings;
+    @BindView(R.id.ll_laundry_fees)
+    LinearLayout llLaundryFees;
+    @BindView(R.id.edt_laundry_fees)
+    EditText edtLaundryFees;
+
 
     Globals globals;
     SellerDropdownModel.SellerDropdownDetail sellerDropdownDetail;
@@ -125,6 +141,7 @@ public class AddHostelPGActivity extends BaseActivity implements PermissionListe
     ArrayList<String> arrFile;
     AdapterAddAttachment adapterAddAttachment;
     ArrayList<AddImageAttachmentModel> arrAddImageAttachment;
+    CharSequence[] arrFacility;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -176,12 +193,13 @@ public class AddHostelPGActivity extends BaseActivity implements PermissionListe
             finish();
         }
     }
+
     /*
 TODO :
-    Paying Guest Id = 2 Then show property size 1,2,3 BHK
     Facility Id = 15 Then laundry_fees textbox need to show / if not available then null
     Facility Id = 18 Then water_timing textbox need to hide / if not available then null
     Facility Id = 16 Then cooking_menu image need to upload / if not available then null
+
 
      */
 
@@ -216,12 +234,11 @@ TODO :
         setSpTypeOfProperty();
         setSpSizeOfProperty();
         setSpState();
-        setSpFacility();
+        arrFacilityList.addAll(sellerDropdownDetail.facilityList);
 
         setContactAdapter();
         setRoomsAdapter();
     }
-
 
     @OnClick(R.id.tv_add_contact)
     public void doAddContact() {
@@ -363,6 +380,17 @@ TODO :
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 type_id = arrProperty.get(position).type_id;
+                if (type_id == 2) {
+                    llTypeOfProperty.setVisibility(View.VISIBLE);
+                    llSizeOfProperty.setVisibility(View.VISIBLE);
+                    setSpTypeOfProperty();
+                    setSpSizeOfProperty();
+                } else {
+                    property_type_id = 0;
+                    property_size_id = 0;
+                    llTypeOfProperty.setVisibility(View.GONE);
+                    llSizeOfProperty.setVisibility(View.GONE);
+                }
             }
 
             @Override
@@ -416,6 +444,8 @@ TODO :
     }
 
     public void setSpTypeOfProperty() {
+        property_type_id = 0;
+        arrTypeOfProperty = new ArrayList<>();
         SellerDropdownModel.PropertytypesList propertytypesList = new SellerDropdownModel.PropertytypesList();
         propertytypesList.property_type_id = 0;
         propertytypesList.property_type = "Select Type of Property";
@@ -459,6 +489,8 @@ TODO :
     }
 
     public void setSpSizeOfProperty() {
+        property_size_id = 0;
+        arrPropertySizes = new ArrayList<>();
         SellerDropdownModel.Propertysizes propertysizes = new SellerDropdownModel.Propertysizes();
         propertysizes.property_size_id = 0;
         propertysizes.property_size = "Select Size of Property";
@@ -596,47 +628,71 @@ TODO :
         });
     }
 
-    public void setSpFacility() {
-        SellerDropdownModel.FacilityList facilityList = new SellerDropdownModel.FacilityList();
-        facilityList.facility_id = 0;
-        facilityList.facility_name = "Select Facility";
+    @OnClick(R.id.btn_facility)
+    protected void showSelectFacilityDialog() {
+        boolean[] checkedFacility = new boolean[arrFacilityList.size()];
+        arrFacility = new CharSequence[arrFacilityList.size()];
 
-        arrFacilityList.add(facilityList);
-        arrFacilityList.addAll(sellerDropdownDetail.facilityList);
+        for (int i = 0; i < arrFacilityList.size(); i++) {
+            checkedFacility[i] = arrFacilityList.get(i).isSelected;
+            arrFacility[i] = arrFacilityList.get(i).facility_name;
+        }
 
-        adapterFacilityList = new ArrayAdapter<SellerDropdownModel.FacilityList>(getApplicationContext(), R.layout.spinner_item, arrFacilityList) {
+        DialogInterface.OnMultiChoiceClickListener coloursDialogListener = new DialogInterface.OnMultiChoiceClickListener() {
+
             @Override
-            public boolean isEnabled(int position) {
-                return position != 0;
-            }
-
-            // Change color item
-            @Override
-            public View getDropDownView(int position, View convertView, @NonNull ViewGroup parent) {
-                View mView = super.getDropDownView(position, convertView, parent);
-                TextView mTextView = (TextView) mView;
-                if (position == 0) {
-                    mTextView.setTextColor(Color.GRAY);
-                } else {
-                    mTextView.setTextColor(Color.BLACK);
-                }
-                return mView;
+            public void onClick(DialogInterface dialog, int which, boolean isChecked) {
+                arrFacilityList.get(which).isSelected = isChecked;
+                onChangeSelectedFacility();
             }
         };
-
-        spFacility.setAdapter(adapterFacilityList);
-
-        spFacility.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Select Facility");
+        builder.setMultiChoiceItems(arrFacility, checkedFacility, coloursDialogListener);
+        builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
             @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                facility_id = arrFacilityList.get(position).facility_id;
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
             }
         });
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+    protected void onChangeSelectedFacility() {
+        StringBuilder strAssignee = new StringBuilder();
+        for (int i = 0; i < arrFacilityList.size(); i++) {
+            if (arrFacilityList.get(i).isSelected) {
+                strAssignee.append(arrFacilityList.get(i).facility_name).append(", ");
+                 /*
+TODO :
+    Facility Id = 15 Then laundry_fees textbox need to show / if not available then null
+    Facility Id = 18 Then water_timing textbox need to hide / if not available then null
+    Facility Id = 16 Then cooking_menu image need to upload / if not available then null
+
+
+     */
+                if (arrFacilityList.get(i).facility_id == 15) {
+                    edtLaundryFees.setText("");
+                    llLaundryFees.setVisibility(View.VISIBLE);
+                }
+                if (arrFacilityList.get(i).facility_id == 18) {
+                    edtWaterTimings.setText("");
+                    llWaterTimings.setVisibility(View.VISIBLE);
+                }
+            }else {
+                if (arrFacilityList.get(i).facility_id == 15) {
+                    llLaundryFees.setVisibility(View.GONE);
+                }else if (arrFacilityList.get(i).facility_id == 18) {
+                    llWaterTimings.setVisibility(View.GONE);
+                }
+            }
+        }
+        if (!strAssignee.toString().isEmpty()) {
+            strAssignee.deleteCharAt(strAssignee.length() - 2);
+            btnFacility.setText(strAssignee.toString());
+        } else
+            btnFacility.setText(getString(R.string._none_selected_));
     }
 
     @OnClick(R.id.img_back)
