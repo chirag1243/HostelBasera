@@ -1,5 +1,6 @@
 package com.hostelbasera.seller;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
@@ -24,9 +25,12 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
+import com.gun0912.tedpermission.PermissionListener;
+import com.gun0912.tedpermission.TedPermission;
 import com.hostelbasera.R;
 import com.hostelbasera.apis.HttpRequestHandler;
 import com.hostelbasera.apis.PostRequest;
+import com.hostelbasera.model.AddImageAttachmentModel;
 import com.hostelbasera.model.SellerDropdownModel;
 import com.hostelbasera.utility.BaseActivity;
 import com.hostelbasera.utility.Globals;
@@ -45,7 +49,7 @@ import droidninja.filepicker.utils.Orientation;
 
 import static com.hostelbasera.utility.Globals.checkFileSize;
 
-public class AddHostelPGActivity extends BaseActivity {
+public class AddHostelPGActivity extends BaseActivity implements PermissionListener {
 
     @BindView(R.id.toolbar_title)
     TextView toolbarTitle;
@@ -119,13 +123,37 @@ public class AddHostelPGActivity extends BaseActivity {
     AdapterContact adapterContact;
     AdapterRoom adapterRoom;
     ArrayList<String> arrFile;
+    AdapterAddAttachment adapterAddAttachment;
+    ArrayList<AddImageAttachmentModel> arrAddImageAttachment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_hostel_pg);
         ButterKnife.bind(this);
+        checkPermission();
+//        init();
+    }
+
+    public void checkPermission() {
+        new TedPermission(this)
+                .setPermissionListener(this)
+                .setRationaleMessage(R.string.rationale_message)
+                .setDeniedMessage(R.string.denied_message)
+                .setGotoSettingButtonText(R.string.ok)
+                .setPermissions(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA)
+                .check();
+    }
+
+    @Override
+    public void onPermissionGranted() {
         init();
+    }
+
+    @Override
+    public void onPermissionDenied(ArrayList<String> deniedPermissions) {
+//        init();
+        finish();
     }
 
     public void init() {
@@ -139,6 +167,7 @@ public class AddHostelPGActivity extends BaseActivity {
         arrStateList = new ArrayList<>();
         arrCityList = new ArrayList<>();
         arrFacilityList = new ArrayList<>();
+        arrAddImageAttachment = new ArrayList<>();
 
         if (Globals.isNetworkAvailable(this)) {
             getSellerDropdownData();
@@ -168,8 +197,8 @@ TODO :
                             if (sellerDropdownModel.status == 0) {
                                 sellerDropdownDetail = sellerDropdownModel.sellerDropdownDetail;
                                 setData();
-                            }
-                            Toaster.shortToast(sellerDropdownModel.message);
+                            } else
+                                Toaster.shortToast(sellerDropdownModel.message);
                         }
 
                         @Override
@@ -192,6 +221,7 @@ TODO :
         setContactAdapter();
         setRoomsAdapter();
     }
+
 
     @OnClick(R.id.tv_add_contact)
     public void doAddContact() {
@@ -276,8 +306,27 @@ TODO :
                 return;
             }
         }
-        //TODO : Add Attachment Changes
-//        setAttachment();
+        for (int i = 0; i < arrFile.size(); i++) {
+            AddImageAttachmentModel addImageAttachmentModel = new AddImageAttachmentModel();
+            addImageAttachmentModel.FilePath = arrFile.get(i);
+            arrAddImageAttachment.add(addImageAttachmentModel);
+        }
+
+        setAttachment();
+    }
+
+    public void setAttachment() {
+        if (adapterAddAttachment == null) {
+            adapterAddAttachment = new AdapterAddAttachment(this);
+        }
+        adapterAddAttachment.doRefresh(arrAddImageAttachment);
+
+        if (rvImages.getAdapter() == null) {
+            rvImages.setHasFixedSize(true);
+            rvImages.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+            rvImages.setItemAnimator(new DefaultItemAnimator());
+            rvImages.setAdapter(adapterAddAttachment);
+        }
     }
 
     public void setSpProperty() {

@@ -1,6 +1,7 @@
 package com.hostelbasera.seller;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,16 +10,22 @@ import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.Priority;
+import com.bumptech.glide.request.RequestOptions;
 import com.hostelbasera.R;
+import com.hostelbasera.model.AddImageAttachmentModel;
+import com.hostelbasera.utility.Constant;
+import com.hostelbasera.utility.ViewFullImageActivity;
 
 import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class AdapterAddAttachment  extends RecyclerView.Adapter<AdapterAddAttachment.ViewHolder> {
+public class AdapterAddAttachment extends RecyclerView.Adapter<AdapterAddAttachment.ViewHolder> {
 
-    public ArrayList<String> mValues = new ArrayList<>();
+    public ArrayList<AddImageAttachmentModel> mValues = new ArrayList<>();
     private final Context mContext;
     private AdapterView.OnItemClickListener onItemClickListener;
 
@@ -26,23 +33,22 @@ public class AdapterAddAttachment  extends RecyclerView.Adapter<AdapterAddAttach
         mContext = context;
     }
 
-    public void doAdd() {
+    public void doRefresh(ArrayList<AddImageAttachmentModel> arrAddImageAttachment) {
+        mValues = arrAddImageAttachment;
         notifyDataSetChanged();
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.contact_item, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.attachment_item, parent, false);
         return new ViewHolder(view, this);
     }
 
     class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private AdapterAddAttachment adapterAddAttachment;
 
-        @BindView(R.id.tv_contact)
-        TextView tvContact;
-        @BindView(R.id.img_edit)
-        ImageView imgEdit;
+        @BindView(R.id.img_attachment_icon)
+        ImageView imgAttachmentIcon;
         @BindView(R.id.tv_remove)
         TextView tvRemove;
 
@@ -53,7 +59,7 @@ public class AdapterAddAttachment  extends RecyclerView.Adapter<AdapterAddAttach
             itemView.setOnClickListener(this);
         }
 
-        void setDataToView(String mItem, ViewHolder holder, int position) {
+        void setDataToView(AddImageAttachmentModel mItem, ViewHolder holder, int position) {
             tvRemove.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -62,12 +68,21 @@ public class AdapterAddAttachment  extends RecyclerView.Adapter<AdapterAddAttach
                     notifyItemRangeChanged(position, mValues.size());
                 }
             });
-            imgEdit.setOnClickListener(new View.OnClickListener() {
+
+            Glide.with(mContext)
+                    .load(mItem.FilePath)
+                    .apply(new RequestOptions()
+                            .fitCenter()
+                            .placeholder(R.drawable.image_placeholder)
+                            .dontAnimate()
+                            .priority(Priority.HIGH))
+                    .into(imgAttachmentIcon);
+            imgAttachmentIcon.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    mContext.startActivity(new Intent(mContext, ViewFullImageActivity.class).putExtra(Constant.File_name, mItem.FilePath).putExtra(Constant.IsFullPath, true));
                 }
             });
-            holder.tvContact.setText(mValues.get(position));
 
         }
 

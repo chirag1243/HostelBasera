@@ -116,4 +116,8 @@ public class Constant {
 
     public static final String Seller_id = "seller_id";
 
+    public static final String File_name = "file_name";
+    public static final String IsFullPath = "IsFullPath";
+    public static final String File_id = "file_id";
+
 }
