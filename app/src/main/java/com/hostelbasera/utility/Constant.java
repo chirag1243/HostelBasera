@@ -135,4 +135,7 @@ public class Constant {
     public static final String Roomname = "roomname";
     public static final String Roomprice = "roomprice";
 
+    public static final String Userfile = "userfile";
+    public static final String Type = "type";
+
 }

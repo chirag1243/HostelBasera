@@ -2,6 +2,7 @@ package com.hostelbasera.seller;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
@@ -33,15 +34,22 @@ import com.gun0912.tedpermission.TedPermission;
 import com.hostelbasera.R;
 import com.hostelbasera.apis.HttpRequestHandler;
 import com.hostelbasera.apis.PostRequest;
+import com.hostelbasera.apis.PostWithRequestParam;
 import com.hostelbasera.model.AddImageAttachmentModel;
+import com.hostelbasera.model.AddRoomModel;
+import com.hostelbasera.model.FileUploadModel;
 import com.hostelbasera.model.SellerDropdownModel;
 import com.hostelbasera.model.UserDetailModel;
 import com.hostelbasera.utility.BaseActivity;
+import com.hostelbasera.utility.Constant;
 import com.hostelbasera.utility.Globals;
 import com.hostelbasera.utility.Toaster;
+import com.loopj.android.http.RequestParams;
 
 import org.json.JSONObject;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
 import butterknife.BindView;
@@ -65,8 +73,8 @@ public class AddHostelPGActivity extends BaseActivity implements PermissionListe
     Toolbar toolbar;
     @BindView(R.id.sp_property)
     Spinner spProperty;
-    @BindView(R.id.edt_add_comment)
-    EditText edtAddComment;
+    @BindView(R.id.edt_name)
+    EditText edtName;
     @BindView(R.id.sp_category)
     Spinner spCategory;
     @BindView(R.id.sp_type_of_property)
@@ -152,6 +160,9 @@ public class AddHostelPGActivity extends BaseActivity implements PermissionListe
 
     AdapterMenuAttachment adapterMenuAttachment;
     ArrayList<AddImageAttachmentModel> arrAddMenuAttachment;
+    int property_id;
+    double longitude, latitude;
+    ArrayList<String> arrContact;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -196,6 +207,9 @@ public class AddHostelPGActivity extends BaseActivity implements PermissionListe
         arrFacilityList = new ArrayList<>();
         arrAddImageAttachment = new ArrayList<>();
         arrAddMenuAttachment = new ArrayList<>();
+        arrContact = new ArrayList<>();
+
+        property_id = getIntent().getIntExtra(Constant.Property_id, 0);
 
         if (Globals.isNetworkAvailable(this)) {
             getSellerDropdownData();
@@ -749,12 +763,201 @@ TODO :
         onBackPressed();
     }
 
+    ArrayList<String> arrFileName;
+    ArrayList<Integer> arrFileIndex;
+
     @OnClick(R.id.btn_add_hostel_pg)
     public void onBtnAddHostelPgClicked() {
+
+
+        if (arrAddImageAttachment.size() > 0) {
+            setProgressDialog(arrAddImageAttachment.size());
+            for (int i = 0; i < arrAddImageAttachment.size(); i++) {
+                doUploadFile(new File(arrAddImageAttachment.get(i).FilePath), i);
+            }
+        } else if (arrAddMenuAttachment.size() > 0) {
+            setProgressDialog(arrAddMenuAttachment.size());
+            for (int i = 0; i < arrAddMenuAttachment.size(); i++) {
+                doUploadMenuFile(new File(arrAddMenuAttachment.get(i).FilePath), i);
+            }
+        } else {
+            doAddHostelPG();
+        }
     }
 
+    public void setProgressDialog(int size) {
+        FileCount = 0;
+        arrFileName = new ArrayList<>();
+        arrFileIndex = new ArrayList<>();
+
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+        progressDialog.setCancelable(false);
+        progressDialog.setMax(size);
+        progressDialog.setTitle("File Uploading");
+        progressDialog.show();
+    }
+
+    ProgressDialog progressDialog;
+    int FileCount = 0;
+
+    private void doUploadFile(File file, int index) {
+        RequestParams requestParams = new RequestParams();
+        try {
+            requestParams.put(Constant.Userfile, file);
+            requestParams.put(Constant.File_id, index);
+            requestParams.put(Constant.Type, "property");
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        new PostWithRequestParam(this, getString(R.string.uploadPropertyimages), requestParams,
+                false, new PostWithRequestParam.OnPostWithReqParamServiceCallListener() {
+            @Override
+            public void onSucceedToPostCall(JSONObject response) {
+                progressDialog.setProgress(FileCount);
+                FileCount++;
+                FileUploadModel fileUploadModel = new Gson().fromJson(response.toString(), FileUploadModel.class);
+                if (fileUploadModel.status == 0) {
+                    arrFileName.add(fileUploadModel.uploadPropertyImagesDetail.file_name);
+                    arrFileIndex.add(fileUploadModel.uploadPropertyImagesDetail.file_id);
+
+                    if (arrFileName.size() == arrAddImageAttachment.size()) {
+                        int count = 0;
+                        for (int j = 0; j < arrAddImageAttachment.size(); j++) {
+                            for (int k = 0; k < arrFileIndex.size(); k++) {
+                                if (arrFileIndex.get(k) == count) {
+                                    arrAddImageAttachment.get(j).FileName = arrFileName.get(k);
+                                    break;
+                                }
+                            }
+                            count++;
+                        }
+//                        if (dialog != null && dialog.isShowing())
+//                            dialog.dismiss();
+                        progressDialog.dismiss();
+                        if (arrAddMenuAttachment.size() > 0) {
+                            setProgressDialog(arrAddMenuAttachment.size());
+                            for (int i = 0; i < arrAddMenuAttachment.size(); i++) {
+                                doUploadMenuFile(new File(arrAddMenuAttachment.get(i).FilePath), i);
+                            }
+                        } else {
+                            doAddHostelPG();
+                        }
+                    }
+                } else {
+//                    isFailToUpload = true;
+                    progressDialog.dismiss();
+                    Toaster.shortToast(fileUploadModel.message);
+                }
+            }
+
+            @Override
+            public void onFailedToPostCall(int statusCode, String msg) {
+//                isFailToUpload = true;
+//                if (dialog != null && dialog.isShowing())
+//                    dialog.dismiss();
+                progressDialog.dismiss();
+                Toaster.shortToast(msg);
+            }
+
+            @Override
+            public void onProgressCall(int progress) {
+                progressDialog.setProgress(progress);
+            }
+        }).execute();
+    }
+
+    private void doUploadMenuFile(File file, int index) {
+        RequestParams requestParams = new RequestParams();
+        try {
+            requestParams.put(Constant.Userfile, file);
+            requestParams.put(Constant.File_id, index);
+            requestParams.put(Constant.Type, "coocking_menu");
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        new PostWithRequestParam(this, getString(R.string.uploadPropertyimages), requestParams,
+                false, new PostWithRequestParam.OnPostWithReqParamServiceCallListener() {
+            @Override
+            public void onSucceedToPostCall(JSONObject response) {
+                progressDialog.setProgress(FileCount);
+                FileCount++;
+                FileUploadModel fileUploadModel = new Gson().fromJson(response.toString(), FileUploadModel.class);
+                if (fileUploadModel.status == 0) {
+                    arrFileName.add(fileUploadModel.uploadPropertyImagesDetail.file_name);
+                    arrFileIndex.add(fileUploadModel.uploadPropertyImagesDetail.file_id);
+
+                    if (arrFileName.size() == arrAddMenuAttachment.size()) {
+                        int count = 0;
+                        for (int j = 0; j < arrAddMenuAttachment.size(); j++) {
+                            for (int k = 0; k < arrFileIndex.size(); k++) {
+                                if (arrFileIndex.get(k) == count) {
+                                    arrAddMenuAttachment.get(j).FileName = arrFileName.get(k);
+                                    break;
+                                }
+                            }
+                            count++;
+                        }
+//                        if (dialog != null && dialog.isShowing())
+//                            dialog.dismiss();
+                        progressDialog.dismiss();
+                        doAddHostelPG();
+                    }
+                } else {
+//                    isFailToUpload = true;
+                    progressDialog.dismiss();
+                    Toaster.shortToast(fileUploadModel.message);
+                }
+            }
+
+            @Override
+            public void onFailedToPostCall(int statusCode, String msg) {
+//                isFailToUpload = true;
+//                if (dialog != null && dialog.isShowing())
+//                    dialog.dismiss();
+                progressDialog.dismiss();
+                Toaster.shortToast(msg);
+            }
+
+            @Override
+            public void onProgressCall(int progress) {
+                progressDialog.setProgress(progress);
+            }
+        }).execute();
+    }
+
+    public ArrayList<AddRoomModel> arrRoomDetails;
+
+    // TODO : Set longitude & latitude
+
     public void doAddHostelPG() {
-        JSONObject postData = HttpRequestHandler.getInstance().getSellerDropdownParam();
+        arrRoomDetails = new ArrayList<>();
+        if (adapterRoom != null) {
+            arrRoomDetails = adapterRoom.mValues;
+        }
+
+        if (adapterContact != null) {
+            arrContact = adapterContact.mValues;
+        }
+
+        StringBuilder contact_no = new StringBuilder();
+        for (int i = 0; i < arrContact.size(); i++) {
+            contact_no.append(arrContact.get(i)).append(", ");
+        }
+/*
+getAddPropertyParam(int property_id, int type_id, String property_name, int property_category_id,
+                                          int property_size_id, String email, String address, double longitude,
+                                          double latitude, String cont_no, String description, int state_id, int city_id,
+                                          String timing, String water_timing, String laundry_fees, ArrayList<AddImageAttachmentModel> arrAddMenuAttachment,
+                                          String price, ArrayList<SellerDropdownModel.FacilityList> arrFacilityList,
+                                          ArrayList<AddImageAttachmentModel> arrAddImageAttachment, ArrayList<AddRoomModel> arrRoomDetails)
+ */
+        JSONObject postData = HttpRequestHandler.getInstance().getAddPropertyParam(property_id, type_id, edtName.getText().toString(),
+                property_category_id,property_size_id,edtEmail.getText().toString(), edtAddress.getText().toString(), longitude, latitude,
+                contact_no.deleteCharAt(contact_no.length() - 2).toString(), edtDescription.getText().toString(), state_id ,city_id,edtOpenHours.getText().toString(),
+                edtWaterTimings.getText().toString(),edtLaundryFees.getText().toString(),arrAddMenuAttachment,edtPrice.getText().toString(),arrFacilityList,arrAddImageAttachment,arrRoomDetails);
 
         if (postData != null) {
             new PostRequest(this, getString(R.string.addProperty), postData, true,

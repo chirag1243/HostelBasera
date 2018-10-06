@@ -30,5 +30,6 @@
     <string name="getSellerDropdown">user/getSellerDropdown</string>
 
     <string name="addProperty">user/addProperty</string>
+    <string name="uploadPropertyimages">login/uploadPropertyimages</string>
 
 </resources>

@@ -20,7 +20,6 @@
             android:layout_margin="@dimen/dim_12dp"
             android:orientation="vertical">
 
-
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -38,7 +37,7 @@
                 app:cardCornerRadius="@dimen/dim_3dp">
 
                 <EditText
-                    android:id="@+id/edt_add_comment"
+                    android:id="@+id/edt_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@null"

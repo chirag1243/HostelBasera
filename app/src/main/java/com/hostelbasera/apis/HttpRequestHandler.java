@@ -3,6 +3,9 @@ package com.hostelbasera.apis;
 import android.content.Context;
 import android.graphics.Color;
 
+import com.hostelbasera.model.AddImageAttachmentModel;
+import com.hostelbasera.model.AddRoomModel;
+import com.hostelbasera.model.SellerDropdownModel;
 import com.hostelbasera.utility.Constant;
 import com.hostelbasera.utility.Globals;
 import com.loopj.android.http.AsyncHttpClient;
@@ -471,16 +474,63 @@ public class HttpRequestHandler {
 
 //TODO : Change as per above JSON
 
-    public JSONObject getAddPropertyParam(int property_id, boolean is_remove) {
+    public JSONObject getAddPropertyParam(int property_id, int type_id, String property_name, int property_category_id,
+                                          int property_size_id, String email, String address, double longitude,
+                                          double latitude, String cont_no, String description, int state_id, int city_id,
+                                          String timing, String water_timing, String laundry_fees, ArrayList<AddImageAttachmentModel> arrAddMenuAttachment,
+                                          String price, ArrayList<SellerDropdownModel.FacilityList> arrFacilityList,
+                                          ArrayList<AddImageAttachmentModel> arrAddImageAttachment, ArrayList<AddRoomModel> arrRoomDetails) {
         JSONObject params = new JSONObject();
         JSONObject jsonObject = new JSONObject();
+        JSONArray jsonArray;
         try {
             params = setDefaultParameters();
-            params.put(Constant.Property_id, property_id);
+            params.put(Constant.Property_id, "" + property_id);
 
+            jsonObject.put(Constant.Type_id, type_id);
+            jsonObject.put(Constant.Seller_id, globals.getUserId());
+            jsonObject.put(Constant.Property_name, property_name);
 
-            jsonObject.put(Constant.User_id, globals.getUserId());
-            jsonObject.put(Constant.Is_remove, is_remove);
+            jsonObject.put(Constant.Property_category_id, property_category_id);
+            jsonObject.put(Constant.Property_size_id, property_size_id);
+            jsonObject.put(Constant.Email, email);
+            jsonObject.put(Constant.Address, address);
+            jsonObject.put(Constant.Longitude, longitude);
+            jsonObject.put(Constant.Latitude, latitude);
+            jsonObject.put(Constant.Cont_no, cont_no);
+            jsonObject.put(Constant.Description, description);
+            jsonObject.put(Constant.State_id, state_id);
+            jsonObject.put(Constant.City_id, city_id);
+            jsonObject.put(Constant.Timing, timing);
+            jsonObject.put(Constant.Water_timing, water_timing);
+            jsonObject.put(Constant.Laundry_fees, laundry_fees);
+
+            StringBuilder cooking_menu = new StringBuilder();
+            for (int i = 0; i < arrAddMenuAttachment.size(); i++) {
+                cooking_menu.append(arrAddMenuAttachment.get(i).FileName).append(", ");
+            }
+            jsonObject.put(Constant.Cooking_menu, cooking_menu.deleteCharAt(cooking_menu.length() - 2));
+            jsonObject.put(Constant.Price, price);
+
+            jsonArray = new JSONArray();
+            for (int i = 0; i < arrFacilityList.size(); i++) {
+                if (arrFacilityList.get(i).isSelected) {
+                    jsonArray.put(arrFacilityList.get(i).facility_id);
+                }
+            }
+            jsonObject.put(Constant.Facility, jsonArray);
+
+            jsonArray = new JSONArray();
+            for (int i = 0; i < arrAddImageAttachment.size(); i++) {
+                jsonArray.put(arrAddImageAttachment.get(i).FileName);
+            }
+            jsonObject.put(Constant.Property_images, jsonArray);
+
+            jsonArray = new JSONArray();
+            for (int i = 0; i < arrRoomDetails.size(); i++) {
+                jsonArray.put(new JSONObject().put(Constant.Roomname, arrRoomDetails.get(i).name).put(Constant.Roomprice, arrRoomDetails.get(i).price));
+            }
+            jsonObject.put(Constant.AddPropertyRoom, jsonArray);
 
             params.put(Constant.AddPropertyData, jsonObject);
         } catch (Exception e) {
