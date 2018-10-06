@@ -397,16 +397,6 @@ public class HttpRequestHandler {
         return params;
     }
 
-    /*
-    {
-	"token":"si0d3lRh4Of7ld03l",
-	"deviceType":1,
-	"seller_id":12
-}
-
-    */
-
-
     public JSONObject getSellerPropertyListParam() {
         JSONObject params = new JSONObject();
         try {
@@ -427,6 +417,78 @@ public class HttpRequestHandler {
         }
         return params;
     }
+
+    /*
+   {
+    "token":"si0d3lRh4Of7ld03l",
+    "deviceType":1,
+    "user_id":2,
+
+    "property_id":"",
+    "addPropertyData":{
+        "type_id":1,
+        "seller_id":1,
+        "property_name":"test property",
+        "property_category_id":1,
+        "property_size_id":2,
+        "email":"test@gmail.com",
+        "address":"501, empire state building,udhana darwaja,surat",
+        "longitude":1.2565,
+        "latitude":2.55558,
+        "cont_no":9898976523,
+        "description":"test",
+        "state_id":2,
+        "city_id":5,
+        "timing":"",
+        "water_timing":"",
+        "laundry_fees":152,
+        "cooking_menu":"1.jpg",
+        "price":1582,
+        "facility":[
+                1,
+                2,
+                5
+        ],
+        "property_images":[
+                            "1.jpg",
+                            "2.jpg",
+                            "5.jpg"
+         ],
+        "addPropertyRoom":[
+                {
+                    "roomname":"room1",
+                    "roomprice":222
+                },
+                {
+                    "roomname":"room1",
+                    "roomprice":222
+                }
+        ]
+    }
+}
+    */
+
+
+//TODO : Change as per above JSON
+
+    public JSONObject getAddPropertyParam(int property_id, boolean is_remove) {
+        JSONObject params = new JSONObject();
+        JSONObject jsonObject = new JSONObject();
+        try {
+            params = setDefaultParameters();
+            params.put(Constant.Property_id, property_id);
+
+
+            jsonObject.put(Constant.User_id, globals.getUserId());
+            jsonObject.put(Constant.Is_remove, is_remove);
+
+            params.put(Constant.AddPropertyData, jsonObject);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return params;
+    }
+
 
     /*public JSONObject getLogoutUserParam() {
         JSONObject params = new JSONObject();

@@ -120,4 +120,19 @@ public class Constant {
     public static final String IsFullPath = "IsFullPath";
     public static final String File_id = "file_id";
 
+    public static final String AddPropertyData = "addPropertyData";
+    public static final String Address = "address";
+    public static final String State_id = "state_id";
+    public static final String City_id = "city_id";
+    public static final String Timing = "timing";
+    public static final String Water_timing = "water_timing";
+    public static final String Laundry_fees = "laundry_fees";
+    public static final String Cooking_menu = "cooking_menu";
+    public static final String Price = "price";
+    public static final String Facility = "facility";
+    public static final String Property_images = "property_images";
+    public static final String AddPropertyRoom = "addPropertyRoom";
+    public static final String Roomname = "roomname";
+    public static final String Roomprice = "roomprice";
+
 }

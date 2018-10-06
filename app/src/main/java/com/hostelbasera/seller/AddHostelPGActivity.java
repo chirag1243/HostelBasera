@@ -11,6 +11,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.AppCompatTextView;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -116,6 +117,12 @@ public class AddHostelPGActivity extends BaseActivity implements PermissionListe
     @BindView(R.id.edt_laundry_fees)
     EditText edtLaundryFees;
 
+    @BindView(R.id.tv_add_menu)
+    TextView tvAddMenu;
+    @BindView(R.id.rv_menu)
+    RecyclerView rvMenu;
+    @BindView(R.id.cv_cooking_menu)
+    CardView cvCookingMenu;
 
     Globals globals;
     SellerDropdownModel.SellerDropdownDetail sellerDropdownDetail;
@@ -142,6 +149,9 @@ public class AddHostelPGActivity extends BaseActivity implements PermissionListe
     AdapterAddAttachment adapterAddAttachment;
     ArrayList<AddImageAttachmentModel> arrAddImageAttachment;
     CharSequence[] arrFacility;
+
+    AdapterMenuAttachment adapterMenuAttachment;
+    ArrayList<AddImageAttachmentModel> arrAddMenuAttachment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -185,6 +195,7 @@ public class AddHostelPGActivity extends BaseActivity implements PermissionListe
         arrCityList = new ArrayList<>();
         arrFacilityList = new ArrayList<>();
         arrAddImageAttachment = new ArrayList<>();
+        arrAddMenuAttachment = new ArrayList<>();
 
         if (Globals.isNetworkAvailable(this)) {
             getSellerDropdownData();
@@ -193,15 +204,6 @@ public class AddHostelPGActivity extends BaseActivity implements PermissionListe
             finish();
         }
     }
-
-    /*
-TODO :
-    Facility Id = 15 Then laundry_fees textbox need to show / if not available then null
-    Facility Id = 18 Then water_timing textbox need to hide / if not available then null
-    Facility Id = 16 Then cooking_menu image need to upload / if not available then null
-
-
-     */
 
     public void getSellerDropdownData() {
         JSONObject postData = HttpRequestHandler.getInstance().getSellerDropdownParam();
@@ -284,9 +286,29 @@ TODO :
         }
     }
 
+    boolean isImage;
 
     @OnClick(R.id.tv_add_image)
     public void doAddImage() {
+        isImage = true;
+        FilePickerBuilder.getInstance()
+                .setMaxCount(10)
+//                    .setSelectedFiles(photoPaths)
+                .setActivityTheme(R.style.LibAppTheme)
+                .enableVideoPicker(false)
+                .enableCameraSupport(true)
+                .showGifs(false)
+                .showFolderView(true)
+                .enableImagePicker(true)
+                .enableDocSupport(true)
+                .withOrientation(Orientation.UNSPECIFIED)
+                .pickPhoto(this);
+
+    }
+
+    @OnClick(R.id.tv_add_menu)
+    public void doAddMenuImage() {
+        isImage = false;
         FilePickerBuilder.getInstance()
                 .setMaxCount(10)
 //                    .setSelectedFiles(photoPaths)
@@ -326,10 +348,16 @@ TODO :
         for (int i = 0; i < arrFile.size(); i++) {
             AddImageAttachmentModel addImageAttachmentModel = new AddImageAttachmentModel();
             addImageAttachmentModel.FilePath = arrFile.get(i);
-            arrAddImageAttachment.add(addImageAttachmentModel);
+            if (isImage)
+                arrAddImageAttachment.add(addImageAttachmentModel);
+            else
+                arrAddMenuAttachment.add(addImageAttachmentModel);
         }
 
-        setAttachment();
+        if (isImage)
+            setAttachment();
+        else
+            setMenuAttachment();
     }
 
     public void setAttachment() {
@@ -343,6 +371,20 @@ TODO :
             rvImages.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
             rvImages.setItemAnimator(new DefaultItemAnimator());
             rvImages.setAdapter(adapterAddAttachment);
+        }
+    }
+
+    public void setMenuAttachment() {
+        if (adapterMenuAttachment == null) {
+            adapterMenuAttachment = new AdapterMenuAttachment(this);
+        }
+        adapterMenuAttachment.doRefresh(arrAddMenuAttachment);
+
+        if (rvMenu.getAdapter() == null) {
+            rvMenu.setHasFixedSize(true);
+            rvMenu.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+            rvMenu.setItemAnimator(new DefaultItemAnimator());
+            rvMenu.setAdapter(adapterMenuAttachment);
         }
     }
 
@@ -671,18 +713,27 @@ TODO :
     Facility Id = 16 Then cooking_menu image need to upload / if not available then null
      */
                 if (arrFacilityList.get(i).facility_id == 15) {
-                    edtLaundryFees.setText("");
                     llLaundryFees.setVisibility(View.VISIBLE);
+                }
+                if (arrFacilityList.get(i).facility_id == 16) {
+                    cvCookingMenu.setVisibility(View.VISIBLE);
                 }
                 if (arrFacilityList.get(i).facility_id == 18) {
                     edtWaterTimings.setText("");
-                    llWaterTimings.setVisibility(View.VISIBLE);
-                }
-            }else {
-                if (arrFacilityList.get(i).facility_id == 15) {
-                    llLaundryFees.setVisibility(View.GONE);
-                }else if (arrFacilityList.get(i).facility_id == 18) {
                     llWaterTimings.setVisibility(View.GONE);
+                }
+            } else {
+                if (arrFacilityList.get(i).facility_id == 15) {
+                    edtLaundryFees.setText("");
+                    llLaundryFees.setVisibility(View.GONE);
+                }
+                if (arrFacilityList.get(i).facility_id == 16) {
+                    arrAddMenuAttachment = new ArrayList<>();
+                    setMenuAttachment();
+                    cvCookingMenu.setVisibility(View.GONE);
+                }
+                if (arrFacilityList.get(i).facility_id == 18) {
+                    llWaterTimings.setVisibility(View.VISIBLE);
                 }
             }
         }
@@ -700,6 +751,30 @@ TODO :
 
     @OnClick(R.id.btn_add_hostel_pg)
     public void onBtnAddHostelPgClicked() {
+    }
+
+    public void doAddHostelPG() {
+        JSONObject postData = HttpRequestHandler.getInstance().getSellerDropdownParam();
+
+        if (postData != null) {
+            new PostRequest(this, getString(R.string.addProperty), postData, true,
+                    new PostRequest.OnPostServiceCallListener() {
+                        @Override
+                        public void onSucceedToPostCall(JSONObject response) {
+                            SellerDropdownModel sellerDropdownModel = new Gson().fromJson(response.toString(), SellerDropdownModel.class);
+                            if (sellerDropdownModel.status == 0) {
+                                onBackPressed();
+                            }
+                            Toaster.shortToast(sellerDropdownModel.message);
+                        }
+
+                        @Override
+                        public void onFailedToPostCall(int statusCode, String msg) {
+                            Toaster.shortToast(msg);
+                        }
+                    }).execute();
+        }
+        Globals.hideKeyboard(this);
     }
 
     @Override

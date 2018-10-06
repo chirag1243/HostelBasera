@@ -98,4 +98,6 @@
 
     <string name="_none_selected_">- None Selected -</string>
     <string name="enter_laundry_fees">Enter Laundry Fees</string>
+    <string name="laundry_fees">Laundry Fees</string>
+    <string name="cooking_menu">Cooking Menu</string>
 </resources>

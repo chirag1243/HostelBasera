@@ -29,4 +29,6 @@
     <string name="getSellerPropertyList">user/getSellerPropertyList</string>
     <string name="getSellerDropdown">user/getSellerDropdown</string>
 
+    <string name="addProperty">user/addProperty</string>
+
 </resources>
