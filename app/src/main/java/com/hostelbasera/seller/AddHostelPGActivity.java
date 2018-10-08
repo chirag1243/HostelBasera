@@ -3,9 +3,12 @@ package com.hostelbasera.seller;
 import android.Manifest;
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -28,6 +31,8 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.vision.barcode.Barcode;
 import com.google.gson.Gson;
 import com.gun0912.tedpermission.PermissionListener;
 import com.gun0912.tedpermission.TedPermission;
@@ -50,7 +55,9 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -932,8 +939,12 @@ TODO :
 
     // TODO : Set longitude & latitude
 
+
     public void doAddHostelPG() {
         arrRoomDetails = new ArrayList<>();
+
+        getLocationFromAddress(edtAddress.getText().toString().trim());
+
         if (adapterRoom != null) {
             arrRoomDetails = adapterRoom.mValues;
         }
@@ -955,9 +966,9 @@ getAddPropertyParam(int property_id, int type_id, String property_name, int prop
                                           ArrayList<AddImageAttachmentModel> arrAddImageAttachment, ArrayList<AddRoomModel> arrRoomDetails)
  */
         JSONObject postData = HttpRequestHandler.getInstance().getAddPropertyParam(property_id, type_id, edtName.getText().toString(),
-                property_category_id,property_size_id,edtEmail.getText().toString(), edtAddress.getText().toString(), longitude, latitude,
-                contact_no.deleteCharAt(contact_no.length() - 2).toString(), edtDescription.getText().toString(), state_id ,city_id,edtOpenHours.getText().toString(),
-                edtWaterTimings.getText().toString(),edtLaundryFees.getText().toString(),arrAddMenuAttachment,edtPrice.getText().toString(),arrFacilityList,arrAddImageAttachment,arrRoomDetails);
+                property_category_id, property_size_id, edtEmail.getText().toString(), edtAddress.getText().toString(), longitude, latitude,
+                contact_no.deleteCharAt(contact_no.length() - 2).toString(), edtDescription.getText().toString(), state_id, city_id, edtOpenHours.getText().toString(),
+                edtWaterTimings.getText().toString(), edtLaundryFees.getText().toString(), arrAddMenuAttachment, edtPrice.getText().toString(), arrFacilityList, arrAddImageAttachment, arrRoomDetails);
 
         if (postData != null) {
             new PostRequest(this, getString(R.string.addProperty), postData, true,
@@ -978,6 +989,34 @@ getAddPropertyParam(int property_id, int type_id, String property_name, int prop
                     }).execute();
         }
         Globals.hideKeyboard(this);
+    }
+
+    public boolean doValidate(){
+        if (edtName.getText().toString().trim().isEmpty()){
+            Toaster.shortToast("Enter name.");
+        }
+        return true;
+    }
+
+    public void getLocationFromAddress(String strAddress) {
+        Geocoder coder = new Geocoder(this);
+        List<Address> address;
+
+        try {
+            // May throw an IOException
+            address = coder.getFromLocationName(strAddress, 5);
+            if (address == null) {
+                return;
+            }
+
+            Address location = address.get(0);
+
+            longitude = location.getLatitude();
+            latitude = location.getLongitude();
+
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
     }
 
     @Override
