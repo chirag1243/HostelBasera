@@ -722,6 +722,7 @@ public class AddHostelPGActivity extends BaseActivity implements PermissionListe
         dialog.show();
     }
 
+
     protected void onChangeSelectedFacility() {
         StringBuilder strAssignee = new StringBuilder();
         for (int i = 0; i < arrFacilityList.size(); i++) {
@@ -735,6 +736,7 @@ TODO :
      */
                 if (arrFacilityList.get(i).facility_id == 15) {
                     llLaundryFees.setVisibility(View.VISIBLE);
+
                 }
                 if (arrFacilityList.get(i).facility_id == 16) {
                     cvCookingMenu.setVisibility(View.VISIBLE);
@@ -776,8 +778,19 @@ TODO :
     @OnClick(R.id.btn_add_hostel_pg)
     public void onBtnAddHostelPgClicked() {
 
+        arrRoomDetails = new ArrayList<>();
+        arrContact = new ArrayList<>();
+        if (adapterRoom != null) {
+            arrRoomDetails = adapterRoom.mValues;
+        }
 
-        if (arrAddImageAttachment.size() > 0) {
+        if (adapterContact != null) {
+            arrContact = adapterContact.mValues;
+        }
+        if (!doValidate())
+            return;
+
+       /* if (arrAddImageAttachment.size() > 0) {
             setProgressDialog(arrAddImageAttachment.size());
             for (int i = 0; i < arrAddImageAttachment.size(); i++) {
                 doUploadFile(new File(arrAddImageAttachment.get(i).FilePath), i);
@@ -789,7 +802,7 @@ TODO :
             }
         } else {
             doAddHostelPG();
-        }
+        }*/
     }
 
     public void setProgressDialog(int size) {
@@ -937,38 +950,18 @@ TODO :
 
     public ArrayList<AddRoomModel> arrRoomDetails;
 
-    // TODO : Set longitude & latitude
-
-
     public void doAddHostelPG() {
-        arrRoomDetails = new ArrayList<>();
-
-        getLocationFromAddress(edtAddress.getText().toString().trim());
-
-        if (adapterRoom != null) {
-            arrRoomDetails = adapterRoom.mValues;
-        }
-
-        if (adapterContact != null) {
-            arrContact = adapterContact.mValues;
-        }
 
         StringBuilder contact_no = new StringBuilder();
         for (int i = 0; i < arrContact.size(); i++) {
             contact_no.append(arrContact.get(i)).append(", ");
         }
-/*
-getAddPropertyParam(int property_id, int type_id, String property_name, int property_category_id,
-                                          int property_size_id, String email, String address, double longitude,
-                                          double latitude, String cont_no, String description, int state_id, int city_id,
-                                          String timing, String water_timing, String laundry_fees, ArrayList<AddImageAttachmentModel> arrAddMenuAttachment,
-                                          String price, ArrayList<SellerDropdownModel.FacilityList> arrFacilityList,
-                                          ArrayList<AddImageAttachmentModel> arrAddImageAttachment, ArrayList<AddRoomModel> arrRoomDetails)
- */
+
         JSONObject postData = HttpRequestHandler.getInstance().getAddPropertyParam(property_id, type_id, edtName.getText().toString(),
                 property_category_id, property_size_id, edtEmail.getText().toString(), edtAddress.getText().toString(), longitude, latitude,
                 contact_no.deleteCharAt(contact_no.length() - 2).toString(), edtDescription.getText().toString(), state_id, city_id, edtOpenHours.getText().toString(),
-                edtWaterTimings.getText().toString(), edtLaundryFees.getText().toString(), arrAddMenuAttachment, edtPrice.getText().toString(), arrFacilityList, arrAddImageAttachment, arrRoomDetails);
+                edtWaterTimings.getText().toString(), edtLaundryFees.getText().toString(), arrAddMenuAttachment, edtPrice.getText().toString(), arrFacilityList,
+                arrAddImageAttachment, arrRoomDetails);
 
         if (postData != null) {
             new PostRequest(this, getString(R.string.addProperty), postData, true,
@@ -991,30 +984,93 @@ getAddPropertyParam(int property_id, int type_id, String property_name, int prop
         Globals.hideKeyboard(this);
     }
 
-    public boolean doValidate(){
-        if (edtName.getText().toString().trim().isEmpty()){
-            Toaster.shortToast("Enter name.");
+    public boolean doValidate() {
+        if (edtName.getText().toString().trim().isEmpty()) {
+            Toaster.shortToast("Please enter name");
+            return false;
+        }
+        if (property_id==0) {
+            Toaster.shortToast("Please select property");
+            return false;
+        }
+        if (property_category_id==0) {
+            Toaster.shortToast("Please select category");
+            return false;
+        }
+        if (edtAddress.getText().toString().trim().isEmpty()) {
+            Toaster.shortToast("Please enter address");
+            return false;
+        }
+
+        getLocationFromAddress(edtAddress.getText().toString().trim());
+        if (latitude == 0 || longitude == 0) {
+            Toaster.shortToast("Enter valid address.");
+            return false;
+        }
+
+        if (arrContact.isEmpty()) {
+            Toaster.shortToast("Please enter contact");
+            return false;
+        }
+        if (edtDescription.getText().toString().trim().isEmpty()) {
+            Toaster.shortToast("Please enter description");
+            return false;
+        }
+        if (state_id==0) {
+            Toaster.shortToast("Please select state");
+            return false;
+        }
+        if (city_id==0) {
+            Toaster.shortToast("Please select city");
+            return false;
+        }
+        if (!doSelectedFacility()){
+            Toaster.shortToast("Please select facility");
+            return false;
+        }
+        if (edtPrice.getText().toString().trim().isEmpty()) {
+            Toaster.shortToast("Please enter price");
+            return false;
+        }
+        if (arrRoomDetails.isEmpty()){
+            Toaster.shortToast("Please enter room details");
+            return false;
         }
         return true;
     }
 
+
+
+    public boolean doSelectedFacility(){
+        for (int i = 0; i < arrFacilityList.size(); i++) {
+            if (arrFacilityList.get(i).isSelected) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+
+
     public void getLocationFromAddress(String strAddress) {
+        latitude = 0;
+        longitude = 0;
         Geocoder coder = new Geocoder(this);
         List<Address> address;
 
         try {
             // May throw an IOException
             address = coder.getFromLocationName(strAddress, 5);
-            if (address == null) {
+            if (address == null || address.isEmpty()) {
                 return;
             }
 
             Address location = address.get(0);
 
-            longitude = location.getLatitude();
-            latitude = location.getLongitude();
+            latitude = location.getLatitude();
+            longitude = location.getLongitude();
 
-        } catch (IOException ex) {
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
     }
