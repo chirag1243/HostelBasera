@@ -472,7 +472,6 @@ public class HttpRequestHandler {
     */
 
 
-//TODO : Change as per above JSON
 
     public JSONObject getAddPropertyParam(int property_id, int type_id, String property_name, int property_category_id,
                                           int property_size_id, String email, String address, double longitude,
@@ -539,6 +538,15 @@ public class HttpRequestHandler {
         return params;
     }
 
+    public JSONObject getPriceBlockParam() {
+        JSONObject params = new JSONObject();
+        try {
+            params = setDefaultParameters();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return params;
+    }
 
     /*public JSONObject getLogoutUserParam() {
         JSONObject params = new JSONObject();

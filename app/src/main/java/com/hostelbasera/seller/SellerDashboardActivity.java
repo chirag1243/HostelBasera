@@ -220,6 +220,6 @@ public class SellerDashboardActivity extends BaseActivity implements NavigationV
 
     @OnClick(R.id.fb_add_hostel)
     public void doAddHostel(){
-        startActivity(new Intent(SellerDashboardActivity.this, AddHostelPGActivity.class));
+        startActivity(new Intent(SellerDashboardActivity.this, PricingActivity.class));// TODO : Change it AddHostelPGActivity
     }
 }

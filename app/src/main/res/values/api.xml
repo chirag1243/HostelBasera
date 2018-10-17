@@ -32,4 +32,6 @@
     <string name="addProperty">user/addProperty</string>
     <string name="uploadPropertyimages">login/uploadPropertyimages</string>
 
+    <string name="getPriceBlock">user/getPriceBlock</string>
+
 </resources>
