@@ -201,12 +201,12 @@ public class FragmentSellerHome extends Fragment implements Paginate.Callbacks, 
         adapterSellerHome.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                startActivity(new Intent(getActivity(), HostelDetailActivity.class).putExtra(Constant.Property_id, arrPropertyDetailArrayList.get(position).property_id)
+                startActivity(new Intent(getActivity(), AddHostelPGActivity.class)
+                        .putExtra(Constant.Property_id, arrPropertyDetailArrayList.get(position).property_id)
                         .putExtra(Constant.Property_name, arrPropertyDetailArrayList.get(position).property_name));
             }
         });
     }
-
 
     private void stopRefreshing() {
         if (swipeRefreshLayout.isRefreshing()) {

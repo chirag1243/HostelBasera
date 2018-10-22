@@ -43,6 +43,7 @@ import com.hostelbasera.apis.PostWithRequestParam;
 import com.hostelbasera.model.AddImageAttachmentModel;
 import com.hostelbasera.model.AddRoomModel;
 import com.hostelbasera.model.FileUploadModel;
+import com.hostelbasera.model.GetPropertyDetModel;
 import com.hostelbasera.model.SellerDropdownModel;
 import com.hostelbasera.model.UserDetailModel;
 import com.hostelbasera.utility.BaseActivity;
@@ -170,6 +171,7 @@ public class AddHostelPGActivity extends BaseActivity implements PermissionListe
     int property_id;
     double longitude, latitude;
     ArrayList<String> arrContact;
+    GetPropertyDetModel.PropertyDetails propertyDetails;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -179,6 +181,7 @@ public class AddHostelPGActivity extends BaseActivity implements PermissionListe
         checkPermission();
 //        init();
     }
+
 
     public void checkPermission() {
         new TedPermission(this)
@@ -204,7 +207,7 @@ public class AddHostelPGActivity extends BaseActivity implements PermissionListe
     public void init() {
         imgBack.setVisibility(View.VISIBLE);
         globals = ((Globals) getApplicationContext());
-        toolbarTitle.setText(getString(R.string.add_hostel_pg));
+
         arrProperty = new ArrayList<>();
         arrCategories = new ArrayList<>();
         arrTypeOfProperty = new ArrayList<>();
@@ -217,6 +220,14 @@ public class AddHostelPGActivity extends BaseActivity implements PermissionListe
         arrContact = new ArrayList<>();
 
         property_id = getIntent().getIntExtra(Constant.Property_id, 0);
+
+        if (property_id > 0) {
+            toolbarTitle.setText(getString(R.string.update_hostel_pg));
+            btnAddHostelPg.setText(getString(R.string.update_hostel_pg));
+        } else {
+            toolbarTitle.setText(getString(R.string.add_hostel_pg));
+            btnAddHostelPg.setText(getString(R.string.add_hostel_pg));
+        }
 
         if (Globals.isNetworkAvailable(this)) {
             getSellerDropdownData();
@@ -238,8 +249,36 @@ public class AddHostelPGActivity extends BaseActivity implements PermissionListe
                             if (sellerDropdownModel.status == 0) {
                                 sellerDropdownDetail = sellerDropdownModel.sellerDropdownDetail;
                                 setData();
+                                if (property_id > 0) {
+                                    getPropertyDetails();
+                                }
                             } else
                                 Toaster.shortToast(sellerDropdownModel.message);
+                        }
+
+                        @Override
+                        public void onFailedToPostCall(int statusCode, String msg) {
+                            Toaster.shortToast(msg);
+                        }
+                    }).execute();
+        }
+        Globals.hideKeyboard(this);
+    }
+
+    public void getPropertyDetails() {
+        JSONObject postData = HttpRequestHandler.getInstance().getPropertyDetParam(property_id);
+
+        if (postData != null) {
+            new PostRequest(this, getString(R.string.getPropertyDet), postData, true,
+                    new PostRequest.OnPostServiceCallListener() {
+                        @Override
+                        public void onSucceedToPostCall(JSONObject response) {
+                            GetPropertyDetModel getPropertyDetModel = new Gson().fromJson(response.toString(), GetPropertyDetModel.class);
+                            if (getPropertyDetModel.status == 0) {
+                                propertyDetails = getPropertyDetModel.propertyDetails;
+                                setPropertyDetails();
+                            } else
+                                Toaster.shortToast(getPropertyDetModel.message);
                         }
 
                         @Override
@@ -261,6 +300,98 @@ public class AddHostelPGActivity extends BaseActivity implements PermissionListe
 
         setContactAdapter();
         setRoomsAdapter();
+
+
+    }
+
+    public void setPropertyDetails() {
+
+        if (propertyDetails != null) {
+            edtName.setText(propertyDetails.property_name);
+
+            for (int i = 0; i < arrProperty.size(); i++) {
+                if (arrProperty.get(i).type_id == propertyDetails.type_id) {
+                    spProperty.setSelection(i);
+                }
+            }
+
+            for (int i = 0; i < arrCategories.size(); i++) {
+                if (arrCategories.get(i).property_category_id == propertyDetails.property_category_id) {
+                    spCategory.setSelection(i);
+                }
+            }
+            edtEmail.setText(propertyDetails.email);
+            edtAddress.setText(propertyDetails.address);
+            //TODO : Set Contact Numbers once multiple done
+            edtDescription.setText(propertyDetails.description);
+
+            for (int i = 0; i < arrStateList.size(); i++) {
+                if (arrStateList.get(i).state_id == propertyDetails.state_id) {
+                    spState.setSelection(i);
+                    state_id = propertyDetails.state_id;
+                    city_id = 0;
+                    if (arrStateList.get(i).cityList != null && !arrStateList.get(i).cityList.isEmpty()) {
+                        llCity.setVisibility(View.VISIBLE);
+                        setSpCity(arrStateList.get(i).cityList);
+                    } else {
+                        llCity.setVisibility(View.GONE);
+                    }
+                }
+            }
+//TODO : Check City is not getting selected
+            for (int i = 0; i < arrCityList.size(); i++) {
+                if (arrCityList.get(i).city_id == propertyDetails.city_id) {
+                    spCity.setSelection(i);
+                }
+            }
+
+
+            for (int i = 0; i < arrFacilityList.size(); i++) {
+                for (int j = 0; j < propertyDetails.propertyFacility.size(); j++) {
+                    if (arrFacilityList.get(i).facility_id == propertyDetails.propertyFacility.get(j)) {
+                        arrFacilityList.get(i).isSelected = true;
+                        onChangeSelectedFacility();
+                    }
+                }
+            }
+
+            edtOpenHours.setText(propertyDetails.timing);
+
+
+            for (int i = 0; i < propertyDetails.productImages.size(); i++) {
+                AddImageAttachmentModel addImageAttachmentModel = new AddImageAttachmentModel();
+                addImageAttachmentModel.FileName = propertyDetails.productImages.get(i);
+                addImageAttachmentModel.FilePath = getString(R.string.image_url) + propertyDetails.productImages.get(i);
+                arrAddImageAttachment.add(addImageAttachmentModel);
+            }
+
+            setAttachment();
+            edtPrice.setText(propertyDetails.price);
+
+            ArrayList<AddRoomModel> mValues = new ArrayList<>();
+            AddRoomModel addRoomModel;
+            if (propertyDetails.propertyrooms != null && !propertyDetails.propertyrooms.isEmpty())
+
+                for (int i = 0; i < propertyDetails.propertyrooms.size(); i++) {
+                    addRoomModel = new AddRoomModel();
+                    addRoomModel.name = propertyDetails.propertyrooms.get(i).roomname;
+                    addRoomModel.price = propertyDetails.propertyrooms.get(i).roomprice;
+                    mValues.add(addRoomModel);
+                }
+
+            if (adapterRoom == null) {
+                adapterRoom = new AdapterRoom(this);
+            }
+            adapterRoom.doRefresh(mValues);
+
+            if (rvRooms.getAdapter() == null) {
+                rvRooms.setLayoutManager(new LinearLayoutManager(this));
+                rvRooms.setItemAnimator(new DefaultItemAnimator());
+                rvRooms.setAdapter(adapterRoom);
+            }
+            latitude = propertyDetails.latitude != null && !propertyDetails.latitude.isEmpty() ? Double.parseDouble(propertyDetails.latitude) : 0;
+            longitude = propertyDetails.longitude != null && !propertyDetails.longitude.isEmpty() ? Double.parseDouble(propertyDetails.longitude) : 0;
+        }
     }
 
     @OnClick(R.id.tv_add_contact)
@@ -736,10 +867,14 @@ TODO :
      */
                 if (arrFacilityList.get(i).facility_id == 15) {
                     llLaundryFees.setVisibility(View.VISIBLE);
-
+                    if (propertyDetails != null)
+                        edtLaundryFees.setText(propertyDetails.laundry_fees);
                 }
                 if (arrFacilityList.get(i).facility_id == 16) {
                     cvCookingMenu.setVisibility(View.VISIBLE);
+                    //TODO : Set Cooking Menu Images once array is set
+//                    if (propertyDetails != null)
+
                 }
                 if (arrFacilityList.get(i).facility_id == 18) {
                     edtWaterTimings.setText("");
@@ -757,6 +892,8 @@ TODO :
                 }
                 if (arrFacilityList.get(i).facility_id == 18) {
                     llWaterTimings.setVisibility(View.VISIBLE);
+                    if (propertyDetails != null)
+                        edtWaterTimings.setText(propertyDetails.water_timing);
                 }
             }
         }
@@ -956,7 +1093,7 @@ TODO :
         for (int i = 0; i < arrContact.size(); i++) {
             contact_no.append(arrContact.get(i)).append(", ");
         }
-
+// TODO : Do Check Proper Data in Update Hostel / PG
         JSONObject postData = HttpRequestHandler.getInstance().getAddPropertyParam(property_id, type_id, edtName.getText().toString(),
                 property_category_id, property_size_id, edtEmail.getText().toString(), edtAddress.getText().toString(), longitude, latitude,
                 contact_no.deleteCharAt(contact_no.length() - 2).toString(), edtDescription.getText().toString(), state_id, city_id, edtOpenHours.getText().toString(),
@@ -989,11 +1126,11 @@ TODO :
             Toaster.shortToast("Please enter name");
             return false;
         }
-        if (property_id==0) {
+        if (property_id == 0) {
             Toaster.shortToast("Please select property");
             return false;
         }
-        if (property_category_id==0) {
+        if (property_category_id == 0) {
             Toaster.shortToast("Please select category");
             return false;
         }
@@ -1016,15 +1153,15 @@ TODO :
             Toaster.shortToast("Please enter description");
             return false;
         }
-        if (state_id==0) {
+        if (state_id == 0) {
             Toaster.shortToast("Please select state");
             return false;
         }
-        if (city_id==0) {
+        if (city_id == 0) {
             Toaster.shortToast("Please select city");
             return false;
         }
-        if (!doSelectedFacility()){
+        if (!doSelectedFacility()) {
             Toaster.shortToast("Please select facility");
             return false;
         }
@@ -1032,7 +1169,7 @@ TODO :
             Toaster.shortToast("Please enter price");
             return false;
         }
-        if (arrRoomDetails.isEmpty()){
+        if (arrRoomDetails.isEmpty()) {
             Toaster.shortToast("Please enter room details");
             return false;
         }
@@ -1040,8 +1177,7 @@ TODO :
     }
 
 
-
-    public boolean doSelectedFacility(){
+    public boolean doSelectedFacility() {
         for (int i = 0; i < arrFacilityList.size(); i++) {
             if (arrFacilityList.get(i).isSelected) {
                 return true;
@@ -1049,7 +1185,6 @@ TODO :
         }
         return false;
     }
-
 
 
     public void getLocationFromAddress(String strAddress) {

@@ -39,6 +39,11 @@ public class AdapterRoom extends RecyclerView.Adapter<AdapterRoom.ViewHolder> {
         notifyDataSetChanged();
     }
 
+    public void doRefresh(ArrayList<AddRoomModel> arrAddRoomModels) {
+        mValues = arrAddRoomModels;
+        notifyDataSetChanged();
+    }
+
     @Override
     public AdapterRoom.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.rooms_item, parent, false);

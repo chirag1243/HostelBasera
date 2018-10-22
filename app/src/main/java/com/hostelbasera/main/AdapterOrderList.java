@@ -34,7 +34,7 @@ public class AdapterOrderList extends RecyclerView.Adapter<AdapterOrderList.View
     private final Context mContext;
     private AdapterView.OnItemClickListener onItemClickListener;
 
-    AdapterOrderList(Context context) {
+    public AdapterOrderList(Context context) {
         mContext = context;
     }
 

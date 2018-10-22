@@ -17,7 +17,7 @@ public class OrderDetailModel implements Serializable {
     @SerializedName("is_valid_token")
     public boolean is_valid_token;
 
-    public static class OrderDetails {
+    public static class OrderDetails implements Serializable {
         @SerializedName("rating")
         public int rating;
         @SerializedName("city_name")

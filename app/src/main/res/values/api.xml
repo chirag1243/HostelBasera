@@ -34,4 +34,7 @@
 
     <string name="getPriceBlock">user/getPriceBlock</string>
 
+    <string name="getSellerOrderData">user/getSellerOrderData</string>
+    <string name="getPropertyDet">user/getPropertyDet</string>
+
 </resources>

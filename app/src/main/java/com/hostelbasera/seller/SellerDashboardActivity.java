@@ -185,7 +185,7 @@ public class SellerDashboardActivity extends BaseActivity implements NavigationV
                 break;
             case R.id.nav_booked_hostel_pg:
                 setToolbarTitle(R.string.booked_hostel_pg);
-                setFragment(new FragmentBookmarkList());
+                setFragment(new FragmentBookedList());
                 break;
             case R.id.nav_enquiry:
                 setToolbarTitle(R.string.enquiry);
@@ -220,6 +220,6 @@ public class SellerDashboardActivity extends BaseActivity implements NavigationV
 
     @OnClick(R.id.fb_add_hostel)
     public void doAddHostel(){
-        startActivity(new Intent(SellerDashboardActivity.this, PricingActivity.class));// TODO : Change it AddHostelPGActivity
+        startActivity(new Intent(SellerDashboardActivity.this, AddHostelPGActivity.class));// TODO : Change it  PricingActivity
     }
 }

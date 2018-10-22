@@ -548,6 +548,53 @@ public class HttpRequestHandler {
         return params;
     }
 
+    /*
+    {
+	"token":"si0d3lRh4Of7ld03l",
+	"deviceType":1,
+    "seller_id":2
+}
+
+
+    */
+    public JSONObject getSellerOrderDataParam() {
+        JSONObject params = new JSONObject();
+        try {
+            params = setDefaultParameters();
+            params.put(Constant.Seller_id, globals.getUserId());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return params;
+    }
+
+    /*
+    {
+	"token":"si0d3lRh4Of7ld03l",
+	"deviceType":1,
+    "user_id":2,
+	"getPropertyData":{
+			"property_id":17
+		}
+}
+
+    */
+
+    public JSONObject getPropertyDetParam(int property_id) {
+        JSONObject params = new JSONObject();
+        JSONObject jsonObject = new JSONObject();
+        try {
+            params = setDefaultParameters();
+
+            jsonObject.put(Constant.Property_id, property_id);
+
+            params.put(Constant.GetPropertyData, jsonObject);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return params;
+    }
+
     /*public JSONObject getLogoutUserParam() {
         JSONObject params = new JSONObject();
         JSONObject jsonObject = new JSONObject();
