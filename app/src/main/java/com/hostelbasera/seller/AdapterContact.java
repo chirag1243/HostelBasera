@@ -43,6 +43,10 @@ public class AdapterContact extends RecyclerView.Adapter<AdapterContact.ViewHold
         notifyDataSetChanged();
     }
 
+    public void doRefresh(ArrayList<String> arrContact) {
+        mValues = arrContact;
+        notifyDataSetChanged();
+    }
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.contact_item, parent, false);
@@ -82,7 +86,6 @@ public class AdapterContact extends RecyclerView.Adapter<AdapterContact.ViewHold
                 }
             });
             holder.tvContact.setText(mValues.get(position));
-
         }
 
         @Override

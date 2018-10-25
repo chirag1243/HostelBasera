@@ -298,10 +298,8 @@ public class AddHostelPGActivity extends BaseActivity implements PermissionListe
         setSpState();
         arrFacilityList.addAll(sellerDropdownDetail.facilityList);
 
-        setContactAdapter();
+        setContactAdapter(null);
         setRoomsAdapter();
-
-
     }
 
     public void setPropertyDetails() {
@@ -312,6 +310,18 @@ public class AddHostelPGActivity extends BaseActivity implements PermissionListe
             for (int i = 0; i < arrProperty.size(); i++) {
                 if (arrProperty.get(i).type_id == propertyDetails.type_id) {
                     spProperty.setSelection(i);
+                    type_id = arrProperty.get(i).type_id;
+                    if (type_id == 2) {
+                        llTypeOfProperty.setVisibility(View.VISIBLE);
+                        llSizeOfProperty.setVisibility(View.VISIBLE);
+                        setSpTypeOfProperty();
+                        setSpSizeOfProperty();
+                    } else {
+                        property_type_id = 0;
+                        property_size_id = 0;
+                        llTypeOfProperty.setVisibility(View.GONE);
+                        llSizeOfProperty.setVisibility(View.GONE);
+                    }
                 }
             }
 
@@ -320,9 +330,16 @@ public class AddHostelPGActivity extends BaseActivity implements PermissionListe
                     spCategory.setSelection(i);
                 }
             }
+
+            for (int i = 0; i < arrPropertySizes.size(); i++) {
+                if (arrPropertySizes.get(i).property_size_id == propertyDetails.property_size_id) {
+                    spSizeOfProperty.setSelection(i);
+                }
+            }
             edtEmail.setText(propertyDetails.email);
             edtAddress.setText(propertyDetails.address);
-            //TODO : Set Contact Numbers once multiple done
+
+            setContactAdapter(propertyDetails.cont_no);
             edtDescription.setText(propertyDetails.description);
 
             for (int i = 0; i < arrStateList.size(); i++) {
@@ -356,7 +373,6 @@ public class AddHostelPGActivity extends BaseActivity implements PermissionListe
             }
 
             edtOpenHours.setText(propertyDetails.timing);
-
 
             for (int i = 0; i < propertyDetails.productImages.size(); i++) {
                 AddImageAttachmentModel addImageAttachmentModel = new AddImageAttachmentModel();
@@ -399,7 +415,7 @@ public class AddHostelPGActivity extends BaseActivity implements PermissionListe
         if (adapterContact != null) {
             adapterContact.doAdd();
         } else {
-            setContactAdapter();
+            setContactAdapter(null);
         }
     }
 
@@ -412,11 +428,12 @@ public class AddHostelPGActivity extends BaseActivity implements PermissionListe
         }
     }
 
-    public void setContactAdapter() {
+    public void setContactAdapter(ArrayList<String> arrCont) {
         if (adapterContact == null) {
             adapterContact = new AdapterContact(this);
         }
-//        adapterContact.doAdd();
+        if (arrCont != null)
+            adapterContact.doRefresh(arrCont);
 
         if (rvContact.getAdapter() == null) {
             rvContact.setLayoutManager(new LinearLayoutManager(this));

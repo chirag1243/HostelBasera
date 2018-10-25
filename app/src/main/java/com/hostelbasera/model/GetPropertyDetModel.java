@@ -40,7 +40,7 @@ public class GetPropertyDetModel implements Serializable {
         @SerializedName("description")
         public String description;
         @SerializedName("cont_no")
-        public String cont_no;
+        public ArrayList<String> cont_no;
         @SerializedName("latitude")
         public String latitude;
         @SerializedName("longitude")
