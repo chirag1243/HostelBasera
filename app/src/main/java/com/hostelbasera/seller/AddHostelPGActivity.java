@@ -3,7 +3,6 @@ package com.hostelbasera.seller;
 import android.Manifest;
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
@@ -31,8 +30,6 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.vision.barcode.Barcode;
 import com.google.gson.Gson;
 import com.gun0912.tedpermission.PermissionListener;
 import com.gun0912.tedpermission.TedPermission;
@@ -45,7 +42,6 @@ import com.hostelbasera.model.AddRoomModel;
 import com.hostelbasera.model.FileUploadModel;
 import com.hostelbasera.model.GetPropertyDetModel;
 import com.hostelbasera.model.SellerDropdownModel;
-import com.hostelbasera.model.UserDetailModel;
 import com.hostelbasera.utility.BaseActivity;
 import com.hostelbasera.utility.Constant;
 import com.hostelbasera.utility.Globals;
@@ -56,7 +52,6 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -249,9 +244,7 @@ public class AddHostelPGActivity extends BaseActivity implements PermissionListe
                             if (sellerDropdownModel.status == 0) {
                                 sellerDropdownDetail = sellerDropdownModel.sellerDropdownDetail;
                                 setData();
-                                if (property_id > 0) {
-                                    getPropertyDetails();
-                                }
+
                             } else
                                 Toaster.shortToast(sellerDropdownModel.message);
                         }
@@ -300,6 +293,10 @@ public class AddHostelPGActivity extends BaseActivity implements PermissionListe
 
         setContactAdapter(null);
         setRoomsAdapter();
+
+        if (property_id > 0) {
+            getPropertyDetails();
+        }
     }
 
     public void setPropertyDetails() {
@@ -310,12 +307,25 @@ public class AddHostelPGActivity extends BaseActivity implements PermissionListe
             for (int i = 0; i < arrProperty.size(); i++) {
                 if (arrProperty.get(i).type_id == propertyDetails.type_id) {
                     spProperty.setSelection(i);
-                    type_id = arrProperty.get(i).type_id;
+                    type_id = propertyDetails.type_id;
                     if (type_id == 2) {
                         llTypeOfProperty.setVisibility(View.VISIBLE);
                         llSizeOfProperty.setVisibility(View.VISIBLE);
                         setSpTypeOfProperty();
+                        for (int j = 0; j < arrTypeOfProperty.size(); j++) {
+                            if (arrTypeOfProperty.get(j).property_type_id == propertyDetails.property_type_id) {
+                                spTypeOfProperty.setSelection(j);
+                                property_type_id = propertyDetails.property_type_id;
+                            }
+                        }
+
                         setSpSizeOfProperty();
+                        for (int k = 0; k < arrPropertySizes.size(); k++) {
+                            if (arrPropertySizes.get(k).property_size_id == propertyDetails.property_size_id) {
+                                spSizeOfProperty.setSelection(k);
+                                property_size_id = propertyDetails.property_size_id;
+                            }
+                        }
                     } else {
                         property_type_id = 0;
                         property_size_id = 0;
@@ -328,14 +338,12 @@ public class AddHostelPGActivity extends BaseActivity implements PermissionListe
             for (int i = 0; i < arrCategories.size(); i++) {
                 if (arrCategories.get(i).property_category_id == propertyDetails.property_category_id) {
                     spCategory.setSelection(i);
+                    property_category_id = propertyDetails.property_category_id;
+                    break;
                 }
             }
 
-            for (int i = 0; i < arrPropertySizes.size(); i++) {
-                if (arrPropertySizes.get(i).property_size_id == propertyDetails.property_size_id) {
-                    spSizeOfProperty.setSelection(i);
-                }
-            }
+
             edtEmail.setText(propertyDetails.email);
             edtAddress.setText(propertyDetails.address);
 
@@ -350,18 +358,17 @@ public class AddHostelPGActivity extends BaseActivity implements PermissionListe
                     if (arrStateList.get(i).cityList != null && !arrStateList.get(i).cityList.isEmpty()) {
                         llCity.setVisibility(View.VISIBLE);
                         setSpCity(arrStateList.get(i).cityList);
+                        for (int j = 0; j< arrCityList.size(); j++) {
+                            if (arrCityList.get(j).city_id == propertyDetails.city_id) {
+                                city_id = propertyDetails.city_id;
+                                spCity.setSelection(j);
+                            }
+                        }
                     } else {
                         llCity.setVisibility(View.GONE);
                     }
                 }
             }
-//TODO : Check City is not getting selected
-            for (int i = 0; i < arrCityList.size(); i++) {
-                if (arrCityList.get(i).city_id == propertyDetails.city_id) {
-                    spCity.setSelection(i);
-                }
-            }
-
 
             for (int i = 0; i < arrFacilityList.size(); i++) {
                 for (int j = 0; j < propertyDetails.propertyFacility.size(); j++) {

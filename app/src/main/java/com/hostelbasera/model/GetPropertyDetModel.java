@@ -59,6 +59,9 @@ public class GetPropertyDetModel implements Serializable {
         public int seller_id;
         @SerializedName("type_id")
         public int type_id;
+
+        @SerializedName("property_type_id")
+        public int property_type_id;
     }
 
     public static class Propertyrooms implements Serializable {
