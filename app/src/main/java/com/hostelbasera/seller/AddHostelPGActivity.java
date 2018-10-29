@@ -311,7 +311,7 @@ public class AddHostelPGActivity extends BaseActivity implements PermissionListe
                     if (type_id == 2) {
                         llTypeOfProperty.setVisibility(View.VISIBLE);
                         llSizeOfProperty.setVisibility(View.VISIBLE);
-                        setSpTypeOfProperty();
+//                        setSpTypeOfProperty();
                         for (int j = 0; j < arrTypeOfProperty.size(); j++) {
                             if (arrTypeOfProperty.get(j).property_type_id == propertyDetails.property_type_id) {
                                 spTypeOfProperty.setSelection(j);
@@ -319,7 +319,7 @@ public class AddHostelPGActivity extends BaseActivity implements PermissionListe
                             }
                         }
 
-                        setSpSizeOfProperty();
+//                        setSpSizeOfProperty();
                         for (int k = 0; k < arrPropertySizes.size(); k++) {
                             if (arrPropertySizes.get(k).property_size_id == propertyDetails.property_size_id) {
                                 spSizeOfProperty.setSelection(k);
@@ -342,7 +342,6 @@ public class AddHostelPGActivity extends BaseActivity implements PermissionListe
                     break;
                 }
             }
-
 
             edtEmail.setText(propertyDetails.email);
             edtAddress.setText(propertyDetails.address);
@@ -601,8 +600,10 @@ public class AddHostelPGActivity extends BaseActivity implements PermissionListe
                 if (type_id == 2) {
                     llTypeOfProperty.setVisibility(View.VISIBLE);
                     llSizeOfProperty.setVisibility(View.VISIBLE);
-                    setSpTypeOfProperty();
-                    setSpSizeOfProperty();
+//                    spTypeOfProperty.setSelection(0);
+//                    spSizeOfProperty.setSelection(0);
+//                    setSpTypeOfProperty();
+//                    setSpSizeOfProperty();
                 } else {
                     property_type_id = 0;
                     property_size_id = 0;
