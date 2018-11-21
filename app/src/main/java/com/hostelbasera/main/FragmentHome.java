@@ -314,29 +314,28 @@ public class FragmentHome extends Fragment implements Paginate.Callbacks, SwipeR
                 paginate.unbind();
             }
             adapterHomePropertyDetail = new AdapterHomePropertyDetail(getActivity());
-            arrPropertyDetailArrayList.add(0, new GetPropertyDetailModel.PropertyDetail());
+//            arrPropertyDetailArrayList.add(0, new GetPropertyDetailModel.PropertyDetail());
         }
         loading = false;
-
         adapterHomePropertyDetail.doRefresh(arrPropertyDetailArrayList);
 
         if (rvHostel.getAdapter() == null) {
             rvHostel.setHasFixedSize(false);
-            GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(),Constant.GRID_SPAN);
-            gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
-                @Override
-                public int getSpanSize(int position) {
-                    switch(adapterHomePropertyDetail.getItemViewType(position)){
-                        case 0:
-                            return 2;
-                        case 1:
-                            return 1;
-
-                        default:
-                            return 1;
-                    }
-                }
-            });
+            GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(),Constant.GRID_SPAN);
+//            gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+//                @Override
+//                public int getSpanSize(int position) {
+//                    switch(adapterHomePropertyDetail.getItemViewType(position)){
+//                        case 0:
+//                            return 2;
+//                        case 1:
+//                            return 1;
+//
+//                        default:
+//                            return 1;
+//                    }
+//                }
+//            });
 
             rvHostel.setLayoutManager(gridLayoutManager);
             rvHostel.setItemAnimator(new DefaultItemAnimator());
