@@ -3,6 +3,9 @@
     <string name="deep_link_app_name">/hostelbasera</string>
     <string name="google_maps_key">AIzaSyCO_w9y8aBbYyNc-SVz0fhHliHKCk2ecp4</string>
 
+    <string name="facebook_app_id">337398663753209</string>
+    <string name="fb_login_protocol_scheme">fb337398663753209</string>
+
     <string name="msg_NO_INTERNET_TITLE">Not connected</string>
     <string name="msg_NO_INTERNET_MSG">Oops… It seems your connection couldn\'t reach us, please verify your settings.</string>
     <string name="no_internet_msg">Please connect the device with internet</string>

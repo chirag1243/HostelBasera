@@ -29,6 +29,16 @@ repositories {
 //    maven { url 'https://maven.fabric.io/public' }
 }
 
+android.defaultConfig.manifestPlaceholders = [
+        facebookAppId        : "337398663753209",
+        googleWebClientId    : "731508075877-i1q3556cl92cnv1apefqmbv276rg4ajh.apps.googleusercontent.com",
+      /*twitterConsumerKey   : "your twitter consumer key",
+       twitterConsumerSecret: "your twitter consumer secret",
+       instagramClientId    : "your instagram client id",
+       instagramClientSecret: "your instagram client secret",
+       instagramRedirectUrl : "your instagram redirect url"*/
+]
+
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'com.android.support:appcompat-v7:26.1.0'
@@ -50,6 +60,12 @@ dependencies {
     implementation 'com.github.alirezaashrafi:GoogleMapView:1.0.4'
     implementation 'com.bogdwellers:pinchtozoom:0.1'
     implementation 'com.squareup.picasso:picasso:2.71828'
+
+    implementation 'com.jaychang:simpleauth:2.1.4'
+    implementation 'com.jaychang:simpleauth-facebook:2.1.4'
+    // if you want to use google auth
+    implementation 'com.jaychang:simpleauth-google:2.1.4'
+
     implementation 'com.victor:lib:1.0.4'
     implementation 'uk.co.chrisjenx:calligraphy:2.3.0'
     implementation 'com.stepstone.apprating:app-rating:2.2.0'
