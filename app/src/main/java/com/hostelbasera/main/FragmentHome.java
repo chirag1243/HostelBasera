@@ -9,8 +9,10 @@ import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.view.menu.MenuAdapter;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -85,8 +87,6 @@ public class FragmentHome extends Fragment implements Paginate.Callbacks, SwipeR
 //    @BindView(R.id.ll_hostel)
 //    LinearLayout llHostel;
 
-    @BindView(R.id.nestedScrollView)
-    NestedScrollView nestedScrollView;
 
     private Paginate paginate;
     private boolean loading = false;
@@ -320,49 +320,37 @@ public class FragmentHome extends Fragment implements Paginate.Callbacks, SwipeR
                 paginate.unbind();
             }
             adapterHomePropertyDetail = new AdapterHomePropertyDetail(getActivity());
-//            arrPropertyDetailArrayList.add(0, new GetPropertyDetailModel.PropertyDetail());
+            arrPropertyDetailArrayList.add(0, new GetPropertyDetailModel.PropertyDetail());
         }
         loading = false;
         adapterHomePropertyDetail.doRefresh(arrPropertyDetailArrayList);
 
         if (rvHostel.getAdapter() == null) {
             rvHostel.setHasFixedSize(false);
-            rvHostel.setNestedScrollingEnabled(false);
             GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), Constant.GRID_SPAN);
-//            gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
-//                @Override
-//                public int getSpanSize(int position) {
-//                    switch(adapterHomePropertyDetail.getItemViewType(position)){
-//                        case 0:
-//                            return 2;
-//                        case 1:
-//                            return 1;
-//
-//                        default:
-//                            return 1;
-//                    }
-//                }
-//            });
 
-            rvHostel.setLayoutManager(gridLayoutManager);
-            rvHostel.setItemAnimator(new DefaultItemAnimator());
-            rvHostel.setAdapter(adapterHomePropertyDetail);
-
-            nestedScrollView.getViewTreeObserver().addOnScrollChangedListener(new ViewTreeObserver.OnScrollChangedListener() {
+            gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
                 @Override
-                public void onScrollChanged() {
-                    View view = (View) nestedScrollView.getChildAt(nestedScrollView.getChildCount() - 1);
-
-                    int diff = (view.getBottom() - (nestedScrollView.getHeight() + nestedScrollView.getScrollY()));
-
-                    if (diff == 0) {
-                        doPagination();
+                public int getSpanSize(int position) {
+                    switch (adapterHomePropertyDetail.getItemViewType(position)) {
+                        case 0:
+                            return 2;
+                        default:
+                            return 1;
                     }
                 }
             });
-
-
-            rvHostel.getLayoutManager().smoothScrollToPosition(rvHostel, new RecyclerView.State(), rvHostel.getAdapter().getItemCount());
+            rvHostel.setLayoutManager(gridLayoutManager);
+            rvHostel.setItemAnimator(new DefaultItemAnimator());
+            rvHostel.setAdapter(adapterHomePropertyDetail);
+            if (arrPropertyDetailArrayList.size() < getPropertyDetailModel.total_properties + 1 && rvHostel != null) {
+                paginate = Paginate.with(rvHostel, this)
+                        .setLoadingTriggerThreshold(Constant.progress_threshold_2)
+                        .addLoadingListItem(Constant.addLoadingRow)
+                        .setLoadingListItemCreator(new PaginationProgressBarAdapter())
+                        .setLoadingListItemSpanSizeLookup(() -> Constant.GRID_SPAN)
+                        .build();
+            }
         }
 
 
@@ -373,17 +361,6 @@ public class FragmentHome extends Fragment implements Paginate.Callbacks, SwipeR
                         .putExtra(Constant.Property_name, arrPropertyDetailArrayList.get(position).property_name));
             }
         });
-    }
-
-    public void doPagination() {
-        if (arrPropertyDetailArrayList.size() < getPropertyDetailModel.total_properties && rvHostel != null) {
-            paginate = Paginate.with(rvHostel, this)
-                    .setLoadingTriggerThreshold(Constant.progress_threshold_2)
-                    .addLoadingListItem(Constant.addLoadingRow)
-                    .setLoadingListItemCreator(new PaginationProgressBarAdapter())
-                    .setLoadingListItemSpanSizeLookup(() -> Constant.GRID_SPAN)
-                    .build();
-        }
     }
 
     @Override

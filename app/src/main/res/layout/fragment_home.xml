@@ -85,62 +85,24 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <android.support.v4.widget.NestedScrollView
-            android:id="@+id/nestedScrollView"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:scrollbars="none">
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-            <LinearLayout
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rv_hostel"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:visibility="gone" />
 
-                <include layout="@layout/header_layout"/>
-
-                <!--
-                <LinearLayout
-                    android:id="@+id/ll_hostel"
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_marginTop="@dimen/dim_20dp"
-                    android:layout_weight="1"
-                    android:orientation="vertical"
-                    android:visibility="visible">
-
-                    <TextView
-                        android:id="@+id/tv_hostel_suggestion"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/rounded_hostel_list_bg"
-                        android:gravity="center"
-                        android:padding="@dimen/dim_20dp"
-                        android:text="@string/hostel_pg_suggestion"
-                        android:textAllCaps="true"
-                        android:textColor="@color/colorAccent"
-                        android:textSize="@dimen/dim_text16"
-                        android:textStyle="bold"
-                        android:visibility="visible" />-->
-
-                    <android.support.v7.widget.RecyclerView
-                        android:id="@+id/rv_hostel"
-                        android:layout_width="match_parent"
-                        android:layout_height="0dp"
-                        android:layout_weight="1"
-                        android:orientation="horizontal"
-                        android:padding="@dimen/dim_8dp"
-                        android:visibility="gone" />
-
-               <!-- </LinearLayout>
--->
-                <include
-                    android:id="@+id/progress"
-                    layout="@layout/progress_layout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center" />
-            </LinearLayout>
-        </android.support.v4.widget.NestedScrollView>
+            <include
+                android:id="@+id/progress"
+                layout="@layout/progress_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center" />
+        </LinearLayout>
     </android.support.v4.widget.SwipeRefreshLayout>
 </LinearLayout>

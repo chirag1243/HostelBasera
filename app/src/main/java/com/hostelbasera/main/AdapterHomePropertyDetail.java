@@ -53,13 +53,13 @@ public class AdapterHomePropertyDetail extends RecyclerView.Adapter<RecyclerView
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
         RecyclerView.ViewHolder viewHolder = null;
         LayoutInflater inflater = LayoutInflater.from(viewGroup.getContext());
-//        if (viewType == TYPE_HEADER) {
-//            View v1 = inflater.inflate(R.layout.header_layout, viewGroup, false);
-//            viewHolder = new HeaderViewHolder(v1);
-//        } else {
+        if (viewType == TYPE_HEADER) {
+            View v1 = inflater.inflate(R.layout.header_layout, viewGroup, false);
+            viewHolder = new HeaderViewHolder(v1);
+        } else {
             View v1 = inflater.inflate(R.layout.home_hostel_item, viewGroup, false);
             viewHolder = new ItemViewHolder(v1);
-//        }
+        }
         return viewHolder;
     }
 
@@ -154,13 +154,13 @@ public class AdapterHomePropertyDetail extends RecyclerView.Adapter<RecyclerView
 
     @Override
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, int position) {
-//        if (holder.getItemViewType() == TYPE_HEADER) {
-//            HeaderViewHolder vh1 = (HeaderViewHolder) holder;
-//            vh1.setDataToView(mValues.get(position), vh1, position);
-//        } else {
+        if (holder.getItemViewType() == TYPE_HEADER) {
+            HeaderViewHolder vh1 = (HeaderViewHolder) holder;
+            vh1.setDataToView(mValues.get(position), vh1, position);
+        } else {
             ItemViewHolder vh1 = (ItemViewHolder) holder;
             vh1.setDataToView(mValues.get(position), vh1, position);
-//        }
+        }
     }
 
     @Override
