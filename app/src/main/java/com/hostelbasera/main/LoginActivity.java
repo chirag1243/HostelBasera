@@ -18,6 +18,8 @@ import android.widget.TextView;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.google.gson.Gson;
@@ -29,10 +31,8 @@ import com.hostelbasera.seller.SellerDashboardActivity;
 import com.hostelbasera.utility.BaseActivity;
 import com.hostelbasera.utility.Globals;
 import com.hostelbasera.utility.Toaster;
-import com.jaychang.sa.AuthCallback;
-import com.jaychang.sa.SocialUser;
-import com.jaychang.sa.facebook.SimpleAuth;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Arrays;
@@ -98,6 +98,28 @@ public class LoginActivity extends BaseActivity {
                     @Override
                     public void onSuccess(LoginResult loginResult) {
                         // App code
+                        // App code
+                        GraphRequest request = GraphRequest.newMeRequest(
+                                loginResult.getAccessToken(),
+                                new GraphRequest.GraphJSONObjectCallback() {
+                                    @Override
+                                    public void onCompleted(JSONObject object, GraphResponse response) {
+                                        Log.v("LoginActivity", response.toString());
+
+                                        // Application code
+                                        try {
+                                            String email = object.getString("email");
+                                            String birthday = object.getString("birthday"); // 01/31/1980 format
+                                        } catch (JSONException e) {
+                                            e.printStackTrace();
+                                        }
+
+                                    }
+                                });
+                        Bundle parameters = new Bundle();
+                        parameters.putString("fields", "id,name,email,gender,birthday");
+                        request.setParameters(parameters);
+                        request.executeAsync();
                         Toaster.shortToast("On Success"+loginResult.toString());
                     }
 

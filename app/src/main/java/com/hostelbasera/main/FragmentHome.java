@@ -7,6 +7,7 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
@@ -14,6 +15,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.view.animation.Animation;
 import android.view.animation.LinearInterpolator;
 import android.view.animation.RotateAnimation;
@@ -82,6 +84,9 @@ public class FragmentHome extends Fragment implements Paginate.Callbacks, SwipeR
     TextView tvNoDataFound;
 //    @BindView(R.id.ll_hostel)
 //    LinearLayout llHostel;
+
+    @BindView(R.id.nestedScrollView)
+    NestedScrollView nestedScrollView;
 
     private Paginate paginate;
     private boolean loading = false;
@@ -206,6 +211,7 @@ public class FragmentHome extends Fragment implements Paginate.Callbacks, SwipeR
             showNoRecordFound(getString(R.string.no_data_found));
             Toaster.shortToast(R.string.no_internet_msg);
         }
+
     }
 
     @OnClick(R.id.tv_search)
@@ -321,7 +327,8 @@ public class FragmentHome extends Fragment implements Paginate.Callbacks, SwipeR
 
         if (rvHostel.getAdapter() == null) {
             rvHostel.setHasFixedSize(false);
-            GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(),Constant.GRID_SPAN);
+            rvHostel.setNestedScrollingEnabled(false);
+            GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), Constant.GRID_SPAN);
 //            gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
 //                @Override
 //                public int getSpanSize(int position) {
@@ -340,16 +347,24 @@ public class FragmentHome extends Fragment implements Paginate.Callbacks, SwipeR
             rvHostel.setLayoutManager(gridLayoutManager);
             rvHostel.setItemAnimator(new DefaultItemAnimator());
             rvHostel.setAdapter(adapterHomePropertyDetail);
-            if (arrPropertyDetailArrayList.size() < getPropertyDetailModel.total_properties && rvHostel != null) {
-                paginate = Paginate.with(rvHostel, this)
-                        .setLoadingTriggerThreshold(Constant.progress_threshold_2)
-                        .addLoadingListItem(Constant.addLoadingRow)
-                        .setLoadingListItemCreator(new PaginationProgressBarAdapter())
-                        .setLoadingListItemSpanSizeLookup(() -> Constant.GRID_SPAN)
-                        .build();
-            }
+
+            nestedScrollView.getViewTreeObserver().addOnScrollChangedListener(new ViewTreeObserver.OnScrollChangedListener() {
+                @Override
+                public void onScrollChanged() {
+                    View view = (View) nestedScrollView.getChildAt(nestedScrollView.getChildCount() - 1);
+
+                    int diff = (view.getBottom() - (nestedScrollView.getHeight() + nestedScrollView.getScrollY()));
+
+                    if (diff == 0) {
+                        doPagination();
+                    }
+                }
+            });
+
+
             rvHostel.getLayoutManager().smoothScrollToPosition(rvHostel, new RecyclerView.State(), rvHostel.getAdapter().getItemCount());
         }
+
 
         adapterHomePropertyDetail.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -358,6 +373,17 @@ public class FragmentHome extends Fragment implements Paginate.Callbacks, SwipeR
                         .putExtra(Constant.Property_name, arrPropertyDetailArrayList.get(position).property_name));
             }
         });
+    }
+
+    public void doPagination() {
+        if (arrPropertyDetailArrayList.size() < getPropertyDetailModel.total_properties && rvHostel != null) {
+            paginate = Paginate.with(rvHostel, this)
+                    .setLoadingTriggerThreshold(Constant.progress_threshold_2)
+                    .addLoadingListItem(Constant.addLoadingRow)
+                    .setLoadingListItemCreator(new PaginationProgressBarAdapter())
+                    .setLoadingListItemSpanSizeLookup(() -> Constant.GRID_SPAN)
+                    .build();
+        }
     }
 
     @Override
