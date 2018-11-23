@@ -15,6 +15,11 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.login.LoginManager;
+import com.facebook.login.LoginResult;
 import com.google.gson.Gson;
 import com.hostelbasera.R;
 import com.hostelbasera.apis.HttpRequestHandler;
@@ -64,6 +69,7 @@ public class LoginActivity extends BaseActivity {
 
     boolean isSeller;
     Globals globals;
+    CallbackManager callbackManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,6 +89,34 @@ public class LoginActivity extends BaseActivity {
                 isSeller = checkedId != R.id.rb_buyer;
             }
         });
+
+        callbackManager = CallbackManager.Factory.create();
+        LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("public_profile","email"));
+
+        LoginManager.getInstance().registerCallback(callbackManager,
+                new FacebookCallback<LoginResult>() {
+                    @Override
+                    public void onSuccess(LoginResult loginResult) {
+                        // App code
+                        Toaster.shortToast("On Success"+loginResult.toString());
+                    }
+
+                    @Override
+                    public void onCancel() {
+                        // App code
+                    }
+
+                    @Override
+                    public void onError(FacebookException exception) {
+                        // App code
+                    }
+                });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        callbackManager.onActivityResult(requestCode, resultCode, data);
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     @OnClick(R.id.btn_sign_in)
@@ -100,7 +134,8 @@ public class LoginActivity extends BaseActivity {
         doLogin();
     }
 
-    void connectFacebook() {
+    /*@OnClick(R.id.login_button)
+    public void connectFacebook() {
         List<String> scopes = Arrays.asList("user_birthday", "user_friends");
 
         SimpleAuth.connectFacebook(scopes, new AuthCallback() {
@@ -126,7 +161,7 @@ public class LoginActivity extends BaseActivity {
             }
         });
 
-        /*com.jaychang.sa.google.SimpleAuth.connectGoogle(scopes, new AuthCallback() {
+        *//*com.jaychang.sa.google.SimpleAuth.connectGoogle(scopes, new AuthCallback() {
             @Override
             public void onSuccess(SocialUser socialUser) {
 //                socialUser.
@@ -141,8 +176,8 @@ public class LoginActivity extends BaseActivity {
             public void onCancel() {
 
             }
-        });*/
-    }
+        });*//*
+    }*/
 
     @SuppressLint("HardwareIds")
     public void doLogin() {
