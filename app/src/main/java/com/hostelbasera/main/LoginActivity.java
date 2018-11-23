@@ -6,6 +6,7 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v7.widget.AppCompatEditText;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -23,8 +24,14 @@ import com.hostelbasera.seller.SellerDashboardActivity;
 import com.hostelbasera.utility.BaseActivity;
 import com.hostelbasera.utility.Globals;
 import com.hostelbasera.utility.Toaster;
+import com.jaychang.sa.AuthCallback;
+import com.jaychang.sa.SocialUser;
+import com.jaychang.sa.facebook.SimpleAuth;
 
 import org.json.JSONObject;
+
+import java.util.Arrays;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -33,6 +40,7 @@ import info.hoang8f.android.segmented.SegmentedGroup;
 
 public class LoginActivity extends BaseActivity {
 
+    private static final String TAG = "Login Activity" ;
     @BindView(R.id.rb_buyer)
     RadioButton rbBuyer;
     @BindView(R.id.rb_seller)
@@ -79,7 +87,7 @@ public class LoginActivity extends BaseActivity {
 
     @OnClick(R.id.btn_sign_in)
     public void onBtnSignInClicked() {
-        if (edtEmail.getText().toString().trim().isEmpty()) {
+       if (edtEmail.getText().toString().trim().isEmpty()) {
             Toaster.shortToast("Please enter email id.");
             return;
         } else if (edtPassword.getText().toString().trim().isEmpty()) {
@@ -90,6 +98,50 @@ public class LoginActivity extends BaseActivity {
             return;
         }
         doLogin();
+    }
+
+    void connectFacebook() {
+        List<String> scopes = Arrays.asList("user_birthday", "user_friends");
+
+        SimpleAuth.connectFacebook(scopes, new AuthCallback() {
+            @Override
+            public void onSuccess(SocialUser socialUser) {
+                Log.d(TAG, "userId:" + socialUser.userId);
+                Log.d(TAG, "email:" + socialUser.email);
+                Log.d(TAG, "accessToken:" + socialUser.accessToken);
+                Log.d(TAG, "profilePictureUrl:" + socialUser.profilePictureUrl);
+                Log.d(TAG, "username:" + socialUser.username);
+                Log.d(TAG, "fullName:" + socialUser.fullName);
+                Log.d(TAG, "pageLink:" + socialUser.pageLink);
+            }
+
+            @Override
+            public void onError(Throwable error) {
+                Log.d(TAG, error.getMessage());
+            }
+
+            @Override
+            public void onCancel() {
+                Log.d(TAG, "Canceled");
+            }
+        });
+
+        /*com.jaychang.sa.google.SimpleAuth.connectGoogle(scopes, new AuthCallback() {
+            @Override
+            public void onSuccess(SocialUser socialUser) {
+//                socialUser.
+            }
+
+            @Override
+            public void onError(Throwable error) {
+
+            }
+
+            @Override
+            public void onCancel() {
+
+            }
+        });*/
     }
 
     @SuppressLint("HardwareIds")
