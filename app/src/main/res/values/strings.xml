@@ -107,4 +107,15 @@
     <string name="buy_now">Buy Now</string>
 
     <string name="pricing">Hostel / PG Pricing</string>
+
+    <string name="leku_title_activity_location_picker">Location Picker</string>
+    <string name="leku_load_location_error">Something went wrong. Please try again.</string>
+    <string name="leku_no_search_results">There are no results for your search</string>
+    <string name="leku_unknown_location">unknown location</string>
+    <string name="leku_voice_search_promp">Search by voice…</string>
+    <string name="leku_voice_search_extra_language">en-EN</string>
+    <string name="leku_toolbar_action_voice_title">Voice</string>
+    <string name="leku_search_hint">Search</string>
+
+
 </resources>

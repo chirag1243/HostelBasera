@@ -952,7 +952,7 @@ TODO :
         if (!doValidate())
             return;
 
-       /* if (arrAddImageAttachment.size() > 0) {
+       if (arrAddImageAttachment.size() > 0) {
             setProgressDialog(arrAddImageAttachment.size());
             for (int i = 0; i < arrAddImageAttachment.size(); i++) {
                 doUploadFile(new File(arrAddImageAttachment.get(i).FilePath), i);
@@ -964,7 +964,7 @@ TODO :
             }
         } else {
             doAddHostelPG();
-        }*/
+        }
     }
 
     public void setProgressDialog(int size) {
@@ -1151,7 +1151,7 @@ TODO :
             Toaster.shortToast("Please enter name");
             return false;
         }
-        if (property_id == 0) {
+        if (type_id == 0) {
             Toaster.shortToast("Please select property");
             return false;
         }

@@ -53,6 +53,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class SellerDashboardActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener {
 
+    private static final int MAP_BUTTON_REQUEST_CODE = 1232;
     boolean doubleBackToExitPressedOnce = false;
     @BindView(R.id.toolbar_title)
     TextView toolbarTitle;
@@ -188,8 +189,16 @@ public class SellerDashboardActivity extends BaseActivity implements NavigationV
                 setFragment(new FragmentBookedList());
                 break;
             case R.id.nav_enquiry:
-                setToolbarTitle(R.string.enquiry);
-                setFragment(new FragmentOrderList());
+//                setToolbarTitle(R.string.enquiry);
+//                setFragment(new FragmentOrderList());
+            //TODO : Do Comment it
+
+                Intent intent = new Intent(getApplicationContext(), PayMentGateWay.class);
+                intent.putExtra("FIRST_NAME", "Chirag Gandhi");
+                intent.putExtra("PHONE_NUMBER", "9843467834");
+                intent.putExtra("EMAIL_ADDRESS", "chirag3424@gmail.com   ");
+                intent.putExtra("RECHARGE_AMT", "1");
+                startActivity(intent);
                 break;
             case R.id.nav_share_app:
                 ShareCompat.IntentBuilder.from(this)
@@ -209,6 +218,23 @@ public class SellerDashboardActivity extends BaseActivity implements NavigationV
         return true;
     }
 
+   /* public void setAddress(){
+        LocationPickerIntent locationPickerIntent = LocationPickerActivity.Builder()
+                .withLocation(41.4036299, 2.1743558)
+                .withGeolocApiKey("<PUT API KEY HERE>")
+                .withSearchZone("es_ES")
+                .shouldReturnOkOnBackPressed()
+                .withStreetHidden()
+                .withCityHidden()
+                .withZipCodeHidden()
+                .withSatelliteViewHidden()
+                .withGooglePlacesEnabled()
+                .withGoogleTimeZoneEnabled()
+                .withVoiceSearchHidden()
+                .build(this);
+
+        startActivityForResult(locationPickerIntent, MAP_BUTTON_REQUEST_CODE);
+    }*/
 
     public void doLogout() {
         globals.setUserDetails(null);
@@ -219,7 +245,7 @@ public class SellerDashboardActivity extends BaseActivity implements NavigationV
     }
 
     @OnClick(R.id.fb_add_hostel)
-    public void doAddHostel(){
+    public void doAddHostel() {
         startActivity(new Intent(SellerDashboardActivity.this, AddHostelPGActivity.class));// TODO : Change it  PricingActivity
     }
 }

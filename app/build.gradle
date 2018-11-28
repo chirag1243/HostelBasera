@@ -62,11 +62,13 @@ dependencies {
     implementation 'com.bogdwellers:pinchtozoom:0.1'
     implementation 'com.squareup.picasso:picasso:2.71828'
     implementation 'com.facebook.android:facebook-login:[4,5)'
+
 //    implementation 'com.jaychang:simpleauth:2.1.4'
 //    implementation 'com.jaychang:simpleauth-facebook:2.1.4'
 //    // if you want to use google auth
 //    implementation 'com.jaychang:simpleauth-google:2.1.4'
 
+//    implementation 'com.payumoney.sdkui:plug-n-play:1.4.4'
     implementation 'com.victor:lib:1.0.4'
     implementation 'uk.co.chrisjenx:calligraphy:2.3.0'
     implementation 'com.stepstone.apprating:app-rating:2.2.0'
@@ -79,6 +81,8 @@ dependencies {
     implementation 'com.google.android.gms:play-services-auth:16.0.1'
     implementation 'com.google.android.gms:play-services-location:16.0.0'
     implementation 'com.google.android.gms:play-services-base:16.0.1'
+
+
 
 //    implementation 'com.google.android.gms:play-services:12.0.1'
 
