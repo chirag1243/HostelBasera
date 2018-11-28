@@ -12,7 +12,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="0.7"
+        android:layout_weight="0.6"
         android:gravity="bottom"
         android:orientation="vertical">
 
@@ -68,20 +68,7 @@
                 android:textSize="@dimen/dim_text16" />
         </info.hoang8f.android.segmented.SegmentedGroup>
 
-        <com.facebook.login.widget.LoginButton
-            android:id="@+id/login_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp" />
 
-        <com.google.android.gms.common.SignInButton
-            android:id="@+id/sign_in_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/dim_10dp"
-            android:layout_gravity="center"/>
 
         <android.support.v7.widget.AppCompatEditText
             android:id="@+id/edt_email"
@@ -89,7 +76,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/dim_40dp"
             android:layout_marginRight="@dimen/dim_40dp"
-            android:layout_marginTop="@dimen/dim_30dp"
+            android:layout_marginTop="@dimen/dim_20dp"
             android:drawableLeft="@drawable/user"
             android:drawablePadding="@dimen/dim_15dp"
             android:hint="@string/email"
@@ -129,12 +116,53 @@
             android:textColor="@color/colorPrimary"
             android:textStyle="bold" />
 
+        <com.facebook.login.widget.LoginButton
+            android:id="@+id/login_button1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/dim_15dp"
+            android:visibility="gone"
+            android:layout_marginBottom="10dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dim_15dp"
+            android:gravity="center">
+
+            <ImageView
+                android:id="@+id/login_button"
+                android:layout_width="@dimen/dim_30dp"
+                android:layout_height="@dimen/dim_30dp"
+                android:layout_gravity="center"
+                android:src="@drawable/com_facebook_button_icon"/>
+
+            <ImageView
+                android:id="@+id/sign_in_button"
+                android:layout_width="@dimen/dim_30dp"
+                android:layout_height="@dimen/dim_30dp"
+                android:layout_gravity="center"
+                android:background="@drawable/rounded_add_bg"
+                android:backgroundTint="@color/white"
+                android:padding="@dimen/dim_5dp"
+                android:layout_marginLeft="@dimen/dim_10dp"
+                android:src="@drawable/googleg_standard_color_18"/>
+        </LinearLayout>
+
+        <com.google.android.gms.common.SignInButton
+            android:id="@+id/sign_in_button1"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/dim_35dp"
+            android:visibility="gone"
+            android:layout_gravity="center"/>
+
         <TextView
             android:id="@+id/tv_forget_password"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginTop="@dimen/dim_15dp"
+            android:layout_marginTop="@dimen/dim_5dp"
             android:padding="@dimen/dim_5dp"
             android:text="@string/forget_password_"
             android:textColor="@color/white"
@@ -145,7 +173,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
-            android:layout_marginTop="@dimen/dim_15dp"
+            android:layout_marginTop="@dimen/dim_5dp"
             android:background="@color/white"
             android:gravity="center"
             android:padding="@dimen/dim_10dp">

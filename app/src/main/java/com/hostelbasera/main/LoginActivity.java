@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -75,7 +76,7 @@ public class LoginActivity extends BaseActivity {
     LinearLayout llSignUp;
 
     @BindView(R.id.sign_in_button)
-    SignInButton signInButton;
+    ImageView signInButton;
     boolean isSeller;
     Globals globals;
     CallbackManager callbackManager;
@@ -96,7 +97,7 @@ public class LoginActivity extends BaseActivity {
         btnSignIn.setTypeface(btnSignIn.getTypeface(), Typeface.BOLD);
         signUp.setTypeface(signUp.getTypeface(), Typeface.BOLD);
 
-        signInButton.setSize(SignInButton.SIZE_STANDARD);
+//        signInButton.setSize(SignInButton.SIZE_STANDARD);
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
                 .requestId()
