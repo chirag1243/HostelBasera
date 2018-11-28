@@ -476,7 +476,7 @@ public class HostelDetailActivity extends BaseActivity implements RatingDialogLi
     @Override
     public void onPermissionGranted() {
         Intent callIntent = new Intent(Intent.ACTION_CALL);
-        callIntent.setData(Uri.parse("tel:7622885409"));
+        callIntent.setData(Uri.parse("tel:+917622885409"));
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
             //    ActivityCompat#requestPermissions

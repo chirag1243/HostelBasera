@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
 
-public abstract class FileUploadModel implements Serializable {
+public class FileUploadModel implements Serializable {
 
     @SerializedName("uploadPropertyImagesDetail")
     public UploadPropertyImagesDetail uploadPropertyImagesDetail;
@@ -15,7 +15,7 @@ public abstract class FileUploadModel implements Serializable {
     @SerializedName("is_valid_token")
     public boolean is_valid_token;
 
-    public static class UploadPropertyImagesDetail {
+    public static class UploadPropertyImagesDetail implements Serializable {
         @SerializedName("file_id")
         public int file_id;
         @SerializedName("image_size_str")

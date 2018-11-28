@@ -1,5 +1,6 @@
 package com.hostelbasera.seller;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.graphics.Typeface;
@@ -46,14 +47,18 @@ import com.hostelbasera.utility.Toaster;
 
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
+import droidninja.filepicker.FilePickerConst;
 
 public class SellerDashboardActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private static final int MAP_BUTTON_REQUEST_CODE = 1232;
+    private static final int Dashboard_REQUEST_CODE = 1243;
     boolean doubleBackToExitPressedOnce = false;
     @BindView(R.id.toolbar_title)
     TextView toolbarTitle;
@@ -189,16 +194,16 @@ public class SellerDashboardActivity extends BaseActivity implements NavigationV
                 setFragment(new FragmentBookedList());
                 break;
             case R.id.nav_enquiry:
-//                setToolbarTitle(R.string.enquiry);
-//                setFragment(new FragmentOrderList());
-            //TODO : Do Comment it
+                setToolbarTitle(R.string.enquiry);
+                setFragment(new FragmentOrderList());
+                //TODO : Do Comment it
 
-                Intent intent = new Intent(getApplicationContext(), PayMentGateWay.class);
-                intent.putExtra("FIRST_NAME", "Chirag Gandhi");
-                intent.putExtra("PHONE_NUMBER", "9843467834");
-                intent.putExtra("EMAIL_ADDRESS", "chirag3424@gmail.com   ");
-                intent.putExtra("RECHARGE_AMT", "1");
-                startActivity(intent);
+//                Intent intent = new Intent(getApplicationContext(), PayMentGateWay.class);
+//                intent.putExtra("FIRST_NAME", "Chirag Gandhi");
+//                intent.putExtra("PHONE_NUMBER", "9843467834");
+//                intent.putExtra("EMAIL_ADDRESS", "chirag3424@gmail.com   ");
+//                intent.putExtra("RECHARGE_AMT", "1");
+//                startActivity(intent);
                 break;
             case R.id.nav_share_app:
                 ShareCompat.IntentBuilder.from(this)
@@ -246,6 +251,17 @@ public class SellerDashboardActivity extends BaseActivity implements NavigationV
 
     @OnClick(R.id.fb_add_hostel)
     public void doAddHostel() {
-        startActivity(new Intent(SellerDashboardActivity.this, AddHostelPGActivity.class));// TODO : Change it  PricingActivity
+        startActivityForResult(new Intent(SellerDashboardActivity.this, AddHostelPGActivity.class), Dashboard_REQUEST_CODE);// TODO : Change it  PricingActivity
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == Dashboard_REQUEST_CODE) {
+            if (resultCode == Activity.RESULT_OK && data != null) {
+                setFragment(new FragmentSellerHome());
+            }
+        }
     }
 }

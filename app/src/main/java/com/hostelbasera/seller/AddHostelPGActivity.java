@@ -37,6 +37,7 @@ import com.hostelbasera.R;
 import com.hostelbasera.apis.HttpRequestHandler;
 import com.hostelbasera.apis.PostRequest;
 import com.hostelbasera.apis.PostWithRequestParam;
+import com.hostelbasera.main.CategoryListActivity;
 import com.hostelbasera.model.AddImageAttachmentModel;
 import com.hostelbasera.model.AddRoomModel;
 import com.hostelbasera.model.FileUploadModel;
@@ -897,7 +898,7 @@ TODO :
                 }
                 if (arrFacilityList.get(i).facility_id == 16) {
                     cvCookingMenu.setVisibility(View.VISIBLE);
-                    //TODO : Set Cooking Menu Images once array is set
+
 //                    if (propertyDetails != null)
 
                 }
@@ -1239,5 +1240,12 @@ TODO :
     public void onBackPressed() {
         finish();
         super.onBackPressed();
+        setResult(Activity.RESULT_OK, new Intent(this, SellerDashboardActivity.class));
+        finish();
+    }
+
+    @OnClick(R.id.ll_main)
+    public void onClickMain(){
+        Globals.hideKeyboard(this);
     }
 }
