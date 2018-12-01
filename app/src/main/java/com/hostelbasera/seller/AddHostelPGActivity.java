@@ -6,6 +6,7 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Build;
@@ -16,9 +17,11 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -40,6 +43,7 @@ import com.hostelbasera.apis.PostWithRequestParam;
 import com.hostelbasera.main.CategoryListActivity;
 import com.hostelbasera.model.AddImageAttachmentModel;
 import com.hostelbasera.model.AddRoomModel;
+import com.hostelbasera.model.CheckSellerPaymentDataModel;
 import com.hostelbasera.model.FileUploadModel;
 import com.hostelbasera.model.GetPropertyDetModel;
 import com.hostelbasera.model.SellerDropdownModel;
@@ -168,6 +172,8 @@ public class AddHostelPGActivity extends BaseActivity implements PermissionListe
     double longitude, latitude;
     ArrayList<String> arrContact;
     GetPropertyDetModel.PropertyDetails propertyDetails;
+
+    public int PAYMENT_CODE = 123;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -358,7 +364,7 @@ public class AddHostelPGActivity extends BaseActivity implements PermissionListe
                     if (arrStateList.get(i).cityList != null && !arrStateList.get(i).cityList.isEmpty()) {
                         llCity.setVisibility(View.VISIBLE);
                         setSpCity(arrStateList.get(i).cityList);
-                        for (int j = 0; j< arrCityList.size(); j++) {
+                        for (int j = 0; j < arrCityList.size(); j++) {
                             if (arrCityList.get(j).city_id == propertyDetails.city_id) {
                                 city_id = propertyDetails.city_id;
                                 spCity.setSelection(j);
@@ -510,6 +516,26 @@ public class AddHostelPGActivity extends BaseActivity implements PermissionListe
                 arrFile = new ArrayList<>();
                 arrFile = data.getStringArrayListExtra(FilePickerConst.KEY_SELECTED_MEDIA);
                 doAttachment();
+            }
+        } else if (requestCode == PAYMENT_CODE) {
+            if (resultCode == Activity.RESULT_OK && data != null) {
+                if (data.getStringExtra(Constant.RESULT).equals("Success")) {
+                    String paymentId = data.getStringExtra(Constant.PAYMENT_ID);
+
+                    if (arrAddImageAttachment.size() > 0) {
+                        setProgressDialog(arrAddImageAttachment.size());
+                        for (int i = 0; i < arrAddImageAttachment.size(); i++) {
+                            doUploadFile(new File(arrAddImageAttachment.get(i).FilePath), i);
+                        }
+                    } else if (arrAddMenuAttachment.size() > 0) {
+                        setProgressDialog(arrAddMenuAttachment.size());
+                        for (int i = 0; i < arrAddMenuAttachment.size(); i++) {
+                            doUploadMenuFile(new File(arrAddMenuAttachment.get(i).FilePath), i);
+                        }
+                    } else {
+                        doAddHostelPG();
+                    }
+                }
             }
         }
     }
@@ -950,22 +976,104 @@ TODO :
         if (adapterContact != null) {
             arrContact = adapterContact.mValues;
         }
-        if (!doValidate())
-            return;
 
-       if (arrAddImageAttachment.size() > 0) {
-            setProgressDialog(arrAddImageAttachment.size());
-            for (int i = 0; i < arrAddImageAttachment.size(); i++) {
-                doUploadFile(new File(arrAddImageAttachment.get(i).FilePath), i);
-            }
-        } else if (arrAddMenuAttachment.size() > 0) {
-            setProgressDialog(arrAddMenuAttachment.size());
-            for (int i = 0; i < arrAddMenuAttachment.size(); i++) {
-                doUploadMenuFile(new File(arrAddMenuAttachment.get(i).FilePath), i);
-            }
+        //TODO : Remove Comment
+//        if (!doValidate())
+//            return;
+
+        if (Globals.isNetworkAvailable(this)) {
+            doCheckSellerPaymentData();
         } else {
-            doAddHostelPG();
+            Toaster.shortToast(R.string.no_internet_msg);
+            return;
         }
+    }
+
+    public void doCheckSellerPaymentData() {
+        JSONObject postData = HttpRequestHandler.getInstance().getCheckSellerPaymentDataParam();
+
+        if (postData != null) {
+            new PostRequest(this, getString(R.string.checkSellerPaymentData), postData, true,
+                    new PostRequest.OnPostServiceCallListener() {
+                        @Override
+                        public void onSucceedToPostCall(JSONObject response) {
+                            CheckSellerPaymentDataModel checkSellerPaymentDataModel = new Gson().fromJson(response.toString(), CheckSellerPaymentDataModel.class);
+                            if (checkSellerPaymentDataModel.status == 0) {
+                                if (checkSellerPaymentDataModel.payment_required == 1) {
+                                    if (checkSellerPaymentDataModel.priceBlockDetails.size() > 0) {
+                                        priceBlockDialog(checkSellerPaymentDataModel.priceBlockDetails);
+                                    } else {
+                                        //TODO : Pass Parameter for Add Hostel
+                                        startActivityForResult(new Intent(AddHostelPGActivity.this, PayMentGateWay.class)
+                                                .putExtra(Constant.Full_name, edtName.getText().toString())
+                                                .putExtra(Constant.Phone_number, arrContact.get(0))
+                                                .putExtra(Constant.Email, edtEmail.getText().toString())
+                                                .putExtra(Constant.Price, "" + checkSellerPaymentDataModel.payment_value), PAYMENT_CODE);
+                                    }
+                                } else {
+                                    if (arrAddImageAttachment.size() > 0) {
+                                        setProgressDialog(arrAddImageAttachment.size());
+                                        for (int i = 0; i < arrAddImageAttachment.size(); i++) {
+                                            doUploadFile(new File(arrAddImageAttachment.get(i).FilePath), i);
+                                        }
+                                    } else if (arrAddMenuAttachment.size() > 0) {
+                                        setProgressDialog(arrAddMenuAttachment.size());
+                                        for (int i = 0; i < arrAddMenuAttachment.size(); i++) {
+                                            doUploadMenuFile(new File(arrAddMenuAttachment.get(i).FilePath), i);
+                                        }
+                                    } else {
+                                        doAddHostelPG();
+                                    }
+                                }
+                            } else
+                                Toaster.shortToast(checkSellerPaymentDataModel.message);
+                        }
+
+                        @Override
+                        public void onFailedToPostCall(int statusCode, String msg) {
+                            Toaster.shortToast(msg);
+                        }
+                    }).execute();
+        }
+        Globals.hideKeyboard(this);
+    }
+
+
+    public void priceBlockDialog(ArrayList<CheckSellerPaymentDataModel.PriceBlockDetails> arrPriceBlockDetails) {
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this, R.style.MyEnquiryAlertDialogStyle);
+        LayoutInflater inflater = this.getLayoutInflater();
+        View dialogView = inflater.inflate(R.layout.pricing_block_dialog, null);
+        dialogBuilder.setView(dialogView);
+
+        TextView tvSelectHostelPgPlans = dialogView.findViewById(R.id.tv_select_hostel_pg_plans);
+        RecyclerView rvPricing = dialogView.findViewById(R.id.rv_pricing);
+        tvSelectHostelPgPlans.setTypeface(tvSelectHostelPgPlans.getTypeface(), Typeface.BOLD);
+
+        AlertDialog alertDialog = dialogBuilder.create();
+        AdapterPricing adapterPricing = null;
+        if (adapterPricing == null) {
+            adapterPricing = new AdapterPricing(this);
+        }
+        adapterPricing.doRefresh(arrPriceBlockDetails);
+
+        if (rvPricing.getAdapter() == null) {
+            rvPricing.setHasFixedSize(false);
+            rvPricing.setLayoutManager(new GridLayoutManager(this, Constant.GRID_SPAN));
+            rvPricing.setItemAnimator(new DefaultItemAnimator());
+            rvPricing.setAdapter(adapterPricing);
+        }
+        adapterPricing.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                startActivityForResult(new Intent(AddHostelPGActivity.this, PayMentGateWay.class)
+                        .putExtra(Constant.Full_name, edtName.getText().toString())
+                        .putExtra(Constant.Phone_number, arrContact.get(0))
+                        .putExtra(Constant.Email, edtEmail.getText().toString())
+                        .putExtra(Constant.Price, "" + arrPriceBlockDetails.get(position).price), PAYMENT_CODE);
+                alertDialog.dismiss();
+            }
+        });
+        alertDialog.show();
     }
 
     public void setProgressDialog(int size) {
@@ -1113,8 +1221,8 @@ TODO :
 
     public ArrayList<AddRoomModel> arrRoomDetails;
 
-    public void doAddHostelPG() {
 
+    public void doAddHostelPG() {
         StringBuilder contact_no = new StringBuilder();
         for (int i = 0; i < arrContact.size(); i++) {
             contact_no.append(arrContact.get(i)).append(", ");
@@ -1125,6 +1233,7 @@ TODO :
                 contact_no.deleteCharAt(contact_no.length() - 2).toString(), edtDescription.getText().toString(), state_id, city_id, edtOpenHours.getText().toString(),
                 edtWaterTimings.getText().toString(), edtLaundryFees.getText().toString(), arrAddMenuAttachment, edtPrice.getText().toString(), arrFacilityList,
                 arrAddImageAttachment, arrRoomDetails);
+
 
         if (postData != null) {
             new PostRequest(this, getString(R.string.addProperty), postData, true,
@@ -1245,7 +1354,7 @@ TODO :
     }
 
     @OnClick(R.id.ll_main)
-    public void onClickMain(){
+    public void onClickMain() {
         Globals.hideKeyboard(this);
     }
 }

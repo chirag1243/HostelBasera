@@ -12,6 +12,7 @@ import com.google.gson.Gson;
 import com.hostelbasera.R;
 import com.hostelbasera.apis.HttpRequestHandler;
 import com.hostelbasera.apis.PostRequest;
+import com.hostelbasera.model.CheckSellerPaymentDataModel;
 import com.hostelbasera.model.PriceBlockDetailModel;
 import com.hostelbasera.utility.BaseActivity;
 import com.hostelbasera.utility.Constant;
@@ -30,7 +31,6 @@ public class PricingActivity extends BaseActivity {
 
     @BindView(R.id.rv_pricing)
     RecyclerView rvPricing;
-    ArrayList<PriceBlockDetailModel.PriceBlockDetail> arrPriceBlockDetail;
     AdapterPricing adapterPricing;
     @BindView(R.id.toolbar_title)
     TextView toolbarTitle;
@@ -39,6 +39,8 @@ public class PricingActivity extends BaseActivity {
     @BindView(R.id.img_share)
     ImageView imgShare;
 
+    ArrayList<CheckSellerPaymentDataModel.PriceBlockDetails> arrPriceBlockDetails;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,15 +48,16 @@ public class PricingActivity extends BaseActivity {
         ButterKnife.bind(this);
         toolbarTitle.setText(getString(R.string.pricing));
         imgBack.setVisibility(View.VISIBLE);
-        if (Globals.isNetworkAvailable(this)) {
-            getPriceBlock();
-        } else {
-            Toaster.shortToast(R.string.no_internet_msg);
+
+        arrPriceBlockDetails = (ArrayList<CheckSellerPaymentDataModel.PriceBlockDetails>) getIntent().getSerializableExtra(Constant.ArrPriceBlockDetails);
+        if (arrPriceBlockDetails != null && !arrPriceBlockDetails.isEmpty()) {
+            setAdapter();
+        }else {
             onBackPressed();
         }
     }
 
-    public void getPriceBlock() {
+   /* public void getPriceBlock() {
         JSONObject postData = HttpRequestHandler.getInstance().getPriceBlockParam();
 
         if (postData != null) {
@@ -79,13 +82,13 @@ public class PricingActivity extends BaseActivity {
                     }).execute();
         }
         Globals.hideKeyboard(this);
-    }
+    }*/
 
     private void setAdapter() {
         if (adapterPricing == null) {
             adapterPricing = new AdapterPricing(this);
         }
-        adapterPricing.doRefresh(arrPriceBlockDetail);
+        adapterPricing.doRefresh(arrPriceBlockDetails);
 
         if (rvPricing.getAdapter() == null) {
             rvPricing.setHasFixedSize(false);

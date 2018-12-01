@@ -15,6 +15,9 @@ public class UserDetailModel implements Serializable {
     @SerializedName("status")
     public int status;
 
+    @SerializedName("is_exiting")
+    public int is_exiting;
+
     public static class LoginUserDetail implements Serializable {
         @SerializedName("token")
         public String token;

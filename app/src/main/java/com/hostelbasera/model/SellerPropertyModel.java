@@ -70,9 +70,9 @@ public class SellerPropertyModel implements Serializable {
         @SerializedName("type_id")
         public int type_id;
         @SerializedName("property_type_id")
-        public int property_type_id;
+        public String property_type_id;
         @SerializedName("property_category_id")
-        public int property_category_id;
+        public String property_category_id;
         @SerializedName("property_name")
         public String property_name;
         @SerializedName("property_id")

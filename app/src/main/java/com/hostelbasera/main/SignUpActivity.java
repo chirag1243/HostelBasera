@@ -18,6 +18,7 @@ import com.hostelbasera.apis.PostRequest;
 import com.hostelbasera.model.UserDetailModel;
 import com.hostelbasera.seller.SellerDashboardActivity;
 import com.hostelbasera.utility.BaseActivity;
+import com.hostelbasera.utility.Constant;
 import com.hostelbasera.utility.Globals;
 import com.hostelbasera.utility.Toaster;
 
@@ -53,6 +54,8 @@ public class SignUpActivity extends BaseActivity {
     Globals globals;
     @BindView(R.id.ll_sign_up)
     LinearLayout llSignUp;
+    Intent intent;
+    String fb_id = "", google_id = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +68,15 @@ public class SignUpActivity extends BaseActivity {
     public void init() {
         globals = ((Globals) this.getApplicationContext());
         btnSignUp.setTypeface(btnSignUp.getTypeface(), Typeface.BOLD);
+
+        intent = getIntent();
+        if (intent != null) {
+            edtEmail.setText(intent.getStringExtra(Constant.Email));
+            edtName.setText(intent.getStringExtra(Constant.Full_name));
+            fb_id = intent.getStringExtra(Constant.Full_name);
+            google_id = intent.getStringExtra(Constant.Google_id);
+        }
+
         segmentedGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
@@ -104,7 +116,7 @@ public class SignUpActivity extends BaseActivity {
     public void doRegisterUser() {
         JSONObject postData = HttpRequestHandler.getInstance().getRegisterUserParam(Settings.Secure.getString(this.getContentResolver(), Settings.Secure.ANDROID_ID),
                 edtName.getText().toString(), edtPassword.getText().toString(), edtEmail.getText().toString(), edtMobileNo.getText().toString(),
-                edtAddress.getText().toString(), isSeller);
+                edtAddress.getText().toString(), isSeller, fb_id, google_id);
 
         if (postData != null) {
             new PostRequest(this, isSeller ? getString(R.string.registerSeller) : getString(R.string.registerUser), postData, true,

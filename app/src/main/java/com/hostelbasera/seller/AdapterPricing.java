@@ -12,8 +12,11 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.hostelbasera.R;
+import com.hostelbasera.model.CheckSellerPaymentDataModel;
 import com.hostelbasera.model.PriceBlockDetailModel;
 import com.hostelbasera.utility.Toaster;
+
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 
@@ -22,15 +25,16 @@ import butterknife.ButterKnife;
 
 public class AdapterPricing extends RecyclerView.Adapter<AdapterPricing.ViewHolder> {
 
-    private ArrayList<PriceBlockDetailModel.PriceBlockDetail> mValues;
+    private ArrayList<CheckSellerPaymentDataModel.PriceBlockDetails> mValues;
     private final Context mContext;
     private AdapterView.OnItemClickListener onItemClickListener;
+
 
     AdapterPricing(Context context) {
         mContext = context;
     }
 
-    public void doRefresh(ArrayList<PriceBlockDetailModel.PriceBlockDetail> arrBookmarkDetails) {
+    public void doRefresh(ArrayList<CheckSellerPaymentDataModel.PriceBlockDetails> arrBookmarkDetails) {
         mValues = arrBookmarkDetails;
         notifyDataSetChanged();
     }
@@ -51,7 +55,7 @@ public class AdapterPricing extends RecyclerView.Adapter<AdapterPricing.ViewHold
         @BindView(R.id.tv_description)
         TextView tvDescription;
         @BindView(R.id.btn_buy_now)
-        Button btnBuyNow;
+        TextView btnBuyNow;
 
         ViewHolder(View itemView, AdapterPricing adapterPricing) {
             super(itemView);
@@ -61,7 +65,7 @@ public class AdapterPricing extends RecyclerView.Adapter<AdapterPricing.ViewHold
         }
 
         @SuppressLint("SetTextI18n")
-        void setDataToView(PriceBlockDetailModel.PriceBlockDetail mItem, ViewHolder holder, int position) {
+        void setDataToView(CheckSellerPaymentDataModel.PriceBlockDetails mItem, ViewHolder holder, int position) {
 
             tvTitle.setTypeface(tvTitle.getTypeface(), Typeface.BOLD);
             tvPrice.setTypeface(tvPrice.getTypeface(), Typeface.BOLD);
@@ -72,13 +76,13 @@ public class AdapterPricing extends RecyclerView.Adapter<AdapterPricing.ViewHold
             tvDescription.setText("" + mItem.discription);
             tvPrice.setText("₹ " + mItem.price);
 
-            btnBuyNow.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-//                    onRemoveBookmarkClicked(position);
-                    Toaster.shortToast("Buy Now");
-                }
-            });
+//            btnBuyNow.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+////                    onRemoveBookmarkClicked(position);
+//                    Toaster.shortToast("Buy Now");
+//                }
+//            });
 
         }
 

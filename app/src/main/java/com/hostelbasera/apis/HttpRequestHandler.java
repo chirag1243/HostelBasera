@@ -125,7 +125,7 @@ public class HttpRequestHandler {
         return params;
     }
 
-    public JSONObject getRegisterUserParam(String deviceId, String name, String password, String email, String mobile_no, String address, boolean isSeller) {
+    public JSONObject getRegisterUserParam(String deviceId, String name, String password, String email, String mobile_no, String address, boolean isSeller, String fb_id, String google_id) {
         JSONObject params = new JSONObject();
         JSONObject jsonObject = new JSONObject();
         try {
@@ -139,6 +139,10 @@ public class HttpRequestHandler {
             jsonObject.put(isSeller ? Constant.Seller_cont_no : Constant.User_cont_no, mobile_no);
             jsonObject.put(isSeller ? Constant.Seller_address : Constant.User_address, address);
 
+            if (!isSeller) {
+                jsonObject.put(Constant.Fb_id, fb_id);
+                jsonObject.put(Constant.Google_id, google_id);
+            }
             params.put(isSeller ? Constant.RegisterSellerData : Constant.RegisterUserData, jsonObject);
         } catch (Exception e) {
             e.printStackTrace();
@@ -472,7 +476,6 @@ public class HttpRequestHandler {
     */
 
 
-
     public JSONObject getAddPropertyParam(int property_id, int type_id, String property_name, int property_category_id,
                                           int property_size_id, String email, String address, double longitude,
                                           double latitude, String cont_no, String description, int state_id, int city_id,
@@ -484,8 +487,9 @@ public class HttpRequestHandler {
         JSONArray jsonArray;
         try {
             params = setDefaultParameters();
-            params.put(Constant.Property_id, "" + property_id);
-
+            if (property_id > 0) {
+                params.put(Constant.Property_id, "" + property_id);
+            }
             jsonObject.put(Constant.Type_id, type_id);
             jsonObject.put(Constant.Seller_id, globals.getUserId());
             jsonObject.put(Constant.Property_name, property_name);
@@ -594,6 +598,34 @@ public class HttpRequestHandler {
         }
         return params;
     }
+
+    public JSONObject getCheckExitingUserParam(String user_email) {
+        JSONObject params = new JSONObject();
+        try {
+            params.put(Constant.User_email, user_email);
+            params.put(Constant.Token, Constant.Token_Value);
+            params.put(Constant.DeviceType, Constant.AndroidDeviceType);
+            params.put(Constant.Fcm_token, globals.getFCMDeviceToken());
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return params;
+    }
+
+    public JSONObject getCheckSellerPaymentDataParam() {
+        JSONObject params = new JSONObject();
+        try {
+            params.put(Constant.Token, Constant.Token_Value);
+            params.put(Constant.DeviceType, Constant.AndroidDeviceType);
+            params.put(Constant.Seller_id, globals.getUserDetails().loginSellerDetail.seller_reg_Id);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return params;
+    }
+
 
     /*public JSONObject getLogoutUserParam() {
         JSONObject params = new JSONObject();

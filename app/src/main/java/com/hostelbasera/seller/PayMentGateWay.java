@@ -16,6 +16,8 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Toast;
 
+import com.hostelbasera.utility.Constant;
+
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
@@ -24,7 +26,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
-public class PayMentGateWay  extends Activity {
+public class PayMentGateWay extends Activity {
 
     private ArrayList<String> post_val = new ArrayList<String>();
     private String post_Data = "";
@@ -34,15 +36,15 @@ public class PayMentGateWay  extends Activity {
     private String hash, hashSequence;
     ProgressDialog progressDialog;
 
-    String merchant_key="pAT6XD0V"; // live
-    String salt="4TPYiV0Qxu"; // live
+    String merchant_key = "pAT6XD0V"; // live
+    String salt = "4TPYiV0Qxu"; // live
 
-//    String merchant_key = "pAT6XD0V"; // test
+    //    String merchant_key = "pAT6XD0V"; // test
 //    String salt = "4TPYiV0Qxu"; // test
     String action1 = "";
-//    String base_url = "https://test.payu.in";
+    //    String base_url = "https://test.payu.in";
     //https://secure.payu.in
-    String base_url="https://secure.payu.in";//
+    String base_url = "https://secure.payu.in";//
     int error = 0;
     String hashString = "";
     Map<String, String> params;
@@ -54,7 +56,7 @@ public class PayMentGateWay  extends Activity {
     Handler mHandler = new Handler();
 
 
-    static String getFirstName, getNumber, getEmailAddress, getRechargeAmt;
+    static String getFirstName, getNumber, getEmailAddress, getPrice;
 
 
     ProgressDialog pDialog;
@@ -74,10 +76,10 @@ public class PayMentGateWay  extends Activity {
 
         Intent oIntent = getIntent();
 
-        getFirstName = oIntent.getExtras().getString("FIRST_NAME");
-        getNumber = oIntent.getExtras().getString("PHONE_NUMBER");
-        getEmailAddress = oIntent.getExtras().getString("EMAIL_ADDRESS");
-        getRechargeAmt = oIntent.getExtras().getString("RECHARGE_AMT");
+        getFirstName = oIntent.getExtras().getString(Constant.Full_name);
+        getNumber = oIntent.getExtras().getString(Constant.Phone_number);
+        getEmailAddress = oIntent.getExtras().getString(Constant.Email);
+        getPrice = oIntent.getExtras().getString(Constant.Price);
 
 
         //post_val = getIntent().getStringArrayListExtra("post_val");
@@ -85,7 +87,7 @@ public class PayMentGateWay  extends Activity {
         params = new HashMap<String, String>();
         params.put("key", merchant_key);
 
-        params.put("amount", getRechargeAmt);
+        params.put("amount", getPrice);
         params.put("firstname", getFirstName);
         params.put("email", getEmailAddress);
         params.put("phone", getNumber);
@@ -294,15 +296,15 @@ public class PayMentGateWay  extends Activity {
                 public void run() {
                     mHandler = null;
 
-	                    /*Intent intent = new Intent();
-	                    intent.putExtra(Constants.RESULT, "success");
-	                    intent.putExtra(Constants.PAYMENT_ID, paymentId);
+	                    Intent intent = new Intent();
+	                    intent.putExtra(Constant.RESULT, "Success");
+	                    intent.putExtra(Constant.PAYMENT_ID, paymentId);
 	                    setResult(RESULT_OK, intent);
-	                    finish();*/
-                    // new PostRechargeData().execute();
-                    Intent intent = new Intent(PayMentGateWay.this, SellerDashboardActivity.class);
-                    intent.putExtra("test", getFirstName);
-                    startActivity(intent);
+	                    finish();
+//                    // new PostRechargeData().execute();
+//                    Intent intent = new Intent(PayMentGateWay.this, SellerDashboardActivity.class);
+//                    intent.putExtra("test", getFirstName);
+//                    startActivity(intent);
 
                     Toast.makeText(getApplicationContext(), "Successfully payment", Toast.LENGTH_LONG).show();
 
@@ -316,6 +318,11 @@ public class PayMentGateWay  extends Activity {
                 @Override
                 public void run() {
                     //cancelPayment();
+                    Intent intent = new Intent();
+                    intent.putExtra(Constant.RESULT, "Cancel");
+                    intent.putExtra(Constant.PAYMENT_ID, 0);
+                    setResult(RESULT_OK, intent);
+                    finish();
                     Toast.makeText(getApplicationContext(), "Cancel payment", Toast.LENGTH_LONG).show();
                 }
             });
@@ -331,11 +338,11 @@ public class PayMentGateWay  extends Activity {
             mHandler.post(new Runnable() {
                 @Override
                 public void run() {
-
-	                    /*Intent intent = new Intent();
-	                    intent.putExtra(Constants.RESULT, params);
-	                    setResult(RESULT_CANCELED, intent);
-	                    finish();*/
+                    Intent intent = new Intent();
+                    intent.putExtra(Constant.RESULT, "Failed");
+                    intent.putExtra(Constant.PAYMENT_ID, 0);
+                    setResult(RESULT_OK, intent);
+                    finish();
                     Toast.makeText(getApplicationContext(), "Failed payment", Toast.LENGTH_LONG).show();
                 }
             });
@@ -460,7 +467,7 @@ public class PayMentGateWay  extends Activity {
 
             String getUserid   = ProSessionManager.getSpeculatorId();
             String getSpeculationId  = "0";
-            String rechargeAmt = getRechargeAmt;
+            String rechargeAmt = getPrice;
             String postAction = "1";
             //http://speculometer.com/webService/stockApp/speculationMoneyreports.php?
             //access_token=ISOFTINCstockAppCheckDevelop&speculator=1&speculation=&amount=1000&action=1

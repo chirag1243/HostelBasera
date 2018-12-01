@@ -138,4 +138,18 @@ public class Constant {
     public static final String Userfile = "userfile";
     public static final String Type = "type";
 
+    public static final String Fb_id = "fb_id";
+    public static final String Google_id = "google_id";
+    public static final String ArrPriceBlockDetails = "arrPriceBlockDetails";
+
+    public static final String Phone_number = "phone_number";
+
+    public static final String ArrAddImageAttachment = "arrAddImageAttachment";
+    public static final String ArrAddMenuAttachment = "arrAddMenuAttachment";
+    public static final String PostData = "postData";
+
+    public static final String RESULT = "RESULT";
+    public static final String PAYMENT_ID = "PAYMENT_ID";
+
+
 }

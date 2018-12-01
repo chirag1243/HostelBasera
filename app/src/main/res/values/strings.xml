@@ -116,6 +116,7 @@
     <string name="leku_voice_search_extra_language">en-EN</string>
     <string name="leku_toolbar_action_voice_title">Voice</string>
     <string name="leku_search_hint">Search</string>
+    <string name="select_hostel_pg_plans">Select Hostel/ PG Plans</string>
 
 
 </resources>

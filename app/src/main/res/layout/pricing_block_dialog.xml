@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/tv_select_hostel_pg_plans"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
+        android:gravity="center"
+        android:padding="@dimen/dim_12dp"
+        android:text="@string/select_hostel_pg_plans"
+        android:textColor="@color/white"
+        android:textSize="@dimen/dim_text18"
+        android:textStyle="bold" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rv_pricing"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+</LinearLayout>
