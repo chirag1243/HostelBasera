@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "128654680645",
+    "firebase_url": "https://secret-cipher-214203.firebaseio.com",
+    "project_id": "secret-cipher-214203",
+    "storage_bucket": "secret-cipher-214203.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:128654680645:android:0ee877cc00d484ce",
+        "android_client_info": {
+          "package_name": "com.hostelbasera"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "128654680645-8uoum39rk1uljv879407ai98498nth2o.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.hostelbasera",
+            "certificate_hash": "5182208bcb3f3a3d17c60001c687a361f18e4b86"
+          }
+        },
+        {
+          "client_id": "128654680645-q27d6tlcibbattihasd1sjlrrj7mngq3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAD-fVpgLX6UmZsu-MPp-oRxOpSDusPALo"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "128654680645-q27d6tlcibbattihasd1sjlrrj7mngq3.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

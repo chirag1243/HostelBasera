@@ -19,6 +19,9 @@ public class CheckSellerPaymentDataModel implements Serializable {
     @SerializedName("status")
     public int status;
 
+    @SerializedName("price_plan")
+    public String price_plan;
+
     public static class PriceBlockDetails implements Serializable {
         @SerializedName("date")
         public String date;

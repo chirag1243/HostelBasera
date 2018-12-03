@@ -8,6 +8,7 @@ import android.content.pm.Signature;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.AppCompatEditText;
 import android.util.Base64;
 import android.util.Log;
@@ -27,13 +28,19 @@ import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
+import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.gson.Gson;
 import com.hostelbasera.R;
 import com.hostelbasera.apis.HttpRequestHandler;
@@ -88,6 +95,8 @@ public class LoginActivity extends BaseActivity {
     Globals globals;
     CallbackManager callbackManager;
     GoogleSignInClient mGoogleSignInClient;
+    GoogleApiClient mGoogleApiClient;
+    private FirebaseAuth mAuth;
 
     private static final int RC_SIGN_IN = 12121;
 
@@ -98,7 +107,9 @@ public class LoginActivity extends BaseActivity {
         ButterKnife.bind(this);
         globals = ((Globals) getApplicationContext());
 
-        try {
+        mAuth = FirebaseAuth.getInstance();
+
+       /* try {
             PackageInfo info = getPackageManager().getPackageInfo(
                     getPackageName(),
                     PackageManager.GET_SIGNATURES);
@@ -111,7 +122,7 @@ public class LoginActivity extends BaseActivity {
 
         } catch (NoSuchAlgorithmException e) {
 
-        }
+        }*/
         init();
     }
 
@@ -119,12 +130,30 @@ public class LoginActivity extends BaseActivity {
         btnSignIn.setTypeface(btnSignIn.getTypeface(), Typeface.BOLD);
         signUp.setTypeface(signUp.getTypeface(), Typeface.BOLD);
 
-//        signInButton.setSize(SignInButton.SIZE_STANDARD);
+
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail()
                 .requestId()
                 .build();
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
+                .build();
+        mGoogleApiClient.connect();
+
+        try {
+            //TODO : Sign out Google account
+            mAuth.signOut();
+            Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(new ResultCallback<Status>() {
+                @Override
+                public void onResult(@NonNull Status status) {
+                    Toaster.shortToast("Sign Out Google : " + status.getStatusMessage());
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         try {
             GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
@@ -166,7 +195,7 @@ public class LoginActivity extends BaseActivity {
 
                                         // Application code
                                         try {
-                                            doCheckExitingUser(object.getString("email"), object.getString("name"),object.getString("id"),"");
+                                            doCheckExitingUser(object.getString("email"), object.getString("name"), object.getString("id"), "");
                                         } catch (JSONException e) {
                                             e.printStackTrace();
                                         }
@@ -236,6 +265,7 @@ public class LoginActivity extends BaseActivity {
 
     @OnClick(R.id.sign_in_button)
     public void signIn() {
+        //TODO : Google Login is Pending
         Intent signInIntent = mGoogleSignInClient.getSignInIntent();
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }
