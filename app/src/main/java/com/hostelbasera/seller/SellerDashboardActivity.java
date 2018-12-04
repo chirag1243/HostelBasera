@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -28,9 +29,12 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
 import com.bumptech.glide.request.RequestOptions;
+import com.github.javiersantos.materialstyleddialogs.MaterialStyledDialog;
 import com.google.gson.Gson;
 import com.hostelbasera.R;
 import com.hostelbasera.apis.HttpRequestHandler;
@@ -41,6 +45,7 @@ import com.hostelbasera.main.FragmentHome;
 import com.hostelbasera.main.FragmentOrderList;
 import com.hostelbasera.main.LoginActivity;
 import com.hostelbasera.model.PropertyDetailModel;
+import com.hostelbasera.model.UserDetailModel;
 import com.hostelbasera.utility.BaseActivity;
 import com.hostelbasera.utility.Globals;
 import com.hostelbasera.utility.Toaster;
@@ -59,6 +64,8 @@ public class SellerDashboardActivity extends BaseActivity implements NavigationV
 
     private static final int MAP_BUTTON_REQUEST_CODE = 1232;
     private static final int Dashboard_REQUEST_CODE = 1243;
+    private static final int UpdateCode = 2212;
+
     boolean doubleBackToExitPressedOnce = false;
     @BindView(R.id.toolbar_title)
     TextView toolbarTitle;
@@ -77,6 +84,7 @@ public class SellerDashboardActivity extends BaseActivity implements NavigationV
     CircleImageView imgProfile;
     public TextView tvNavTitle;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -88,6 +96,9 @@ public class SellerDashboardActivity extends BaseActivity implements NavigationV
     public void init() {
         globals = ((Globals) getApplicationContext());
         fbAddHostel.setVisibility(View.VISIBLE);
+        //TODO : Remove Comment
+//        updateChecker();
+
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close) {
             @Override
             public void onDrawerOpened(View drawerView) {
@@ -137,6 +148,44 @@ public class SellerDashboardActivity extends BaseActivity implements NavigationV
 
         setFragment(new FragmentSellerHome());
     }
+
+    //TODO : Remove Comment
+    /*public void updateChecker() {
+        UserDetailModel.VersionDetail versionDetail = globals.getUserDetails().loginUserDetail.versionDetail;
+        if (versionDetail.is_update_available) {
+            MaterialStyledDialog.Builder builder = new MaterialStyledDialog.Builder(this);
+            builder.setTitle(R.string.new_update_available)
+                    .setDescription("Update ver." + versionDetail.latest_version + " is available to download. Downloading the latest update you will get the latest features, " + versionDetail.remark + " of HostelBasera.")
+                    .setCancelable(false)
+                    .setIcon(R.mipmap.ic_launcher)
+                    .setHeaderDrawable(R.drawable.nav_bg)
+                    .autoDismiss(false)
+                    .withDarkerOverlay(false)
+                    .setPositiveText("Update")
+                    .onPositive(new MaterialDialog.SingleButtonCallback() {
+                        @Override
+                        public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                            final String appPackageName = getPackageName();
+                            try {
+                                startActivityForResult(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName)), UpdateCode);
+                            } catch (android.content.ActivityNotFoundException anfe) {
+                                startActivityForResult(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName)), UpdateCode);
+                            }
+                            dialog.dismiss();
+                        }
+                    });
+            if (!versionDetail.force_update) {
+                builder.setNegativeText("Later")
+                        .onNegative(new MaterialDialog.SingleButtonCallback() {
+                            @Override
+                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                dialog.dismiss();
+                            }
+                        });
+            }
+            builder.show();
+        }
+    }*/
 
     public void setToolbarTitle(int title) {
         toolbarTitle.setText(title);
@@ -196,14 +245,6 @@ public class SellerDashboardActivity extends BaseActivity implements NavigationV
             case R.id.nav_enquiry:
                 setToolbarTitle(R.string.enquiry);
                 setFragment(new FragmentOrderList());
-                //TODO : Do Comment it
-
-//                Intent intent = new Intent(getApplicationContext(), PayMentGateWay.class);
-//                intent.putExtra("FIRST_NAME", "Chirag Gandhi");
-//                intent.putExtra("PHONE_NUMBER", "9843467834");
-//                intent.putExtra("EMAIL_ADDRESS", "chirag3424@gmail.com   ");
-//                intent.putExtra("RECHARGE_AMT", "1");
-//                startActivity(intent);
                 break;
             case R.id.nav_share_app:
                 ShareCompat.IntentBuilder.from(this)
@@ -251,7 +292,7 @@ public class SellerDashboardActivity extends BaseActivity implements NavigationV
 
     @OnClick(R.id.fb_add_hostel)
     public void doAddHostel() {
-        startActivityForResult(new Intent(SellerDashboardActivity.this, AddHostelPGActivity.class), Dashboard_REQUEST_CODE);// TODO : Change it  PricingActivity
+        startActivityForResult(new Intent(SellerDashboardActivity.this, AddHostelPGActivity.class), Dashboard_REQUEST_CODE);
     }
 
     @Override
@@ -263,5 +304,10 @@ public class SellerDashboardActivity extends BaseActivity implements NavigationV
                 setFragment(new FragmentSellerHome());
             }
         }
+        if (requestCode == UpdateCode) {
+            //TODO : Remove Comment
+//          updateChecker();
+        }
+
     }
 }

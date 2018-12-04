@@ -38,6 +38,7 @@ import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -96,7 +97,6 @@ public class LoginActivity extends BaseActivity {
     CallbackManager callbackManager;
     GoogleSignInClient mGoogleSignInClient;
     GoogleApiClient mGoogleApiClient;
-    private FirebaseAuth mAuth;
 
     private static final int RC_SIGN_IN = 12121;
 
@@ -107,7 +107,6 @@ public class LoginActivity extends BaseActivity {
         ButterKnife.bind(this);
         globals = ((Globals) getApplicationContext());
 
-        mAuth = FirebaseAuth.getInstance();
 
        /* try {
             PackageInfo info = getPackageManager().getPackageInfo(
@@ -143,25 +142,11 @@ public class LoginActivity extends BaseActivity {
         mGoogleApiClient.connect();
 
         try {
-            //TODO : Sign out Google account
-            mAuth.signOut();
-            Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(new ResultCallback<Status>() {
-                @Override
-                public void onResult(@NonNull Status status) {
-                    Toaster.shortToast("Sign Out Google : " + status.getStatusMessage());
-                }
-            });
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        try {
             GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
-            Toaster.shortToast(account.getEmail());
+//            Toaster.shortToast(account.getEmail());
         } catch (Exception e) {
             e.printStackTrace();
         }
-
 
         segmentedGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
@@ -177,6 +162,13 @@ public class LoginActivity extends BaseActivity {
             Toaster.shortToast("Coming Soon");
             return;
         }
+
+        try {
+            LoginManager.getInstance().logOut();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         callbackManager = CallbackManager.Factory.create();
         LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("public_profile", "email"));
 
@@ -265,7 +257,23 @@ public class LoginActivity extends BaseActivity {
 
     @OnClick(R.id.sign_in_button)
     public void signIn() {
-        //TODO : Google Login is Pending
+        if (isSeller) {
+            Toaster.shortToast("Coming Soon");
+            return;
+        }
+
+        try {
+            mGoogleSignInClient.signOut()
+                    .addOnCompleteListener(this, new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+//                        Toaster.shortToast("Sign Out Google : ");
+                        }
+                    });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         Intent signInIntent = mGoogleSignInClient.getSignInIntent();
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }
@@ -289,13 +297,19 @@ public class LoginActivity extends BaseActivity {
             GoogleSignInAccount account = completedTask.getResult(ApiException.class);
 
             Toaster.shortToast(account.getEmail());
+            try {
+                doCheckExitingUser(account.getEmail(), account.getGivenName(), "", account.getId());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
             // Signed in successfully, show authenticated UI.
 //            updateUI(account);
         } catch (ApiException e) {
             // The ApiException status code indicates the detailed failure reason.
             // Please refer to the GoogleSignInStatusCodes class reference for more information.
             Log.w(TAG, "signInResult:failed code=" + e.getStatusCode());
-            Toaster.shortToast("Failed Login");
+            Toaster.shortToast("Google Login Failed");
 //            updateUI(null);
         }
     }
@@ -314,51 +328,6 @@ public class LoginActivity extends BaseActivity {
         }
         doLogin();
     }
-
-    /*@OnClick(R.id.login_button)
-    public void connectFacebook() {
-        List<String> scopes = Arrays.asList("user_birthday", "user_friends");
-
-        SimpleAuth.connectFacebook(scopes, new AuthCallback() {
-            @Override
-            public void onSuccess(SocialUser socialUser) {
-                Log.d(TAG, "userId:" + socialUser.userId);
-                Log.d(TAG, "email:" + socialUser.email);
-                Log.d(TAG, "accessToken:" + socialUser.accessToken);
-                Log.d(TAG, "profilePictureUrl:" + socialUser.profilePictureUrl);
-                Log.d(TAG, "username:" + socialUser.username);
-                Log.d(TAG, "fullName:" + socialUser.fullName);
-                Log.d(TAG, "pageLink:" + socialUser.pageLink);
-            }
-
-            @Override
-            public void onError(Throwable error) {
-                Log.d(TAG, error.getMessage());
-            }
-
-            @Override
-            public void onCancel() {
-                Log.d(TAG, "Canceled");
-            }
-        });
-
-        *//*com.jaychang.sa.google.SimpleAuth.connectGoogle(scopes, new AuthCallback() {
-            @Override
-            public void onSuccess(SocialUser socialUser) {
-//                socialUser.
-            }
-
-            @Override
-            public void onError(Throwable error) {
-
-            }
-
-            @Override
-            public void onCancel() {
-
-            }
-        });*//*
-    }*/
 
     @SuppressLint("HardwareIds")
     public void doLogin() {

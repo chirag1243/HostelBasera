@@ -977,9 +977,8 @@ TODO :
             arrContact = adapterContact.mValues;
         }
 
-        //TODO : Remove Comment
-//        if (!doValidate())
-//            return;
+        if (!doValidate())
+            return;
 
         if (Globals.isNetworkAvailable(this)) {
             doCheckSellerPaymentData();
@@ -1003,7 +1002,6 @@ TODO :
                                     if (checkSellerPaymentDataModel.priceBlockDetails.size() > 0) {
                                         priceBlockDialog(checkSellerPaymentDataModel.priceBlockDetails);
                                     } else {
-                                        //TODO : Pass Parameter for Add Hostel
                                         startActivityForResult(new Intent(AddHostelPGActivity.this, PayMentGateWay.class)
                                                 .putExtra(Constant.Full_name, edtName.getText().toString())
                                                 .putExtra(Constant.Phone_number, arrContact.get(0))

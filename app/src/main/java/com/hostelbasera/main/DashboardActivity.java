@@ -1,9 +1,11 @@
 package com.hostelbasera.main;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -25,14 +27,19 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
 import com.bumptech.glide.request.RequestOptions;
+import com.github.javiersantos.materialstyleddialogs.MaterialStyledDialog;
 import com.google.gson.Gson;
 import com.hostelbasera.R;
 import com.hostelbasera.apis.HttpRequestHandler;
 import com.hostelbasera.apis.PostRequest;
 import com.hostelbasera.model.PropertyDetailModel;
+import com.hostelbasera.model.UserDetailModel;
+import com.hostelbasera.seller.FragmentSellerHome;
 import com.hostelbasera.utility.BaseActivity;
 import com.hostelbasera.utility.Globals;
 import com.hostelbasera.utility.Toaster;
@@ -44,6 +51,8 @@ import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class DashboardActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener {
+
+    private static final int UpdateCode = 2212;
 
     boolean doubleBackToExitPressedOnce = false;
     @BindView(R.id.toolbar_title)
@@ -71,6 +80,7 @@ public class DashboardActivity extends BaseActivity implements NavigationView.On
 
     public void init() {
         globals = ((Globals) getApplicationContext());
+        updateChecker();
 
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close) {
             @Override
@@ -119,6 +129,56 @@ public class DashboardActivity extends BaseActivity implements NavigationView.On
         navigationView.getMenu().getItem(0).setChecked(true);
 
         setFragment(new FragmentHome());
+
+    }
+
+    public void updateChecker() {
+        //TODO : Remove Comment
+//        UserDetailModel.VersionDetail versionDetail = globals.getUserDetails().loginUserDetail.versionDetail;
+//        if (versionDetail.is_update_available) {
+            MaterialStyledDialog.Builder builder = new MaterialStyledDialog.Builder(this);
+            builder.setTitle(R.string.new_update_available)
+                    //TODO : Remove Comment
+                    .setDescription("Update ver." + /*versionDetail.latest_version +*/ " is available to download. Downloading the latest update you will get the latest features, " + /*versionDetail.remark +*/ " of HostelBasera.")
+                    .setCancelable(false)
+                    .setIcon(R.mipmap.ic_launcher)
+                    .setHeaderDrawable(R.drawable.nav_bg)
+                    .autoDismiss(false)
+                    .withDarkerOverlay(false)
+                    .setPositiveText("Update")
+                    .onPositive(new MaterialDialog.SingleButtonCallback() {
+                        @Override
+                        public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                            final String appPackageName = getPackageName();
+                            try {
+                                startActivityForResult(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName)), UpdateCode);
+                            } catch (android.content.ActivityNotFoundException anfe) {
+                                startActivityForResult(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName)), UpdateCode);
+                            }
+                            dialog.dismiss();
+                        }
+                    });
+        //TODO : Remove Comment
+//            if (!versionDetail.force_update) {
+                builder.setNegativeText("Later")
+                        .onNegative(new MaterialDialog.SingleButtonCallback() {
+                            @Override
+                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                dialog.dismiss();
+                            }
+                        });
+//            }
+            builder.show();
+//        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == UpdateCode) {
+            updateChecker();
+        }
     }
 
     public void setToolbarTitle(int title) {
