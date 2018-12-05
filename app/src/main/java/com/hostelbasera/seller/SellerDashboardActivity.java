@@ -149,7 +149,7 @@ public class SellerDashboardActivity extends BaseActivity implements NavigationV
     }
 
     public void updateChecker() {
-        UserDetailModel.VersionDetail versionDetail = globals.getUserDetails().loginUserDetail.versionDetail;
+        UserDetailModel.VersionDetail versionDetail = globals.getUserDetails().loginSellerDetail.versionDetail;
         if (versionDetail.is_update_available) {
             MaterialStyledDialog.Builder builder = new MaterialStyledDialog.Builder(this);
             builder.setTitle(R.string.new_update_available)
@@ -241,10 +241,15 @@ public class SellerDashboardActivity extends BaseActivity implements NavigationV
                 setToolbarTitle(R.string.booked_hostel_pg);
                 setFragment(new FragmentBookedList());
                 break;
-            case R.id.nav_enquiry:
+            /*case R.id.nav_enquiry:
                 setToolbarTitle(R.string.enquiry);
                 setFragment(new FragmentOrderList());
-                break;
+                break;*/
+            case R.id.nav_change_password:
+                setToolbarTitle(R.string.change_password);
+                onChangePasswordClicked();
+                doCloseDrawer();
+                return false;
             case R.id.nav_share_app:
                 ShareCompat.IntentBuilder.from(this)
                         .setType("text/plain")
@@ -281,6 +286,99 @@ public class SellerDashboardActivity extends BaseActivity implements NavigationV
         startActivityForResult(locationPickerIntent, MAP_BUTTON_REQUEST_CODE);
     }*/
 
+    public void onChangePasswordClicked() {
+
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this, R.style.MyEnquiryAlertDialogStyle);
+        LayoutInflater inflater = this.getLayoutInflater();
+        View dialogView = inflater.inflate(R.layout.change_password_dialog, null);
+        dialogBuilder.setView(dialogView);
+
+        TextView tvTitle = dialogView.findViewById(R.id.tv_title);
+        EditText edtOldPassword = dialogView.findViewById(R.id.edt_old_password);
+        EditText edtNewPassword = dialogView.findViewById(R.id.edt_new_password);
+        EditText edtConfirmPassword = dialogView.findViewById(R.id.edt_confirm_password);
+
+        TextView tvSubmit = dialogView.findViewById(R.id.tv_submit);
+        TextView tvCancel = dialogView.findViewById(R.id.tv_cancel);
+
+
+        AlertDialog alertDialog = dialogBuilder.create();
+
+        tvTitle.setTypeface(tvTitle.getTypeface(), Typeface.BOLD);
+        tvSubmit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (edtOldPassword.getText().toString().trim().isEmpty()) {
+                    Toaster.shortToast("Please enter old password");
+                    return;
+                }
+                if (!edtOldPassword.getText().toString().trim().equals(globals.getUserDetails().loginSellerDetail.password)) {
+                    Toaster.shortToast("Please enter valid old password");
+                    return;
+                }
+                if (edtNewPassword.getText().toString().trim().isEmpty()) {
+                    Toaster.shortToast("Please enter password");
+                    return;
+                }
+                if (edtNewPassword.getText().toString().length() < 6) {
+                    Toaster.shortToast("Password must be min 6 character.");
+                    return;
+                }
+
+                if (edtConfirmPassword.getText().toString().trim().isEmpty()) {
+                    Toaster.shortToast("Please enter confirm password");
+                    return;
+                }
+
+                if (!edtNewPassword.getText().toString().trim().equals(edtConfirmPassword.getText().toString().trim())) {
+                    Toaster.shortToast("Password & confirm password doesn't match");
+                    return;
+                }
+
+                if (Globals.isNetworkAvailable(SellerDashboardActivity.this)) {
+                    doChangePassword(edtNewPassword.getText().toString());
+                    alertDialog.dismiss();
+                } else {
+                    Toaster.shortToast(getString(R.string.no_internet_msg));
+                }
+            }
+        });
+
+        tvCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertDialog.dismiss();
+            }
+        });
+
+        alertDialog.show();
+    }
+
+    private void doChangePassword(String password) {
+        JSONObject postData = HttpRequestHandler.getInstance().getChangePasswordParam(true, password);
+        if (postData != null) {
+
+            new PostRequest(this, getString(R.string.changePassword), postData, true, new PostRequest.OnPostServiceCallListener() {
+                @Override
+                public void onSucceedToPostCall(JSONObject response) {
+                    PropertyDetailModel propertyDetailModel = new Gson().fromJson(response.toString(), PropertyDetailModel.class);
+                    UserDetailModel userDetailModel = new UserDetailModel();
+                    userDetailModel = globals.getUserDetails();
+                    userDetailModel.loginSellerDetail.password = password;
+                    globals.setUserDetails(userDetailModel);
+
+                    Toaster.shortToast(propertyDetailModel.message);
+                }
+
+                @Override
+                public void onFailedToPostCall(int statusCode, String msg) {
+                    Toaster.shortToast(msg);
+                }
+            }).execute();
+        }
+        Globals.hideKeyboard(this);
+    }
+
     public void doLogout() {
         globals.setUserDetails(null);
         globals.setUserId(0);
@@ -304,7 +402,7 @@ public class SellerDashboardActivity extends BaseActivity implements NavigationV
             }
         }
         if (requestCode == UpdateCode) {
-          updateChecker();
+            updateChecker();
         }
 
     }

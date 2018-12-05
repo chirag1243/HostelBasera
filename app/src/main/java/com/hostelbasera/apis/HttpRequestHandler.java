@@ -634,6 +634,20 @@ public class HttpRequestHandler {
     }
 
 
+    public JSONObject getChangePasswordParam(boolean isSeller, String password) {
+        JSONObject params = new JSONObject();
+        try {
+            params.put(Constant.Token, Constant.Token_Value);
+            params.put(Constant.DeviceType, Constant.AndroidDeviceType);
+            params.put(Constant.User_id, isSeller ? globals.getUserDetails().loginSellerDetail.seller_reg_Id : globals.getUserDetails().loginUserDetail.user_reg_Id);
+            params.put(Constant.Is_seller, isSeller);
+            params.put(Constant.Password, password);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return params;
+    }
+
     /*public JSONObject getLogoutUserParam() {
         JSONObject params = new JSONObject();
         JSONObject jsonObject = new JSONObject();

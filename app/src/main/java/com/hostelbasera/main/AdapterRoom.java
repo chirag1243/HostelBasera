@@ -82,10 +82,11 @@ public class AdapterRoom extends RecyclerView.Adapter<AdapterRoom.ViewHolder> {
                 public void onClick(View v) {
                     room_id = mItem.id;
                     doResetSelection();
-                    mValues.get(position).isSelected = true;
+                    mValues.get(position).isSelected = !mValues.get(position).isSelected;
                     notifyDataSetChanged();
                 }
             });
+            radio.setClickable(false);
         }
 
         void doResetSelection() {

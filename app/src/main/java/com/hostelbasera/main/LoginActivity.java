@@ -158,10 +158,6 @@ public class LoginActivity extends BaseActivity {
 
     @OnClick(R.id.login_button)
     public void facebookLogin() {
-        if (isSeller) {
-            Toaster.shortToast("Coming Soon");
-            return;
-        }
 
         try {
             LoginManager.getInstance().logOut();
@@ -213,7 +209,7 @@ public class LoginActivity extends BaseActivity {
     }
 
     public void doCheckExitingUser(String email, String name, String fb_id, String google_id) {
-        JSONObject postData = HttpRequestHandler.getInstance().getCheckExitingUserParam(email,isSeller);
+        JSONObject postData = HttpRequestHandler.getInstance().getCheckExitingUserParam(email, isSeller);
 
         if (postData != null) {
             new PostRequest(this, isSeller ? getString(R.string.checkExitingSeller) : getString(R.string.checkExitingUser), postData, true,
@@ -240,7 +236,7 @@ public class LoginActivity extends BaseActivity {
                                         .putExtra(Constant.Full_name, name)
                                         .putExtra(Constant.Fb_id, fb_id)
                                         .putExtra(Constant.Google_id, google_id)
-                                        .putExtra(Constant.IsSeller,isSeller)
+                                        .putExtra(Constant.IsSeller, isSeller)
                                 );
                             }
                             Toaster.shortToast(userDetailModel.message);
@@ -257,11 +253,6 @@ public class LoginActivity extends BaseActivity {
 
     @OnClick(R.id.sign_in_button)
     public void signIn() {
-        if (isSeller) {
-            Toaster.shortToast("Coming Soon");
-            return;
-        }
-
         try {
             mGoogleSignInClient.signOut()
                     .addOnCompleteListener(this, new OnCompleteListener<Void>() {

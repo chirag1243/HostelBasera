@@ -119,4 +119,8 @@
     <string name="select_hostel_pg_plans">Select Hostel/ PG Plans</string>
 
     <string name="new_update_available"><b>New update available!</b> </string>
+    <string name="change_password">Change Password</string>
+    <string name="enter_old_password">Enter old password</string>
+    <string name="enter_password">Enter password</string>
+    <string name="enter_confirm_password">Enter confirm password</string>
 </resources>

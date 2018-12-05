@@ -12,10 +12,15 @@
             android:id="@+id/nav_booked_hostel_pg"
             android:icon="@drawable/nav_my_pg_hostel"
             android:title="@string/booked_hostel_pg" />
-        <item
+        <!--TODO : Add Enquiry-->
+        <!--<item
             android:id="@+id/nav_enquiry"
             android:icon="@drawable/nav_feedback"
-            android:title="@string/enquiry" />
+            android:title="@string/enquiry" />-->
+        <item
+            android:id="@+id/nav_change_password"
+            android:icon="@drawable/nav_change_pass"
+            android:title="@string/change_password" />
         <item
             android:id="@+id/nav_share_app"
             android:icon="@drawable/nav_share"

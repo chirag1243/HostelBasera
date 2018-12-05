@@ -154,4 +154,6 @@ public class Constant {
     public static final String Payment_id = "payment_id";
     public static final String Price_plan = "price_plan";
 
+    public static final String Is_seller = "is_seller";
+
 }

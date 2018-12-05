@@ -237,6 +237,11 @@ public class DashboardActivity extends BaseActivity implements NavigationView.On
                 setToolbarTitle(R.string.my_pg_hostel);
                 setFragment(new FragmentOrderList());
                 break;
+            case R.id.nav_change_password:
+                setToolbarTitle(R.string.change_password);
+                onChangePasswordClicked();
+                doCloseDrawer();
+                return false;
             case R.id.nav_feedback:
                 onFeedbackClicked();
                 doCloseDrawer();
@@ -288,8 +293,12 @@ public class DashboardActivity extends BaseActivity implements NavigationView.On
                     Toaster.shortToast("Please write your description here ...");
                     return;
                 }
-                doGiveFeedback(edtTitle.getText().toString(), edtDescription.getText().toString());
-                alertDialog.dismiss();
+                if (Globals.isNetworkAvailable(DashboardActivity.this)) {
+                    doGiveFeedback(edtTitle.getText().toString(), edtDescription.getText().toString());
+                    alertDialog.dismiss();
+                } else {
+                    Toaster.shortToast(getString(R.string.no_internet_msg));
+                }
             }
         });
 
@@ -304,10 +313,6 @@ public class DashboardActivity extends BaseActivity implements NavigationView.On
     }
 
     private void doGiveFeedback(String title, String description) {
-        if (!Globals.isNetworkAvailable(this)) {
-            Toaster.shortToast(R.string.no_internet_msg);
-            return;
-        }
 
         JSONObject postData = HttpRequestHandler.getInstance().getAddFeedbackDataParam(title, description);
         if (postData != null) {
@@ -316,6 +321,99 @@ public class DashboardActivity extends BaseActivity implements NavigationView.On
                 @Override
                 public void onSucceedToPostCall(JSONObject response) {
                     PropertyDetailModel propertyDetailModel = new Gson().fromJson(response.toString(), PropertyDetailModel.class);
+                    Toaster.shortToast(propertyDetailModel.message);
+                }
+
+                @Override
+                public void onFailedToPostCall(int statusCode, String msg) {
+                    Toaster.shortToast(msg);
+                }
+            }).execute();
+        }
+        Globals.hideKeyboard(this);
+    }
+
+    public void onChangePasswordClicked() {
+
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this, R.style.MyEnquiryAlertDialogStyle);
+        LayoutInflater inflater = this.getLayoutInflater();
+        View dialogView = inflater.inflate(R.layout.change_password_dialog, null);
+        dialogBuilder.setView(dialogView);
+
+        TextView tvTitle = dialogView.findViewById(R.id.tv_title);
+        EditText edtOldPassword = dialogView.findViewById(R.id.edt_old_password);
+        EditText edtNewPassword = dialogView.findViewById(R.id.edt_new_password);
+        EditText edtConfirmPassword = dialogView.findViewById(R.id.edt_confirm_password);
+
+        TextView tvSubmit = dialogView.findViewById(R.id.tv_submit);
+        TextView tvCancel = dialogView.findViewById(R.id.tv_cancel);
+
+
+        AlertDialog alertDialog = dialogBuilder.create();
+
+        tvTitle.setTypeface(tvTitle.getTypeface(), Typeface.BOLD);
+        tvSubmit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (edtOldPassword.getText().toString().trim().isEmpty()) {
+                    Toaster.shortToast("Please enter old password");
+                    return;
+                }
+                if (!edtOldPassword.getText().toString().trim().equals(globals.getUserDetails().loginUserDetail.password)) {
+                    Toaster.shortToast("Please enter valid old password");
+                    return;
+                }
+                if (edtNewPassword.getText().toString().trim().isEmpty()) {
+                    Toaster.shortToast("Please enter password");
+                    return;
+                }
+
+                if (edtNewPassword.getText().toString().length() < 6) {
+                    Toaster.shortToast("Password must be min 6 character.");
+                    return;
+                }
+
+                if (edtConfirmPassword.getText().toString().trim().isEmpty()) {
+                    Toaster.shortToast("Please enter confirm password");
+                    return;
+                }
+
+                if (!edtNewPassword.getText().toString().trim().equals(edtConfirmPassword.getText().toString().trim())) {
+                    Toaster.shortToast("Password & confirm password doesn't match");
+                    return;
+                }
+
+                if (Globals.isNetworkAvailable(DashboardActivity.this)) {
+                    doChangePassword(edtNewPassword.getText().toString());
+                    alertDialog.dismiss();
+                } else {
+                    Toaster.shortToast(getString(R.string.no_internet_msg));
+                }
+            }
+        });
+
+        tvCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertDialog.dismiss();
+            }
+        });
+
+        alertDialog.show();
+    }
+
+    private void doChangePassword(String password) {
+        JSONObject postData = HttpRequestHandler.getInstance().getChangePasswordParam(false, password);
+        if (postData != null) {
+
+            new PostRequest(this, getString(R.string.changePassword), postData, true, new PostRequest.OnPostServiceCallListener() {
+                @Override
+                public void onSucceedToPostCall(JSONObject response) {
+                    PropertyDetailModel propertyDetailModel = new Gson().fromJson(response.toString(), PropertyDetailModel.class);
+                    UserDetailModel userDetailModel = new UserDetailModel();
+                    userDetailModel = globals.getUserDetails();
+                    userDetailModel.loginUserDetail.password = password;
+                    globals.setUserDetails(userDetailModel);
                     Toaster.shortToast(propertyDetailModel.message);
                 }
 

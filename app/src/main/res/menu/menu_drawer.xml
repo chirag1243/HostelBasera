@@ -21,6 +21,10 @@
             android:icon="@drawable/nav_feedback"
             android:title="@string/feedback" />
         <item
+            android:id="@+id/nav_change_password"
+            android:icon="@drawable/nav_change_pass"
+            android:title="@string/change_password" />
+        <item
             android:id="@+id/nav_share_app"
             android:icon="@drawable/nav_share"
             android:title="@string/share_app" />
