@@ -96,8 +96,7 @@ public class SellerDashboardActivity extends BaseActivity implements NavigationV
     public void init() {
         globals = ((Globals) getApplicationContext());
         fbAddHostel.setVisibility(View.VISIBLE);
-        //TODO : Remove Comment
-//        updateChecker();
+        updateChecker();
 
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close) {
             @Override
@@ -149,8 +148,7 @@ public class SellerDashboardActivity extends BaseActivity implements NavigationV
         setFragment(new FragmentSellerHome());
     }
 
-    //TODO : Remove Comment
-    /*public void updateChecker() {
+    public void updateChecker() {
         UserDetailModel.VersionDetail versionDetail = globals.getUserDetails().loginUserDetail.versionDetail;
         if (versionDetail.is_update_available) {
             MaterialStyledDialog.Builder builder = new MaterialStyledDialog.Builder(this);
@@ -185,7 +183,8 @@ public class SellerDashboardActivity extends BaseActivity implements NavigationV
             }
             builder.show();
         }
-    }*/
+    }
+
 
     public void setToolbarTitle(int title) {
         toolbarTitle.setText(title);
@@ -305,8 +304,7 @@ public class SellerDashboardActivity extends BaseActivity implements NavigationV
             }
         }
         if (requestCode == UpdateCode) {
-            //TODO : Remove Comment
-//          updateChecker();
+          updateChecker();
         }
 
     }

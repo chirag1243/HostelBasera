@@ -174,6 +174,7 @@ public class AddHostelPGActivity extends BaseActivity implements PermissionListe
     GetPropertyDetModel.PropertyDetails propertyDetails;
 
     public int PAYMENT_CODE = 123;
+    String paymentId = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -520,7 +521,7 @@ public class AddHostelPGActivity extends BaseActivity implements PermissionListe
         } else if (requestCode == PAYMENT_CODE) {
             if (resultCode == Activity.RESULT_OK && data != null) {
                 if (data.getStringExtra(Constant.RESULT).equals("Success")) {
-                    String paymentId = data.getStringExtra(Constant.PAYMENT_ID);
+                    paymentId = data.getStringExtra(Constant.Payment_id);
 
                     if (arrAddImageAttachment.size() > 0) {
                         setProgressDialog(arrAddImageAttachment.size());
@@ -988,7 +989,10 @@ TODO :
         }
     }
 
+    String price_plan = "";
+
     public void doCheckSellerPaymentData() {
+        price_plan = "";
         JSONObject postData = HttpRequestHandler.getInstance().getCheckSellerPaymentDataParam();
 
         if (postData != null) {
@@ -998,6 +1002,7 @@ TODO :
                         public void onSucceedToPostCall(JSONObject response) {
                             CheckSellerPaymentDataModel checkSellerPaymentDataModel = new Gson().fromJson(response.toString(), CheckSellerPaymentDataModel.class);
                             if (checkSellerPaymentDataModel.status == 0) {
+                                price_plan = checkSellerPaymentDataModel.price_plan;
                                 if (checkSellerPaymentDataModel.payment_required == 1) {
                                     if (checkSellerPaymentDataModel.priceBlockDetails.size() > 0) {
                                         priceBlockDialog(checkSellerPaymentDataModel.priceBlockDetails);
@@ -1230,7 +1235,7 @@ TODO :
                 property_category_id, property_size_id, edtEmail.getText().toString(), edtAddress.getText().toString(), longitude, latitude,
                 contact_no.deleteCharAt(contact_no.length() - 2).toString(), edtDescription.getText().toString(), state_id, city_id, edtOpenHours.getText().toString(),
                 edtWaterTimings.getText().toString(), edtLaundryFees.getText().toString(), arrAddMenuAttachment, edtPrice.getText().toString(), arrFacilityList,
-                arrAddImageAttachment, arrRoomDetails);
+                arrAddImageAttachment, arrRoomDetails, paymentId, price_plan);
 
 
         if (postData != null) {

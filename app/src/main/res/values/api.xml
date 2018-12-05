@@ -38,6 +38,7 @@
     <string name="getPropertyDet">user/getPropertyDet</string>
 
     <string name="checkExitingUser">user/checkExitingUser</string>
+    <string name="checkExitingSeller">user/checkExitingSeller</string>
     <string name="checkSellerPaymentData">user/checkSellerPaymentData</string>
 
 </resources>

@@ -75,6 +75,14 @@ public class SignUpActivity extends BaseActivity {
             edtName.setText(intent.getStringExtra(Constant.Full_name));
             fb_id = intent.getStringExtra(Constant.Full_name);
             google_id = intent.getStringExtra(Constant.Google_id);
+            if (intent.hasExtra(Constant.IsSeller)){
+                isSeller = intent.getBooleanExtra(Constant.IsSeller, false);
+                if (isSeller){
+                    rbSeller.setChecked(true);
+                }else {
+                    rbBuyer.setChecked(false);
+                }
+            }
         }
 
         segmentedGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {

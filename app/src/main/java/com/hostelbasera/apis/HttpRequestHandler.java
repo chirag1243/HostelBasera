@@ -104,7 +104,7 @@ public class HttpRequestHandler {
         return dialog;
     }
 
-    public JSONObject getLoginUserParam(String deviceId, String email, String password, boolean isSeller) {
+    public JSONObject getLoginUserParam(String deviceId, String email, String password, boolean isSeller, String version) {
         JSONObject params = new JSONObject();
         JSONObject jsonObject = new JSONObject();
         try {
@@ -114,6 +114,7 @@ public class HttpRequestHandler {
             jsonObject.put(Constant.Email, email);
             jsonObject.put(Constant.Password, password);
             jsonObject.put(Constant.Fcm_token, globals.getFCMDeviceToken());
+            jsonObject.put(Constant.Version, version);
 
             if (isSeller)
                 params.put(Constant.LoginSellerData, jsonObject);
@@ -139,10 +140,9 @@ public class HttpRequestHandler {
             jsonObject.put(isSeller ? Constant.Seller_cont_no : Constant.User_cont_no, mobile_no);
             jsonObject.put(isSeller ? Constant.Seller_address : Constant.User_address, address);
 
-            if (!isSeller) {
-                jsonObject.put(Constant.Fb_id, fb_id);
-                jsonObject.put(Constant.Google_id, google_id);
-            }
+            jsonObject.put(Constant.Fb_id, fb_id);
+            jsonObject.put(Constant.Google_id, google_id);
+
             params.put(isSeller ? Constant.RegisterSellerData : Constant.RegisterUserData, jsonObject);
         } catch (Exception e) {
             e.printStackTrace();
@@ -481,7 +481,8 @@ public class HttpRequestHandler {
                                           double latitude, String cont_no, String description, int state_id, int city_id,
                                           String timing, String water_timing, String laundry_fees, ArrayList<AddImageAttachmentModel> arrAddMenuAttachment,
                                           String price, ArrayList<SellerDropdownModel.FacilityList> arrFacilityList,
-                                          ArrayList<AddImageAttachmentModel> arrAddImageAttachment, ArrayList<AddRoomModel> arrRoomDetails) {
+                                          ArrayList<AddImageAttachmentModel> arrAddImageAttachment, ArrayList<AddRoomModel> arrRoomDetails,
+                                          String payment_id, String price_plan) {
         JSONObject params = new JSONObject();
         JSONObject jsonObject = new JSONObject();
         JSONArray jsonArray;
@@ -507,6 +508,10 @@ public class HttpRequestHandler {
             jsonObject.put(Constant.Timing, timing);
             jsonObject.put(Constant.Water_timing, water_timing);
             jsonObject.put(Constant.Laundry_fees, laundry_fees);
+
+            jsonObject.put(Constant.Payment_id, payment_id);
+            jsonObject.put(Constant.Price_plan, price_plan);
+
 
             StringBuilder cooking_menu = new StringBuilder();
             for (int i = 0; i < arrAddMenuAttachment.size(); i++) {
@@ -599,10 +604,12 @@ public class HttpRequestHandler {
         return params;
     }
 
-    public JSONObject getCheckExitingUserParam(String user_email) {
+    public JSONObject getCheckExitingUserParam(String user_email, boolean isSeller) {
         JSONObject params = new JSONObject();
         try {
-            params.put(Constant.User_email, user_email);
+
+            params.put(isSeller ? Constant.Seller_email : Constant.User_email, user_email);
+
             params.put(Constant.Token, Constant.Token_Value);
             params.put(Constant.DeviceType, Constant.AndroidDeviceType);
             params.put(Constant.Fcm_token, globals.getFCMDeviceToken());

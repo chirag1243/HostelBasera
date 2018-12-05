@@ -298,7 +298,7 @@ public class PayMentGateWay extends Activity {
 
 	                    Intent intent = new Intent();
 	                    intent.putExtra(Constant.RESULT, "Success");
-	                    intent.putExtra(Constant.PAYMENT_ID, paymentId);
+	                    intent.putExtra(Constant.Payment_id, paymentId);
 	                    setResult(RESULT_OK, intent);
 	                    finish();
 //                    // new PostRechargeData().execute();
@@ -320,7 +320,7 @@ public class PayMentGateWay extends Activity {
                     //cancelPayment();
                     Intent intent = new Intent();
                     intent.putExtra(Constant.RESULT, "Cancel");
-                    intent.putExtra(Constant.PAYMENT_ID, 0);
+                    intent.putExtra(Constant.Payment_id, "");
                     setResult(RESULT_OK, intent);
                     finish();
                     Toast.makeText(getApplicationContext(), "Cancel payment", Toast.LENGTH_LONG).show();
@@ -340,7 +340,7 @@ public class PayMentGateWay extends Activity {
                 public void run() {
                     Intent intent = new Intent();
                     intent.putExtra(Constant.RESULT, "Failed");
-                    intent.putExtra(Constant.PAYMENT_ID, 0);
+                    intent.putExtra(Constant.Payment_id, "");
                     setResult(RESULT_OK, intent);
                     finish();
                     Toast.makeText(getApplicationContext(), "Failed payment", Toast.LENGTH_LONG).show();

@@ -32,6 +32,9 @@ public class UserDetailModel implements Serializable {
 
         @SerializedName("password")
         public String password;
+
+        @SerializedName("versionDetail")
+        public VersionDetail versionDetail;
     }
 
     public static class LoginSellerDetail implements Serializable {
@@ -48,5 +51,19 @@ public class UserDetailModel implements Serializable {
 
         @SerializedName("password")
         public String password;
+
+        @SerializedName("versionDetail")
+        public VersionDetail versionDetail;
+    }
+
+    public static class VersionDetail implements Serializable {
+        @SerializedName("remark")
+        public String remark;
+        @SerializedName("latest_version")
+        public String latest_version;
+        @SerializedName("is_update_available")
+        public boolean is_update_available;
+        @SerializedName("force_update")
+        public boolean force_update;
     }
 }

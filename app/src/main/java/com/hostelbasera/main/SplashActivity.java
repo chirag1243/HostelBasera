@@ -3,6 +3,8 @@ package com.hostelbasera.main;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.graphics.Typeface;
 import android.os.Handler;
 import android.provider.Settings;
@@ -77,9 +79,16 @@ public class SplashActivity extends Activity {
 
     @SuppressLint("HardwareIds")
     public void doLogin() {
+        String version = "1.0.1";
+        try {
+            PackageInfo pInfo = this.getPackageManager().getPackageInfo(getPackageName(), 0);
+            version = pInfo.versionName;
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
         JSONObject postData = HttpRequestHandler.getInstance().getLoginUserParam(Settings.Secure.getString(this.getContentResolver(), Settings.Secure.ANDROID_ID),
                 isSeller ? userModel.loginSellerDetail.email : userModel.loginUserDetail.email,
-                isSeller ? userModel.loginSellerDetail.password : userModel.loginUserDetail.password, isSeller);
+                isSeller ? userModel.loginSellerDetail.password : userModel.loginUserDetail.password, isSeller, version);
 
         if (postData != null) {
             new PostRequest(this, isSeller ? getString(R.string.loginSeller) : getString(R.string.loginUser),

@@ -133,13 +133,11 @@ public class DashboardActivity extends BaseActivity implements NavigationView.On
     }
 
     public void updateChecker() {
-        //TODO : Remove Comment
-//        UserDetailModel.VersionDetail versionDetail = globals.getUserDetails().loginUserDetail.versionDetail;
-//        if (versionDetail.is_update_available) {
+        UserDetailModel.VersionDetail versionDetail = globals.getUserDetails().loginUserDetail.versionDetail;
+        if (versionDetail.is_update_available) {
             MaterialStyledDialog.Builder builder = new MaterialStyledDialog.Builder(this);
             builder.setTitle(R.string.new_update_available)
-                    //TODO : Remove Comment
-                    .setDescription("Update ver." + /*versionDetail.latest_version +*/ " is available to download. Downloading the latest update you will get the latest features, " + /*versionDetail.remark +*/ " of HostelBasera.")
+                    .setDescription("Update ver." + versionDetail.latest_version + " is available to download. Downloading the latest update you will get the latest features, " + versionDetail.remark + " of HostelBasera.")
                     .setCancelable(false)
                     .setIcon(R.mipmap.ic_launcher)
                     .setHeaderDrawable(R.drawable.nav_bg)
@@ -158,8 +156,7 @@ public class DashboardActivity extends BaseActivity implements NavigationView.On
                             dialog.dismiss();
                         }
                     });
-        //TODO : Remove Comment
-//            if (!versionDetail.force_update) {
+            if (!versionDetail.force_update) {
                 builder.setNegativeText("Later")
                         .onNegative(new MaterialDialog.SingleButtonCallback() {
                             @Override
@@ -167,9 +164,9 @@ public class DashboardActivity extends BaseActivity implements NavigationView.On
                                 dialog.dismiss();
                             }
                         });
-//            }
+            }
             builder.show();
-//        }
+        }
     }
 
     @Override

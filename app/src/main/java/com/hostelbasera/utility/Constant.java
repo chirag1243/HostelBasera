@@ -20,6 +20,7 @@ public class Constant {
 
     public static final String Message = "message";
     public static final String Status = "status";
+    public static final String Version = "version";
 
     public static final String USER_MODEL = "USER_MODEL";
     public static final String SELLER_MODEL = "SELLER_MODEL";
@@ -149,7 +150,8 @@ public class Constant {
     public static final String PostData = "postData";
 
     public static final String RESULT = "RESULT";
-    public static final String PAYMENT_ID = "PAYMENT_ID";
 
+    public static final String Payment_id = "payment_id";
+    public static final String Price_plan = "price_plan";
 
 }

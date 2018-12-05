@@ -191,7 +191,6 @@ public class LoginActivity extends BaseActivity {
                                         } catch (JSONException e) {
                                             e.printStackTrace();
                                         }
-
                                     }
                                 });
                         Bundle parameters = new Bundle();
@@ -214,10 +213,10 @@ public class LoginActivity extends BaseActivity {
     }
 
     public void doCheckExitingUser(String email, String name, String fb_id, String google_id) {
-        JSONObject postData = HttpRequestHandler.getInstance().getCheckExitingUserParam(email);
+        JSONObject postData = HttpRequestHandler.getInstance().getCheckExitingUserParam(email,isSeller);
 
         if (postData != null) {
-            new PostRequest(this, getString(R.string.checkExitingUser), postData, true,
+            new PostRequest(this, isSeller ? getString(R.string.checkExitingSeller) : getString(R.string.checkExitingUser), postData, true,
                     new PostRequest.OnPostServiceCallListener() {
                         @Override
                         public void onSucceedToPostCall(JSONObject response) {
@@ -241,6 +240,7 @@ public class LoginActivity extends BaseActivity {
                                         .putExtra(Constant.Full_name, name)
                                         .putExtra(Constant.Fb_id, fb_id)
                                         .putExtra(Constant.Google_id, google_id)
+                                        .putExtra(Constant.IsSeller,isSeller)
                                 );
                             }
                             Toaster.shortToast(userDetailModel.message);
@@ -331,8 +331,16 @@ public class LoginActivity extends BaseActivity {
 
     @SuppressLint("HardwareIds")
     public void doLogin() {
+        String version = "1.0.1";
+        try {
+            PackageInfo pInfo = this.getPackageManager().getPackageInfo(getPackageName(), 0);
+            version = pInfo.versionName;
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+
         JSONObject postData = HttpRequestHandler.getInstance().getLoginUserParam(Settings.Secure.getString(this.getContentResolver(),
-                Settings.Secure.ANDROID_ID), edtEmail.getText().toString(), edtPassword.getText().toString(), isSeller);
+                Settings.Secure.ANDROID_ID), edtEmail.getText().toString(), edtPassword.getText().toString(), isSeller, version);
 
         if (postData != null) {
             new PostRequest(this, isSeller ? getString(R.string.loginSeller) : getString(R.string.loginUser), postData, true,
