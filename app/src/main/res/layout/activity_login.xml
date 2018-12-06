@@ -79,7 +79,7 @@
             android:layout_marginTop="@dimen/dim_20dp"
             android:drawableLeft="@drawable/user"
             android:drawablePadding="@dimen/dim_15dp"
-            android:hint="@string/email"
+            android:hint="@string/email_mobile"
             android:inputType="textEmailAddress"
             android:backgroundTint="@android:color/white"
             android:textColor="@color/white"

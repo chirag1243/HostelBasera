@@ -308,7 +308,7 @@ public class LoginActivity extends BaseActivity {
     @OnClick(R.id.btn_sign_in)
     public void onBtnSignInClicked() {
         if (edtEmail.getText().toString().trim().isEmpty()) {
-            Toaster.shortToast("Please enter email id.");
+            Toaster.shortToast("Please enter email id/mobile number.");
             return;
         } else if (edtPassword.getText().toString().trim().isEmpty()) {
             Toaster.shortToast("Please enter password.");
@@ -322,7 +322,7 @@ public class LoginActivity extends BaseActivity {
 
     @SuppressLint("HardwareIds")
     public void doLogin() {
-        String version = "1.0.1";
+        String version = "1.0.2";
         try {
             PackageInfo pInfo = this.getPackageManager().getPackageInfo(getPackageName(), 0);
             version = pInfo.versionName;
@@ -366,7 +366,7 @@ public class LoginActivity extends BaseActivity {
 
     @OnClick(R.id.tv_forget_password)
     public void onTvForgetPasswordClicked() {
-        Toaster.shortToast("forget password");
+        Toaster.shortToast("Coming soon");
     }
 
     @OnClick(R.id.ll_sign_up)
