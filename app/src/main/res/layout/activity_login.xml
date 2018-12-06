@@ -69,19 +69,18 @@
         </info.hoang8f.android.segmented.SegmentedGroup>
 
 
-
         <android.support.v7.widget.AppCompatEditText
             android:id="@+id/edt_email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/dim_40dp"
-            android:layout_marginRight="@dimen/dim_40dp"
             android:layout_marginTop="@dimen/dim_20dp"
+            android:layout_marginRight="@dimen/dim_40dp"
+            android:backgroundTint="@android:color/white"
             android:drawableLeft="@drawable/user"
             android:drawablePadding="@dimen/dim_15dp"
             android:hint="@string/email_mobile"
             android:inputType="textEmailAddress"
-            android:backgroundTint="@android:color/white"
             android:textColor="@color/white"
             android:textColorHint="@color/colorAccent" />
 
@@ -90,13 +89,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/dim_40dp"
-            android:layout_marginRight="@dimen/dim_40dp"
             android:layout_marginTop="@dimen/dim_10dp"
+            android:layout_marginRight="@dimen/dim_40dp"
+            android:backgroundTint="@android:color/white"
             android:drawableLeft="@drawable/password"
             android:drawablePadding="@dimen/dim_15dp"
             android:hint="@string/password"
             android:inputType="textPassword"
-            android:backgroundTint="@android:color/white"
             android:textColor="@color/white"
             android:textColorHint="@color/colorAccent" />
 
@@ -106,14 +105,14 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginLeft="@dimen/dim_40dp"
-            android:layout_marginRight="@dimen/dim_40dp"
             android:layout_marginTop="@dimen/dim_15dp"
+            android:layout_marginRight="@dimen/dim_40dp"
             android:background="@drawable/rounded_sign_in_bg"
             android:padding="@dimen/dim_10dp"
-            android:textSize="@dimen/dim_text16"
             android:text="@string/sign_in"
             android:textAllCaps="true"
             android:textColor="@color/colorPrimary"
+            android:textSize="@dimen/dim_text16"
             android:textStyle="bold" />
 
         <com.facebook.login.widget.LoginButton
@@ -122,8 +121,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="@dimen/dim_15dp"
-            android:visibility="gone"
-            android:layout_marginBottom="10dp" />
+            android:layout_marginBottom="10dp"
+            android:visibility="gone" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -136,26 +135,26 @@
                 android:layout_width="@dimen/dim_30dp"
                 android:layout_height="@dimen/dim_30dp"
                 android:layout_gravity="center"
-                android:src="@drawable/com_facebook_button_icon"/>
+                android:src="@drawable/com_facebook_button_icon_blue" />
 
             <ImageView
                 android:id="@+id/sign_in_button"
                 android:layout_width="@dimen/dim_30dp"
                 android:layout_height="@dimen/dim_30dp"
                 android:layout_gravity="center"
+                android:layout_marginLeft="@dimen/dim_10dp"
                 android:background="@drawable/rounded_add_bg"
                 android:backgroundTint="@color/white"
                 android:padding="@dimen/dim_5dp"
-                android:layout_marginLeft="@dimen/dim_10dp"
-                android:src="@drawable/googleg_standard_color_18"/>
+                android:src="@drawable/googleg_standard_color_18" />
         </LinearLayout>
 
         <com.google.android.gms.common.SignInButton
             android:id="@+id/sign_in_button1"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/dim_35dp"
-            android:visibility="gone"
-            android:layout_gravity="center"/>
+            android:layout_gravity="center"
+            android:visibility="gone" />
 
         <TextView
             android:id="@+id/tv_forget_password"
