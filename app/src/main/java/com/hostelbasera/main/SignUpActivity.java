@@ -73,14 +73,14 @@ public class SignUpActivity extends BaseActivity {
         if (intent != null) {
             edtEmail.setText(intent.getStringExtra(Constant.Email));
             edtName.setText(intent.getStringExtra(Constant.Full_name));
-            fb_id = intent.getStringExtra(Constant.Full_name);
+            fb_id = intent.getStringExtra(Constant.Fb_id);
             google_id = intent.getStringExtra(Constant.Google_id);
-            if (intent.hasExtra(Constant.IsSeller)){
+            if (intent.hasExtra(Constant.IsSeller)) {
                 isSeller = intent.getBooleanExtra(Constant.IsSeller, false);
-                if (isSeller){
+                if (isSeller) {
                     rbSeller.setChecked(true);
-                }else {
-                    rbBuyer.setChecked(false);
+                } else {
+                    rbBuyer.setChecked(true);
                 }
             }
         }

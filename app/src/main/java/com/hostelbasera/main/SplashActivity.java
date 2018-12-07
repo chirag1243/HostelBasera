@@ -79,7 +79,7 @@ public class SplashActivity extends Activity {
 
     @SuppressLint("HardwareIds")
     public void doLogin() {
-        String version = "1.0.2";
+        String version = "1.0.3";
         try {
             PackageInfo pInfo = this.getPackageManager().getPackageInfo(getPackageName(), 0);
             version = pInfo.versionName;

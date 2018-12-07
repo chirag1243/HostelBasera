@@ -219,10 +219,10 @@ public class LoginActivity extends BaseActivity {
                             UserDetailModel userDetailModel = new Gson().fromJson(response.toString(), UserDetailModel.class);
                             if (userDetailModel.status == 0 && userDetailModel.is_exiting == 1) {
                                 if (isSeller) {
-                                    userDetailModel.loginSellerDetail.password = edtPassword.getText().toString();
+//                                    userDetailModel.loginSellerDetail.password = edtPassword.getText().toString();
                                     globals.setUserId(userDetailModel.loginSellerDetail.seller_reg_Id);
                                 } else {
-                                    userDetailModel.loginUserDetail.password = edtPassword.getText().toString();
+//                                    userDetailModel.loginUserDetail.password = edtPassword.getText().toString();
                                     globals.setUserId(userDetailModel.loginUserDetail.user_reg_Id);
                                 }
 
@@ -322,7 +322,7 @@ public class LoginActivity extends BaseActivity {
 
     @SuppressLint("HardwareIds")
     public void doLogin() {
-        String version = "1.0.2";
+        String version = "1.0.3";
         try {
             PackageInfo pInfo = this.getPackageManager().getPackageInfo(getPackageName(), 0);
             version = pInfo.versionName;
