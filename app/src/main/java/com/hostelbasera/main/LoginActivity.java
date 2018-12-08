@@ -209,7 +209,14 @@ public class LoginActivity extends BaseActivity {
     }
 
     public void doCheckExitingUser(String email, String name, String fb_id, String google_id) {
-        JSONObject postData = HttpRequestHandler.getInstance().getCheckExitingUserParam(email, isSeller);
+        try {
+            PackageInfo pInfo = this.getPackageManager().getPackageInfo(getPackageName(), 0);
+            version = pInfo.versionName;
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        JSONObject postData = HttpRequestHandler.getInstance().getCheckExitingUserParam(email, isSeller,version);
 
         if (postData != null) {
             new PostRequest(this, isSeller ? getString(R.string.checkExitingSeller) : getString(R.string.checkExitingUser), postData, true,
@@ -320,9 +327,10 @@ public class LoginActivity extends BaseActivity {
         doLogin();
     }
 
+    String version = "1.0.3";
     @SuppressLint("HardwareIds")
     public void doLogin() {
-        String version = "1.0.3";
+
         try {
             PackageInfo pInfo = this.getPackageManager().getPackageInfo(getPackageName(), 0);
             version = pInfo.versionName;

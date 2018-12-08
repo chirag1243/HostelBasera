@@ -145,8 +145,8 @@ public class HostelDetailActivity extends BaseActivity implements RatingDialogLi
     final long PERIOD_MS = 3000; // time in milliseconds between successive task executions.
     AdapterAmenities adapterAmenities;
     AdapterReview adapterReview;
-    @BindView(R.id.btn_book_now)
-    Button btnBookNow;
+//    @BindView(R.id.btn_book_now)
+//    Button btnBookNow;
     boolean is_bookmark_remove;
 
     AdapterRoom adapterRoom;
@@ -167,7 +167,7 @@ public class HostelDetailActivity extends BaseActivity implements RatingDialogLi
         toolbarTitle.setText(getIntent().getStringExtra(Constant.Property_name));
         imgBack.setVisibility(View.VISIBLE);
         imgShare.setVisibility(View.GONE);
-        btnBookNow.setTypeface(btnBookNow.getTypeface(), Typeface.BOLD);
+//        btnBookNow.setTypeface(btnBookNow.getTypeface(), Typeface.BOLD);
         if (Globals.isNetworkAvailable(this)) {
             getPropertyListData();
         } else {
@@ -217,9 +217,9 @@ public class HostelDetailActivity extends BaseActivity implements RatingDialogLi
         } else {
             if (propertyDetails.price != null && !propertyDetails.price.isEmpty() && !propertyDetails.price.equals("0")) {
                 tvPrice.setText("₹ " + propertyDetails.price);
-            } else {
+            } /*else {
                 btnBookNow.setVisibility(View.GONE);
-            }
+            }*/
         }
 
         is_bookmark_remove = propertyDetails.isBookMark;
@@ -670,7 +670,7 @@ public class HostelDetailActivity extends BaseActivity implements RatingDialogLi
         super.onBackPressed();
     }
 
-    @OnClick(R.id.btn_book_now)
+    /*@OnClick(R.id.btn_book_now)
     public void onViewClicked() {
         if (!Globals.isNetworkAvailable(this)) {
             Toaster.shortToast(R.string.no_internet_msg);
@@ -700,6 +700,6 @@ public class HostelDetailActivity extends BaseActivity implements RatingDialogLi
             }).execute();
         }
         Globals.hideKeyboard(this);
-    }
+    }*/
 
 }

@@ -383,7 +383,7 @@
                     android:textAllCaps="true"
                     android:textColor="@color/white"
                     android:textSize="@dimen/dim_text16"
-                    android:visibility="visible" />
+                    android:visibility="gone" />
             </LinearLayout>
         </FrameLayout>
     </android.support.v4.widget.NestedScrollView>

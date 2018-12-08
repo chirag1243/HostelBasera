@@ -2,6 +2,8 @@ package com.hostelbasera.main;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -122,9 +124,16 @@ public class SignUpActivity extends BaseActivity {
 
     @SuppressLint("HardwareIds")
     public void doRegisterUser() {
+        String version = "1.0.3";
+        try {
+            PackageInfo pInfo = this.getPackageManager().getPackageInfo(getPackageName(), 0);
+            version = pInfo.versionName;
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
         JSONObject postData = HttpRequestHandler.getInstance().getRegisterUserParam(Settings.Secure.getString(this.getContentResolver(), Settings.Secure.ANDROID_ID),
                 edtName.getText().toString(), edtPassword.getText().toString(), edtEmail.getText().toString(), edtMobileNo.getText().toString(),
-                edtAddress.getText().toString(), isSeller, fb_id, google_id);
+                edtAddress.getText().toString(), isSeller, fb_id, google_id, version);
 
         if (postData != null) {
             new PostRequest(this, isSeller ? getString(R.string.registerSeller) : getString(R.string.registerUser), postData, true,

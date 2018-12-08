@@ -126,7 +126,8 @@ public class HttpRequestHandler {
         return params;
     }
 
-    public JSONObject getRegisterUserParam(String deviceId, String name, String password, String email, String mobile_no, String address, boolean isSeller, String fb_id, String google_id) {
+    public JSONObject getRegisterUserParam(String deviceId, String name, String password, String email, String mobile_no,
+                                           String address, boolean isSeller, String fb_id, String google_id, String version) {
         JSONObject params = new JSONObject();
         JSONObject jsonObject = new JSONObject();
         try {
@@ -142,6 +143,7 @@ public class HttpRequestHandler {
 
             jsonObject.put(Constant.Fb_id, fb_id);
             jsonObject.put(Constant.Google_id, google_id);
+            jsonObject.put(Constant.Version, version);
 
             params.put(isSeller ? Constant.RegisterSellerData : Constant.RegisterUserData, jsonObject);
         } catch (Exception e) {
@@ -604,7 +606,7 @@ public class HttpRequestHandler {
         return params;
     }
 
-    public JSONObject getCheckExitingUserParam(String user_email, boolean isSeller) {
+    public JSONObject getCheckExitingUserParam(String user_email, boolean isSeller, String version) {
         JSONObject params = new JSONObject();
         try {
 
@@ -613,6 +615,7 @@ public class HttpRequestHandler {
             params.put(Constant.Token, Constant.Token_Value);
             params.put(Constant.DeviceType, Constant.AndroidDeviceType);
             params.put(Constant.Fcm_token, globals.getFCMDeviceToken());
+            params.put(Constant.Version, version);
 
         } catch (Exception e) {
             e.printStackTrace();

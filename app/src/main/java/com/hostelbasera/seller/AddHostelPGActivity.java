@@ -1278,10 +1278,11 @@ TODO :
         }
 
         getLocationFromAddress(edtAddress.getText().toString().trim());
-        if (latitude == 0 || longitude == 0) {
+       //TODO : Check Validation for address
+        /* if (latitude == 0 || longitude == 0) {
             Toaster.shortToast("Enter valid address.");
             return false;
-        }
+        }*/
 
         if (arrContact.isEmpty()) {
             Toaster.shortToast("Please enter contact");
