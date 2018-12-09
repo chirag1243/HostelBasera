@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">HostelBasera</string>
     <string name="deep_link_app_name">/hostelbasera</string>
-    <string name="google_maps_key">AIzaSyCO_w9y8aBbYyNc-SVz0fhHliHKCk2ecp4</string>
+    <string name="google_maps_key">AIzaSyAvcp0ojqeNunqmNGGfFeEs0lna-BkBLDw</string><!--AIzaSyCO_w9y8aBbYyNc-SVz0fhHliHKCk2ecp4-->
 
     <string name="facebook_app_id">337398663753209</string>
     <string name="fb_login_protocol_scheme">fb337398663753209</string>
@@ -13,8 +13,8 @@
     <string name="msg_server_error">The server might be down, please try again later.</string>
     <string name="error_msg_connection_timeout">The request timed out please try again.</string>
 
-    <string name="rationale_message">we need permission for <b>Attachment</b></string>
-    <string name="denied_message">If you reject permission, you can not use this attachment feature.</string>
+    <string name="rationale_message">we need permission for <b>Attachment</b> &amp; <b>Address</b></string>
+    <string name="denied_message">If you reject permission, you can not use this attachment &amp; address feature.</string>
     <string name="back_again">Please click BACK again to exit</string>
     <string name="ok">OK</string>
 
@@ -35,6 +35,7 @@
     <string name="email">Email</string>
     <string name="password">Password</string>
     <string name="forget_password_">Forget Password?</string>
+    <string name="forget_password">Forget Password</string>
     <string name="don_t_have_an_account_">Don\'t have an account?</string>
     <string name="sign_up">Sign up</string>
     <string name="name">Name</string>
@@ -124,4 +125,7 @@
     <string name="enter_password">Enter password</string>
     <string name="enter_confirm_password">Enter confirm password</string>
     <string name="email_mobile">Email / Mobile</string>
+    <string name="enter_mobile_number">Enter Mobile Number</string>
+    <string name="enter_otp">Enter OTP</string>
+    <string name="get_otp">Get OTP</string>
 </resources>

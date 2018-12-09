@@ -5,13 +5,16 @@ import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
+import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.AppCompatEditText;
 import android.util.Base64;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -46,6 +49,8 @@ import com.google.gson.Gson;
 import com.hostelbasera.R;
 import com.hostelbasera.apis.HttpRequestHandler;
 import com.hostelbasera.apis.PostRequest;
+import com.hostelbasera.model.PropertyDetailModel;
+import com.hostelbasera.model.SellerDropdownModel;
 import com.hostelbasera.model.UserDetailModel;
 import com.hostelbasera.seller.SellerDashboardActivity;
 import com.hostelbasera.utility.BaseActivity;
@@ -216,7 +221,7 @@ public class LoginActivity extends BaseActivity {
             e.printStackTrace();
         }
 
-        JSONObject postData = HttpRequestHandler.getInstance().getCheckExitingUserParam(email, isSeller,version);
+        JSONObject postData = HttpRequestHandler.getInstance().getCheckExitingUserParam(email, isSeller, version);
 
         if (postData != null) {
             new PostRequest(this, isSeller ? getString(R.string.checkExitingSeller) : getString(R.string.checkExitingUser), postData, true,
@@ -328,6 +333,7 @@ public class LoginActivity extends BaseActivity {
     }
 
     String version = "1.0.3";
+
     @SuppressLint("HardwareIds")
     public void doLogin() {
 
@@ -372,9 +378,218 @@ public class LoginActivity extends BaseActivity {
         Globals.hideKeyboard(this);
     }
 
+    AlertDialog alertDialog;
+
     @OnClick(R.id.tv_forget_password)
     public void onTvForgetPasswordClicked() {
-        Toaster.shortToast("Coming soon");
+
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this, R.style.MyEnquiryAlertDialogStyle);
+        LayoutInflater inflater = this.getLayoutInflater();
+        View dialogView = inflater.inflate(R.layout.forget_password_dialog, null);
+        dialogBuilder.setView(dialogView);
+
+        TextView tvTitle = dialogView.findViewById(R.id.tv_title);
+        EditText edtMobileNumber = dialogView.findViewById(R.id.edt_mobile_number);
+        TextView tvGetOtp = dialogView.findViewById(R.id.tv_get_otp);
+
+        EditText edtOtp = dialogView.findViewById(R.id.edt_otp);
+
+        TextView tvSubmit = dialogView.findViewById(R.id.tv_submit);
+        TextView tvCancel = dialogView.findViewById(R.id.tv_cancel);
+
+        alertDialog = dialogBuilder.create();
+
+        tvTitle.setTypeface(tvTitle.getTypeface(), Typeface.BOLD);
+        tvGetOtp.setTypeface(tvTitle.getTypeface(), Typeface.BOLD);
+        tvGetOtp.setPaintFlags(tvGetOtp.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+
+        tvGetOtp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (edtMobileNumber.getText().toString().trim().isEmpty()) {
+                    Toaster.shortToast("Please enter mobile number");
+                    return;
+                }
+                if (Globals.isNetworkAvailable(LoginActivity.this)) {
+                    doCheckMobilenoForOtp(edtMobileNumber.getText().toString());
+                } else {
+                    Toaster.shortToast(getString(R.string.no_internet_msg));
+                }
+
+            }
+        });
+
+        tvSubmit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (edtMobileNumber.getText().toString().trim().isEmpty()) {
+                    Toaster.shortToast("Please enter mobile number");
+                    return;
+                }
+
+                if (edtOtp.getText().toString().trim().isEmpty()) {
+                    Toaster.shortToast("Please enter OTP");
+                    return;
+                }
+
+                if (Globals.isNetworkAvailable(LoginActivity.this)) {
+                    doVerifyOtp(edtMobileNumber.getText().toString(), edtOtp.getText().toString());
+                } else {
+                    Toaster.shortToast(getString(R.string.no_internet_msg));
+                }
+            }
+        });
+
+        tvCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertDialog.dismiss();
+            }
+        });
+
+        alertDialog.show();
+    }
+
+    public void doCheckMobilenoForOtp(String mobile_no) {
+        JSONObject postData = HttpRequestHandler.getInstance().getCheckMobilenoForOtpParam(mobile_no, isSeller);
+
+        if (postData != null) {
+            new PostRequest(this, getString(R.string.checkMobilenoForOtp), postData, true,
+                    new PostRequest.OnPostServiceCallListener() {
+                        @Override
+                        public void onSucceedToPostCall(JSONObject response) {
+                            UserDetailModel userDetailModel = new Gson().fromJson(response.toString(), UserDetailModel.class);
+                            /*if (userDetailModel.status == 0) {
+                            } */
+                            Toaster.shortToast(userDetailModel.message);
+                        }
+
+                        @Override
+                        public void onFailedToPostCall(int statusCode, String msg) {
+                            Toaster.shortToast(msg);
+                        }
+                    }).execute();
+        }
+    }
+
+    public void doVerifyOtp(String mobile_no, String otp) {
+        JSONObject postData = HttpRequestHandler.getInstance().getVerifyOtpParam(mobile_no, otp, isSeller);
+
+        if (postData != null) {
+            new PostRequest(this, getString(R.string.verifyOtp), postData, true,
+                    new PostRequest.OnPostServiceCallListener() {
+                        @Override
+                        public void onSucceedToPostCall(JSONObject response) {
+                            UserDetailModel userDetailModel = new Gson().fromJson(response.toString(), UserDetailModel.class);
+                            if (userDetailModel.status == 0) {
+                                if (Globals.isNetworkAvailable(LoginActivity.this)) {
+                                    onChangePasswordClicked(mobile_no);
+                                } else {
+                                    Toaster.shortToast(getString(R.string.no_internet_msg));
+                                }
+                                alertDialog.dismiss();
+                            }
+                            Toaster.shortToast(userDetailModel.message);
+                        }
+
+                        @Override
+                        public void onFailedToPostCall(int statusCode, String msg) {
+                            Toaster.shortToast(msg);
+                        }
+                    }).execute();
+        }
+    }
+
+    AlertDialog alertChangePasswordDialog;
+
+    public void onChangePasswordClicked(String mobile_no) {
+
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this, R.style.MyEnquiryAlertDialogStyle);
+        LayoutInflater inflater = this.getLayoutInflater();
+        View dialogView = inflater.inflate(R.layout.change_password_dialog, null);
+        dialogBuilder.setView(dialogView);
+
+        TextView tvTitle = dialogView.findViewById(R.id.tv_title);
+        EditText edtOldPassword = dialogView.findViewById(R.id.edt_old_password);
+        EditText edtNewPassword = dialogView.findViewById(R.id.edt_new_password);
+        EditText edtConfirmPassword = dialogView.findViewById(R.id.edt_confirm_password);
+
+        edtOldPassword.setVisibility(View.GONE);
+
+        TextView tvSubmit = dialogView.findViewById(R.id.tv_submit);
+        TextView tvCancel = dialogView.findViewById(R.id.tv_cancel);
+
+        alertChangePasswordDialog = dialogBuilder.create();
+
+        tvTitle.setTypeface(tvTitle.getTypeface(), Typeface.BOLD);
+        tvSubmit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (edtNewPassword.getText().toString().trim().isEmpty()) {
+                    Toaster.shortToast("Please enter password");
+                    return;
+                }
+
+                if (edtNewPassword.getText().toString().length() < 6) {
+                    Toaster.shortToast("Password must be min 6 character.");
+                    return;
+                }
+
+                if (edtConfirmPassword.getText().toString().trim().isEmpty()) {
+                    Toaster.shortToast("Please enter confirm password");
+                    return;
+                }
+
+                if (!edtNewPassword.getText().toString().trim().equals(edtConfirmPassword.getText().toString().trim())) {
+                    Toaster.shortToast("Password & confirm password doesn't match");
+                    return;
+                }
+
+                if (Globals.isNetworkAvailable(LoginActivity.this)) {
+                    doChangePassword(mobile_no, edtNewPassword.getText().toString());
+                } else {
+                    Toaster.shortToast(getString(R.string.no_internet_msg));
+                }
+            }
+        });
+
+        tvCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertChangePasswordDialog.dismiss();
+            }
+        });
+
+        alertChangePasswordDialog.show();
+    }
+
+    private void doChangePassword(String mobile_no, String password) {
+        JSONObject postData = HttpRequestHandler.getInstance().getChangePasswordParam(isSeller, password);
+        if (postData != null) {
+
+            new PostRequest(this, getString(R.string.changePassword), postData, true, new PostRequest.OnPostServiceCallListener() {
+                @Override
+                public void onSucceedToPostCall(JSONObject response) {
+                    alertChangePasswordDialog.dismiss();
+                    UserDetailModel userDetailModel = new Gson().fromJson(response.toString(), UserDetailModel.class);
+                    Toaster.shortToast(userDetailModel.message);
+                    if (userDetailModel.status == 1) {
+                        edtEmail.setText(mobile_no);
+                        edtPassword.setText(password);
+                        if (Globals.isNetworkAvailable(LoginActivity.this)) {
+                            doLogin();
+                        } else {
+                            Toaster.shortToast(getString(R.string.no_internet_msg));
+                        }
+                    }
+                }
+
+                @Override
+                public void onFailedToPostCall(int statusCode, String msg) {
+                    Toaster.shortToast(msg);
+                }
+            }).execute();
+        }
     }
 
     @OnClick(R.id.ll_sign_up)

@@ -156,4 +156,8 @@ public class Constant {
 
     public static final String Is_seller = "is_seller";
 
+    public static final String Mobile_no = "mobile_no";
+    public static final String Otp = "otp";
+
+
 }

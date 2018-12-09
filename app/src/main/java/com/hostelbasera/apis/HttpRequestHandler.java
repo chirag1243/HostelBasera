@@ -651,6 +651,35 @@ public class HttpRequestHandler {
         return params;
     }
 
+
+    public JSONObject getCheckMobilenoForOtpParam(String mobile_no, boolean isSeller) {
+        JSONObject params = new JSONObject();
+        try {
+            params.put(Constant.Token, Constant.Token_Value);
+            params.put(Constant.DeviceType, Constant.AndroidDeviceType);
+            params.put(Constant.Mobile_no, mobile_no);
+            params.put(Constant.Type, isSeller ? "seller" : "user");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return params;
+    }
+
+    public JSONObject getVerifyOtpParam(String mobile_no, String otp, boolean isSeller) {
+        JSONObject params = new JSONObject();
+        try {
+            params.put(Constant.Token, Constant.Token_Value);
+            params.put(Constant.DeviceType, Constant.AndroidDeviceType);
+            params.put(Constant.Mobile_no, mobile_no);
+            params.put(Constant.Otp, otp);
+            params.put(Constant.Type, isSeller ? "seller" : "user");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return params;
+    }
     /*public JSONObject getLogoutUserParam() {
         JSONObject params = new JSONObject();
         JSONObject jsonObject = new JSONObject();

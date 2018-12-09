@@ -210,8 +210,8 @@
                 android:padding="@dimen/dim_2dp"
                 app:cardCornerRadius="@dimen/dim_3dp">
 
-                <EditText
-                    android:id="@+id/edt_address"
+                <TextView
+                    android:id="@+id/tv_address"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@null"
