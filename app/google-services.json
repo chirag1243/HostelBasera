@@ -23,6 +23,14 @@
           }
         },
         {
+          "client_id": "128654680645-dq471pktv47phrp5ucno1fhkr9qa3ssf.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.hostelbasera",
+            "certificate_hash": "2b67b3a30e18a6800b6a0980baefbaf32f052433"
+          }
+        },
+        {
           "client_id": "128654680645-q27d6tlcibbattihasd1sjlrrj7mngq3.apps.googleusercontent.com",
           "client_type": 3
         }

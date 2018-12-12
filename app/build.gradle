@@ -6,8 +6,8 @@ android {
         applicationId "com.hostelbasera"
         minSdkVersion 16
         targetSdkVersion 26
-        versionCode 3
-        versionName "1.0.3"
+        versionCode 4
+        versionName "1.0.4"
         multiDexEnabled true
     }
     buildTypes {
@@ -62,6 +62,7 @@ dependencies {
     implementation 'com.bogdwellers:pinchtozoom:0.1'
     implementation 'com.squareup.picasso:picasso:2.71828'
     implementation 'com.facebook.android:facebook-login:[4,5)'
+    implementation 'com.facebook.android:facebook-marketing:[4,5)'
 
     implementation 'com.github.javiersantos:MaterialStyledDialogs:2.1'
 
@@ -80,7 +81,7 @@ dependencies {
     implementation 'com.google.android.gms:play-services-places:16.0.0'
 
     implementation 'com.google.firebase:firebase-auth:16.0.5'
-
+    implementation 'com.google.firebase:firebase-core:16.0.5'
 
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.6.0'
     implementation 'com.android.support:design:26.1.0'
