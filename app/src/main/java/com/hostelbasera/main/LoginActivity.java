@@ -112,6 +112,8 @@ public class LoginActivity extends BaseActivity {
         ButterKnife.bind(this);
         globals = ((Globals) getApplicationContext());
 
+        //TODO : Google Login remove comment once issue solved
+        signInButton.setVisibility(View.GONE);
 
        /* try {
             PackageInfo info = getPackageManager().getPackageInfo(
@@ -263,7 +265,8 @@ public class LoginActivity extends BaseActivity {
         Globals.hideKeyboard(this);
     }
 
-    @OnClick(R.id.sign_in_button)
+    //TODO : Google Login remove comment once issue solved
+    /*@OnClick(R.id.sign_in_button)
     public void signIn() {
         try {
             mGoogleSignInClient.signOut()
@@ -279,7 +282,7 @@ public class LoginActivity extends BaseActivity {
 
         Intent signInIntent = mGoogleSignInClient.getSignInIntent();
         startActivityForResult(signInIntent, RC_SIGN_IN);
-    }
+    }*/
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -332,7 +335,7 @@ public class LoginActivity extends BaseActivity {
         doLogin();
     }
 
-    String version = "1.0.4";
+    String version = "1.0.6";
 
     @SuppressLint("HardwareIds")
     public void doLogin() {

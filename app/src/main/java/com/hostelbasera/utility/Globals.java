@@ -23,11 +23,13 @@ import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 
+import com.crashlytics.android.Crashlytics;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.hostelbasera.R;
 import com.hostelbasera.model.UserDetailModel;
 
+import io.fabric.sdk.android.Fabric;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStream;
@@ -47,8 +49,8 @@ public class Globals extends CoreApp {
     @Override
     public void onCreate() {
         super.onCreate();
+        Fabric.with(this, new Crashlytics());
         context = getApplicationContext();
-//        Fabric.with(this, new Crashlytics());
     }
 
     public SharedPreferences.Editor getEditor() {

@@ -145,7 +145,7 @@ public class HostelDetailActivity extends BaseActivity implements RatingDialogLi
     final long PERIOD_MS = 3000; // time in milliseconds between successive task executions.
     AdapterAmenities adapterAmenities;
     AdapterReview adapterReview;
-//    @BindView(R.id.btn_book_now)
+    //    @BindView(R.id.btn_book_now)
 //    Button btnBookNow;
     boolean is_bookmark_remove;
 
@@ -475,8 +475,13 @@ public class HostelDetailActivity extends BaseActivity implements RatingDialogLi
 
     @Override
     public void onPermissionGranted() {
+        String contact_no = "+917622885409";//Chintan
+        if (propertyDetails != null && propertyDetails.cont_no != null) {
+            contact_no = propertyDetails.cont_no;
+        }
+
         Intent callIntent = new Intent(Intent.ACTION_CALL);
-        callIntent.setData(Uri.parse("tel:+917622885409"));
+        callIntent.setData(Uri.parse("tel:" + contact_no));
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
             //    ActivityCompat#requestPermissions

@@ -175,10 +175,14 @@ public class CategoryListActivity extends BaseActivity implements Paginate.Callb
                     getPropertyDetailModel = new Gson().fromJson(response.toString(), GetPropertyDetailModel.class);
                     if (getPropertyDetailModel.propertyDetail != null && !getPropertyDetailModel.propertyDetail.isEmpty()) {
                         if (swipeRefreshLayout.isRefreshing()) {
-                            stopRefreshing();
-                            rvHostelList.setAdapter(null);
-                            arrPropertyDetailArrayList.clear();
-                            adapterCategoryList.notifyDataSetChanged();
+                            try {
+                                stopRefreshing();
+                                rvHostelList.setAdapter(null);
+                                arrPropertyDetailArrayList.clear();
+                                adapterCategoryList.notifyDataSetChanged();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
                         }
                         setupList(getPropertyDetailModel.propertyDetail);
                     } else {

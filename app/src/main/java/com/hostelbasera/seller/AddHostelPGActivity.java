@@ -1353,7 +1353,7 @@ TODO :
         }
 
 //        getLocationFromAddress(edtAddress.getText().toString().trim());
-        //TODO : Check Validation for address
+
         /* if (latitude == 0 || longitude == 0) {
             Toaster.shortToast("Enter valid address.");
             return false;
