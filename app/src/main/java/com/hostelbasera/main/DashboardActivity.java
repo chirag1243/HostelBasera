@@ -1,7 +1,9 @@
 package com.hostelbasera.main;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.PorterDuff;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
@@ -10,6 +12,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.ShareCompat;
@@ -34,6 +37,8 @@ import com.bumptech.glide.Priority;
 import com.bumptech.glide.request.RequestOptions;
 import com.github.javiersantos.materialstyleddialogs.MaterialStyledDialog;
 import com.google.gson.Gson;
+import com.gun0912.tedpermission.PermissionListener;
+import com.gun0912.tedpermission.TedPermission;
 import com.hostelbasera.R;
 import com.hostelbasera.apis.HttpRequestHandler;
 import com.hostelbasera.apis.PostRequest;
@@ -46,11 +51,13 @@ import com.hostelbasera.utility.Toaster;
 
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class DashboardActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class DashboardActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener, PermissionListener {
 
     private static final int UpdateCode = 2212;
 
@@ -246,6 +253,16 @@ public class DashboardActivity extends BaseActivity implements NavigationView.On
                 onFeedbackClicked();
                 doCloseDrawer();
                 return false;
+            case R.id.nav_contact_us:
+                new TedPermission(this)
+                        .setPermissionListener(this)
+                        .setRationaleMessage(R.string.call_message)
+                        .setDeniedMessage(R.string.call_denied_message)
+                        .setGotoSettingButtonText(R.string.ok)
+                        .setPermissions(Manifest.permission.CALL_PHONE)
+                        .check();
+                doCloseDrawer();
+                return false;
             case R.id.nav_share_app:
 //                setToolbarTitle(R.string.share_app);
 //                Toaster.shortToast("Coming Soon");
@@ -265,6 +282,30 @@ public class DashboardActivity extends BaseActivity implements NavigationView.On
         }
         doCloseDrawer();
         return true;
+    }
+
+    @Override
+    public void onPermissionGranted() {
+        String contact_no = "+917622885409";//Chintan
+
+        Intent callIntent = new Intent(Intent.ACTION_CALL);
+        callIntent.setData(Uri.parse("tel:" + contact_no));
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        startActivity(callIntent);
+    }
+
+    @Override
+    public void onPermissionDenied(ArrayList<String> deniedPermissions) {
+
     }
 
     public void onFeedbackClicked() {

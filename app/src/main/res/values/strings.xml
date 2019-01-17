@@ -128,4 +128,6 @@
     <string name="enter_mobile_number">Enter Mobile Number</string>
     <string name="enter_otp">Enter OTP</string>
     <string name="get_otp">Get OTP</string>
+
+    <string name="contact_us">Contact Us</string>
 </resources>

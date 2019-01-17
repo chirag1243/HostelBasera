@@ -25,6 +25,11 @@
             android:id="@+id/nav_share_app"
             android:icon="@drawable/nav_share"
             android:title="@string/share_app" />
+
+        <item
+            android:id="@+id/nav_contact_us"
+            android:icon="@drawable/footer_contact"
+            android:title="@string/contact_us" />
         <item
             android:id="@+id/nav_sign_out"
             android:icon="@drawable/nav_signout"
