@@ -124,7 +124,7 @@ public class SignUpActivity extends BaseActivity {
 
     @SuppressLint("HardwareIds")
     public void doRegisterUser() {
-        String version = "1.0.6";
+        String version = "1.0.7";
         try {
             PackageInfo pInfo = this.getPackageManager().getPackageInfo(getPackageName(), 0);
             version = pInfo.versionName;
