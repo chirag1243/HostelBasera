@@ -612,6 +612,24 @@ public class AddHostelPGActivity extends BaseActivity implements PermissionListe
                         doAddHostelPG();
                     }
                 }
+
+            }
+            //TODO : Remove Else
+            else{
+                paymentId = "123";
+                if (arrAddImageAttachment.size() > 0) {
+                    setProgressDialog(arrAddImageAttachment.size());
+                    for (int i = 0; i < arrAddImageAttachment.size(); i++) {
+                        doUploadFile(new File(arrAddImageAttachment.get(i).FilePath), i);
+                    }
+                } else if (arrAddMenuAttachment.size() > 0) {
+                    setProgressDialog(arrAddMenuAttachment.size());
+                    for (int i = 0; i < arrAddMenuAttachment.size(); i++) {
+                        doUploadMenuFile(new File(arrAddMenuAttachment.get(i).FilePath), i);
+                    }
+                } else {
+                    doAddHostelPG();
+                }
             }
         }
     }

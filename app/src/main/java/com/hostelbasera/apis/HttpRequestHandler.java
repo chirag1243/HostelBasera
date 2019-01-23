@@ -519,7 +519,7 @@ public class HttpRequestHandler {
             for (int i = 0; i < arrAddMenuAttachment.size(); i++) {
                 cooking_menu.append(arrAddMenuAttachment.get(i).FileName).append(", ");
             }
-            jsonObject.put(Constant.Cooking_menu, cooking_menu.deleteCharAt(cooking_menu.length() - 2));
+            jsonObject.put(Constant.Cooking_menu, arrAddMenuAttachment.size() > 0 ? cooking_menu.deleteCharAt(cooking_menu.length() - 2) : "");
             jsonObject.put(Constant.Price, price);
 
             jsonArray = new JSONArray();
