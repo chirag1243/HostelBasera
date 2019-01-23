@@ -426,6 +426,13 @@ public class SellerDashboardActivity extends BaseActivity implements NavigationV
         finish();
     }
 
+    /*@Override
+    protected void onResume() {
+        super.onResume();
+        setToolbarTitle(R.string.my_pg_hostel);
+        setFragment(new FragmentSellerHome());
+    }*/
+
     @OnClick(R.id.fb_add_hostel)
     public void doAddHostel() {
         startActivityForResult(new Intent(SellerDashboardActivity.this, AddHostelPGActivity.class), Dashboard_REQUEST_CODE);
@@ -436,9 +443,9 @@ public class SellerDashboardActivity extends BaseActivity implements NavigationV
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == Dashboard_REQUEST_CODE) {
-            if (resultCode == Activity.RESULT_OK && data != null) {
+//            if (resultCode == RESULT_OK) {
                 setFragment(new FragmentSellerHome());
-            }
+//            }
         }
         if (requestCode == UpdateCode) {
             updateChecker();

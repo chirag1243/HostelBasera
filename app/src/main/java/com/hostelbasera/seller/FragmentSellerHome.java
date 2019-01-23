@@ -139,10 +139,14 @@ public class FragmentSellerHome extends Fragment implements Paginate.Callbacks, 
                     sellerPropertyModel = new Gson().fromJson(response.toString(), SellerPropertyModel.class);
                     if (sellerPropertyModel.propertyDetail != null && !sellerPropertyModel.propertyDetail.isEmpty()) {
                         if (swipeRefreshLayout.isRefreshing()) {
-                            stopRefreshing();
-                            rvHostel.setAdapter(null);
-                            arrPropertyDetailArrayList.clear();
-                            adapterSellerHome.notifyDataSetChanged();
+                            try {
+                                stopRefreshing();
+                                rvHostel.setAdapter(null);
+                                arrPropertyDetailArrayList.clear();
+                                adapterSellerHome.notifyDataSetChanged();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
                         }
                         if (sellerPropertyModel.propertyDetail != null && !sellerPropertyModel.propertyDetail.isEmpty()) {
                             arrPropertyDetailArrayList.addAll(sellerPropertyModel.propertyDetail);
