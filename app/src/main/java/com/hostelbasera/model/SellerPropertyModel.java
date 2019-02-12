@@ -18,7 +18,7 @@ public class SellerPropertyModel implements Serializable {
     @SerializedName("is_valid_token")
     public boolean is_valid_token;
 
-    public static class PropertyDetail {
+    public static class PropertyDetail implements Serializable {
         @SerializedName("rating")
         public int rating;
         @SerializedName("city_name")
@@ -77,5 +77,11 @@ public class SellerPropertyModel implements Serializable {
         public String property_name;
         @SerializedName("property_id")
         public int property_id;
+
+        @SerializedName("is_renew")
+        public boolean is_renew;
+        @SerializedName("renew_price")
+        public String renew_price;
+
     }
 }

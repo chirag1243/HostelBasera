@@ -45,6 +45,11 @@ public class FilterModel implements Serializable {
         @SerializedName("type_id")
         public int type_id;
 
+        @SerializedName("price")
+        public String price;
+        @SerializedName("id")
+        public int id;
+
         @SerializedName("isSelected")
         public boolean isSelected;
     }

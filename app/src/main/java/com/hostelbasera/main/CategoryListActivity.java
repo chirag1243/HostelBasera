@@ -82,6 +82,7 @@ public class CategoryListActivity extends BaseActivity implements Paginate.Callb
     ArrayList<String> arrPropertyTypeId;
     ArrayList<String> arrTypeId;
     ArrayList<String> arrPropertySizeId;
+    ArrayList<String> arrPriceId;
     FilterModel filterModel;
     private static final int filterCode = 1005;
     double latitude = 0, longitude = 0;
@@ -110,6 +111,7 @@ public class CategoryListActivity extends BaseActivity implements Paginate.Callb
 
         arrPropertyTypeId = new ArrayList<>();
         arrTypeId = new ArrayList<>();
+        arrPriceId = new ArrayList<>();
         arrPropertySizeId = new ArrayList<>();
         arrPropertyCategoryId = new ArrayList<>();
 
@@ -155,9 +157,9 @@ public class CategoryListActivity extends BaseActivity implements Paginate.Callb
     public void getPropertyListData(boolean showProgress) {
         JSONObject postData;
         if (isNearMe) {
-            postData = HttpRequestHandler.getInstance().getNearbyPropertyDataParam(pageNo, arrPropertyCategoryId, arrPropertyTypeId, arrTypeId, arrPropertySizeId, latitude, longitude);
+            postData = HttpRequestHandler.getInstance().getNearbyPropertyDataParam(pageNo, arrPropertyCategoryId, arrPropertyTypeId, arrTypeId, arrPropertySizeId,arrPriceId, latitude, longitude);
         } else {
-            postData = HttpRequestHandler.getInstance().getPropertyListDataParam(pageNo, arrPropertyCategoryId, arrPropertyTypeId, arrTypeId, arrPropertySizeId);
+            postData = HttpRequestHandler.getInstance().getPropertyListDataParam(pageNo, arrPropertyCategoryId, arrPropertyTypeId, arrTypeId, arrPropertySizeId,arrPriceId);
         }
 
         if (postData != null) {
@@ -340,6 +342,7 @@ public class CategoryListActivity extends BaseActivity implements Paginate.Callb
         arrPropertyTypeId.clear();
         arrPropertySizeId.clear();
         arrTypeId.clear();
+        arrPriceId.clear();
 
         if (!isClearAll) {
             for (int i = 0; i < filterModel.filterDetail.size(); i++) {
@@ -355,6 +358,9 @@ public class CategoryListActivity extends BaseActivity implements Paginate.Callb
                                 break;
                             case Constant.Types:
                                 arrTypeId.add("" + filterModel.filterDetail.get(i).data.get(j).type_id);
+                                break;
+                            case Constant.Prices:
+                                arrPriceId.add("" + filterModel.filterDetail.get(i).data.get(j).id);
                                 break;
                         }
                     }

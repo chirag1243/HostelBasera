@@ -153,7 +153,7 @@ public class HttpRequestHandler {
     }
 
 
-    public JSONObject getPropertyListDataParam(int pageNo, ArrayList<String> arrPropertyCategoryId, ArrayList<String> arrPropertyTypeId, ArrayList<String> arrTypeId, ArrayList<String> arrPropertySizeId) {
+    public JSONObject getPropertyListDataParam(int pageNo, ArrayList<String> arrPropertyCategoryId, ArrayList<String> arrPropertyTypeId, ArrayList<String> arrTypeId, ArrayList<String> arrPropertySizeId, ArrayList<String> arrPriceId) {
         JSONObject params = new JSONObject();
         JSONObject jsonObject = new JSONObject();
         try {
@@ -183,6 +183,12 @@ public class HttpRequestHandler {
                 jsonArray.put(arrPropertySizeId.get(i));
             }
             jsonFilters.put(Constant.Property_size_id, jsonArray);
+
+            jsonArray = new JSONArray();
+            for (int i = 0; i < arrPriceId.size(); i++) {
+                jsonArray.put(arrPriceId.get(i));
+            }
+            jsonFilters.put(Constant.Property_price, jsonArray);
 
             jsonObject.put(Constant.Filters, jsonFilters);
             jsonObject.put(Constant.Limit, 0);
@@ -195,7 +201,7 @@ public class HttpRequestHandler {
         return params;
     }
 
-    public JSONObject getNearbyPropertyDataParam(int pageNo, ArrayList<String> arrPropertyCategoryId, ArrayList<String> arrPropertyTypeId, ArrayList<String> arrTypeId, ArrayList<String> arrPropertySizeId, double latitude, double longitude) {
+    public JSONObject getNearbyPropertyDataParam(int pageNo, ArrayList<String> arrPropertyCategoryId, ArrayList<String> arrPropertyTypeId, ArrayList<String> arrTypeId, ArrayList<String> arrPropertySizeId, ArrayList<String> arrPriceId, double latitude, double longitude) {
         JSONObject params = new JSONObject();
         JSONObject jsonObject = new JSONObject();
         try {
@@ -225,6 +231,12 @@ public class HttpRequestHandler {
                 jsonArray.put(arrPropertySizeId.get(i));
             }
             jsonFilters.put(Constant.Property_size_id, jsonArray);
+
+            jsonArray = new JSONArray();
+            for (int i = 0; i < arrPriceId.size(); i++) {
+                jsonArray.put(arrPriceId.get(i));
+            }
+            jsonFilters.put(Constant.Property_price, jsonArray);
 
             jsonFilters.put(Constant.Latitude, "" + latitude);
             jsonFilters.put(Constant.Longitude, "" + longitude);
@@ -680,6 +692,26 @@ public class HttpRequestHandler {
         }
         return params;
     }
+
+    public JSONObject getRenewPropertyParam(int property_id, int seller_id, String payment_id, String price) {
+        JSONObject params = new JSONObject();
+        JSONObject jsonObject = new JSONObject();
+        try {
+            params = setDefaultParameters();
+
+            jsonObject.put(Constant.Property_id, property_id);
+            jsonObject.put(Constant.Seller_id, seller_id);
+            jsonObject.put(Constant.Payment_id, payment_id);
+            jsonObject.put(Constant.Price, price);
+
+            params.put(Constant.RenewPropertyData, jsonObject);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return params;
+    }
+
+
     /*public JSONObject getLogoutUserParam() {
         JSONObject params = new JSONObject();
         JSONObject jsonObject = new JSONObject();

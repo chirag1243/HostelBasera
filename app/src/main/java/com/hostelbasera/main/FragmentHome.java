@@ -254,7 +254,7 @@ public class FragmentHome extends Fragment implements Paginate.Callbacks, SwipeR
     }
 
     public void getPropertyListData(boolean showProgress) {
-        JSONObject postData = HttpRequestHandler.getInstance().getPropertyListDataParam(pageNo, new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+        JSONObject postData = HttpRequestHandler.getInstance().getPropertyListDataParam(pageNo, new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>(),new ArrayList<>());
 
         if (postData != null) {
             if (!swipeRefreshLayout.isRefreshing() && showProgress)

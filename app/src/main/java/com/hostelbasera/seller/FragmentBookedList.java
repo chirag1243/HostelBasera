@@ -109,7 +109,7 @@ public class FragmentBookedList extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 //                startActivity(new Intent(getActivity(), HostelDetailActivity.class)
-//                        .putExtra(Constant.Property_id, arOrderDetailsArrayList.get(position).property_id)
+//                        .putExtra(Constant.Property_id, arOrderDetailsArrayList.get(position).propertyId)
 //                        .putExtra(Constant.Property_name, arOrderDetailsArrayList.get(position).property_name));
             }
         });

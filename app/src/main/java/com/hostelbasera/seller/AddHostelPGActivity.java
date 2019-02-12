@@ -561,7 +561,6 @@ public class AddHostelPGActivity extends BaseActivity implements PermissionListe
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == PLACE_PICKER_REQUEST) {
-            if (resultCode == RESULT_OK) {
                 Place place = PlacePicker.getPlace(this, data);
                 /*
                 StringBuilder stBuilder = new StringBuilder();
@@ -585,7 +584,7 @@ public class AddHostelPGActivity extends BaseActivity implements PermissionListe
 
                 edtAddress.setText(String.format("%s", place.getAddress()));
             }
-        }
+
 
         if (requestCode == FilePickerConst.REQUEST_CODE_PHOTO) {
             if (resultCode == Activity.RESULT_OK && data != null) {

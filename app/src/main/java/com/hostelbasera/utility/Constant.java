@@ -71,6 +71,8 @@ public class Constant {
     public static final String Type_id = "type_id";
     public static final String Property_size_id = "property_size_id";
     public static final String Property_id = "property_id";
+    public static final String Property_price = "property_price";
+
 
     public static final String GetPropertyData = "getPropertyData";
 
@@ -85,6 +87,8 @@ public class Constant {
     public static final int Size = 1;
     public static final int Property_Types = 2;
     public static final int Types = 3;
+    public static final int Prices = 4;
+
 
     public static final String AddReviewData = "addReviewData";
     public static final String Review = "review";
@@ -159,5 +163,6 @@ public class Constant {
     public static final String Mobile_no = "mobile_no";
     public static final String Otp = "otp";
 
+    public static final String RenewPropertyData = "renewPropertyData";
 
 }

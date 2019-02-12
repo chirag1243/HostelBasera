@@ -45,4 +45,5 @@
     <string name="checkMobilenoForOtp">login/checkMobilenoForOtp</string>
     <string name="verifyOtp">login/verifyOtp</string>
 
+    <string name="renewProperty">login/renewProperty</string>
 </resources>

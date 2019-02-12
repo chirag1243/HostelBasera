@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
@@ -33,9 +34,15 @@ public class AdapterSellerHome extends RecyclerView.Adapter<AdapterSellerHome.Vi
     private ArrayList<SellerPropertyModel.PropertyDetail> mValues;
     private final Context mContext;
     private AdapterView.OnItemClickListener onItemClickListener;
+    private OnRenewListener listener;
 
-    AdapterSellerHome(Context context) {
+    AdapterSellerHome(Context context,OnRenewListener renewListener) {
         mContext = context;
+        listener = renewListener;
+    }
+
+    public interface OnRenewListener {
+        void onRenewToPostCall(String renew_price, int property_id, int seller_id);
     }
 
     public void doRefresh(ArrayList<SellerPropertyModel.PropertyDetail> arrPropertyDetails) {
@@ -65,6 +72,9 @@ public class AdapterSellerHome extends RecyclerView.Adapter<AdapterSellerHome.Vi
         @BindView(R.id.tv_price)
         TextView tvPrice;
 
+        @BindView(R.id.btn_renew)
+        Button btnRenew;
+
         ViewHolder(View itemView, AdapterSellerHome adapterSellerHome) {
             super(itemView);
             this.adapterSellerHome = adapterSellerHome;
@@ -84,6 +94,18 @@ public class AdapterSellerHome extends RecyclerView.Adapter<AdapterSellerHome.Vi
             simpleRatingBar.setRating(mItem.rating);
 
             imgPlaceHolder.setVisibility(View.VISIBLE);
+
+            if (mItem.is_renew){
+                btnRenew.setVisibility(View.VISIBLE);
+            }else {
+                btnRenew.setVisibility(View.GONE);
+            }
+            btnRenew.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    listener.onRenewToPostCall(mItem.renew_price,mItem.property_id,mItem.seller_id);
+                }
+            });
 
             Glide.with(mContext)
                     .load(mContext.getString(R.string.image_url) + mItem.image).apply(new RequestOptions().dontAnimate())

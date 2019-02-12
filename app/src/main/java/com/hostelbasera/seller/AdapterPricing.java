@@ -93,7 +93,7 @@ public class AdapterPricing extends RecyclerView.Adapter<AdapterPricing.ViewHold
     }
 
     /*private void onRemoveBookmarkClicked(int position) {
-        JSONObject postData = HttpRequestHandler.getInstance().getAddBookmarkParam(mValues.get(position).property_id, true);
+        JSONObject postData = HttpRequestHandler.getInstance().getAddBookmarkParam(mValues.get(position).propertyId, true);
 
         if (postData != null) {
 

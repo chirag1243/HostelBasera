@@ -139,6 +139,11 @@ public class HostelDetailActivity extends BaseActivity implements RatingDialogLi
     @BindView(R.id.tv_rooms)
     TextView tvRooms;
 
+    @BindView(R.id.cv_description)
+    CardView cvDescription;
+    @BindView(R.id.tv_description)
+    TextView tvDescription;
+
     PropertyDetailModel.PropertyDetails propertyDetails;
     Timer timer;
     final long DELAY_MS = 500;//delay in milliseconds before task is to be executed
@@ -236,6 +241,11 @@ public class HostelDetailActivity extends BaseActivity implements RatingDialogLi
         if (propertyDetails.latitude != null && !propertyDetails.latitude.isEmpty()) {
             SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
             mapFragment.getMapAsync(this);
+        }
+
+        if (propertyDetails.description != null && !propertyDetails.description.isEmpty()) {
+            cvDescription.setVisibility(View.VISIBLE);
+            tvDescription.setText(propertyDetails.description);
         }
     }
 

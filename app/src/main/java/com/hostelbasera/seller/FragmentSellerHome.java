@@ -1,11 +1,11 @@
 package com.hostelbasera.seller;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -24,10 +24,9 @@ import com.google.gson.Gson;
 import com.hostelbasera.R;
 import com.hostelbasera.apis.HttpRequestHandler;
 import com.hostelbasera.apis.PostRequest;
-import com.hostelbasera.main.AdapterHomePropertyDetail;
-import com.hostelbasera.main.HostelDetailActivity;
-import com.hostelbasera.model.GetPropertyDetailModel;
+import com.hostelbasera.model.GetPropertyDetModel;
 import com.hostelbasera.model.SellerPropertyModel;
+import com.hostelbasera.model.UserDetailModel;
 import com.hostelbasera.utility.Constant;
 import com.hostelbasera.utility.Globals;
 import com.hostelbasera.utility.PaginationProgressBarAdapter;
@@ -42,7 +41,7 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class FragmentSellerHome extends Fragment implements Paginate.Callbacks, SwipeRefreshLayout.OnRefreshListener {
+public class FragmentSellerHome extends Fragment implements Paginate.Callbacks, SwipeRefreshLayout.OnRefreshListener, AdapterSellerHome.OnRenewListener {
 
     View view;
     Globals globals;
@@ -67,6 +66,9 @@ public class FragmentSellerHome extends Fragment implements Paginate.Callbacks, 
     SellerPropertyModel sellerPropertyModel;
     ArrayList<SellerPropertyModel.PropertyDetail> arrPropertyDetailArrayList;
     AdapterSellerHome adapterSellerHome;
+    public int PAYMENT_CODE = 777;
+
+    UserDetailModel.LoginSellerDetail loginSellerDetail;
 
     public static FragmentSellerHome newInstance() {
         FragmentSellerHome fragment = new FragmentSellerHome();
@@ -86,6 +88,7 @@ public class FragmentSellerHome extends Fragment implements Paginate.Callbacks, 
         Globals.hideKeyboard(getActivity());
         globals = ((Globals) getActivity().getApplicationContext());
         progressBar.setVisibility(View.GONE);
+        loginSellerDetail = globals.getUserDetails().loginSellerDetail;
 
         swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary);
         swipeRefreshLayout.setOnRefreshListener(this);
@@ -181,7 +184,7 @@ public class FragmentSellerHome extends Fragment implements Paginate.Callbacks, 
             if (paginate != null) {
                 paginate.unbind();
             }
-            adapterSellerHome = new AdapterSellerHome(getActivity());
+            adapterSellerHome = new AdapterSellerHome(getActivity(), this);
         }
         loading = false;
         adapterSellerHome.doRefresh(arrPropertyDetailArrayList);
@@ -207,7 +210,7 @@ public class FragmentSellerHome extends Fragment implements Paginate.Callbacks, 
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 //                ToDO : Edit Option pending
 //                startActivity(new Intent(getActivity(), AddHostelPGActivity.class)
-//                        .putExtra(Constant.Property_id, arrPropertyDetailArrayList.get(position).property_id)
+//                        .putExtra(Constant.Property_id, arrPropertyDetailArrayList.get(position).propertyId)
 //                        .putExtra(Constant.Property_name, arrPropertyDetailArrayList.get(position).property_name));
             }
         });
@@ -283,5 +286,59 @@ public class FragmentSellerHome extends Fragment implements Paginate.Callbacks, 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+    }
+
+    String renewPrice = "";
+    int propertyId = 0, sellerId = 0;
+
+    @Override
+    public void onRenewToPostCall(String renew_price, int property_id, int seller_id) {
+        renewPrice = renew_price;
+        propertyId = property_id;
+        sellerId = seller_id;
+        startActivityForResult(new Intent(getContext(), PayMentGateWay.class)
+                .putExtra(Constant.Full_name, loginSellerDetail.name)
+                .putExtra(Constant.Phone_number, loginSellerDetail.contact_no)
+                .putExtra(Constant.Email, loginSellerDetail.email)
+                .putExtra(Constant.Price, renew_price), PAYMENT_CODE);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == PAYMENT_CODE) {
+            if (resultCode == Activity.RESULT_OK && data != null) {
+                if (data.getStringExtra(Constant.RESULT).equals("Success")) {
+                    doRenewProperty(data.getStringExtra(Constant.Payment_id));
+                }
+            }
+        }
+    }
+
+    public void doRenewProperty(String payment_id) {
+        JSONObject postData = HttpRequestHandler.getInstance().getRenewPropertyParam(propertyId,sellerId ,payment_id , renewPrice);
+
+        if (postData != null) {
+            new PostRequest(getContext(), getString(R.string.renewProperty), postData, true,
+                    new PostRequest.OnPostServiceCallListener() {
+                        @Override
+                        public void onSucceedToPostCall(JSONObject response) {
+                            GetPropertyDetModel getPropertyDetModel = new Gson().fromJson(response.toString(), GetPropertyDetModel.class);
+                            if (getPropertyDetModel.status == 0) {
+                                if (Globals.isNetworkAvailable(getActivity())) {
+                                    getPropertyListData(true);
+                                } else {
+                                    showNoRecordFound(getString(R.string.no_data_found));
+                                    Toaster.shortToast(R.string.no_internet_msg);
+                                }
+                            } else
+                                Toaster.shortToast(getPropertyDetModel.message);
+                        }
+
+                        @Override
+                        public void onFailedToPostCall(int statusCode, String msg) {
+                            Toaster.shortToast(msg);
+                        }
+                    }).execute();
+        }
     }
 }

@@ -73,6 +73,9 @@ public class AdapterFilter extends RecyclerView.Adapter<AdapterFilter.ViewHolder
                 case Constant.Types:
                     holder.tv_filter.setText("" + mValues.get(position).type_name);
                     break;
+                case Constant.Prices:
+                    holder.tv_filter.setText("" + mValues.get(position).price);
+                    break;
             }
 
             if (mValues.get(position).isSelected)
