@@ -52,6 +52,14 @@ public class PostRequest {
         this.url = context.getString(R.string.server_url) + url;
     }
 
+    public PostRequest(Context context, String server_url, String url, JSONObject postData, boolean isLoaderRequired, OnPostServiceCallListener listener) {
+        this.listener = listener;
+        this.postData = postData;
+        this.context = context;
+        this.isLoaderRequired = isLoaderRequired;
+        this.url = server_url + url;
+    }
+
     public PostRequest(Context context, String url, JSONObject postData, boolean isLoaderRequired, OnPostServiceCallListener listener, OnNoInternetListener internetListener) {
         this.listener = listener;
         this.postData = postData;

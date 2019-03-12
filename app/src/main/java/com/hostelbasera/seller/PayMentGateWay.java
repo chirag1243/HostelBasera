@@ -296,11 +296,11 @@ public class PayMentGateWay extends Activity {
                 public void run() {
                     mHandler = null;
 
-	                    Intent intent = new Intent();
-	                    intent.putExtra(Constant.RESULT, "Success");
-	                    intent.putExtra(Constant.Payment_id, paymentId);
-	                    setResult(RESULT_OK, intent);
-	                    finish();
+                    Intent intent = new Intent();
+                    intent.putExtra(Constant.RESULT, "Success");
+                    intent.putExtra(Constant.Payment_id, paymentId);
+                    setResult(RESULT_OK, intent);
+                    finish();
 //                    // new PostRechargeData().execute();
 //                    Intent intent = new Intent(PayMentGateWay.this, SellerDashboardActivity.class);
 //                    intent.putExtra("test", getFirstName);

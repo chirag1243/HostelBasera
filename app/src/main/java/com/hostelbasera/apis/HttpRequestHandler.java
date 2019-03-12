@@ -712,6 +712,25 @@ public class HttpRequestHandler {
     }
 
 
+    public JSONObject doGenerateChecksumParam(String orderId, String custId, String amount) {
+        JSONObject params = new JSONObject();
+        try {
+
+            params.put(Constant.MID, "LzRICFm=rn9EBwIN@F");//Live : "" Constant.MID_Value
+            params.put(Constant.ORDER_ID, orderId);
+            params.put(Constant.CUST_ID, custId);
+            params.put(Constant.INDUSTRY_TYPE_ID, Constant.INDUSTRY_TYPE_ID_Value);
+            params.put(Constant.CHANNEL_ID, Constant.CHANNEL_ID_Value);
+            params.put(Constant.TXN_AMOUNT, amount);
+            params.put(Constant.WEBSITE, Constant.WEBSITE_Value);
+            params.put(Constant.CALLBACK_URL, Constant.CALLBACK_URL_Value);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return params;
+    }
+
     /*public JSONObject getLogoutUserParam() {
         JSONObject params = new JSONObject();
         JSONObject jsonObject = new JSONObject();

@@ -46,4 +46,8 @@
     <string name="verifyOtp">login/verifyOtp</string>
 
     <string name="renewProperty">login/renewProperty</string>
+
+    <string name="main_url">http://hostelbasera.com/</string>
+    <string name="generateChecksum">paytm/generateChecksum.php</string>
+
 </resources>

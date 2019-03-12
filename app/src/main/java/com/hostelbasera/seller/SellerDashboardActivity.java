@@ -25,12 +25,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -49,15 +51,23 @@ import com.hostelbasera.main.FragmentBookmarkList;
 import com.hostelbasera.main.FragmentHome;
 import com.hostelbasera.main.FragmentOrderList;
 import com.hostelbasera.main.LoginActivity;
+import com.hostelbasera.model.CheckSumModel;
 import com.hostelbasera.model.PropertyDetailModel;
 import com.hostelbasera.model.UserDetailModel;
 import com.hostelbasera.utility.BaseActivity;
+import com.hostelbasera.utility.Constant;
 import com.hostelbasera.utility.Globals;
 import com.hostelbasera.utility.Toaster;
+import com.orhanobut.logger.Logger;
+import com.paytm.pgsdk.PaytmOrder;
+import com.paytm.pgsdk.PaytmPGService;
+import com.paytm.pgsdk.PaytmPaymentTransactionCallback;
 
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -435,8 +445,120 @@ public class SellerDashboardActivity extends BaseActivity implements NavigationV
 
     @OnClick(R.id.fb_add_hostel)
     public void doAddHostel() {
-        startActivityForResult(new Intent(SellerDashboardActivity.this, AddHostelPGActivity.class), Dashboard_REQUEST_CODE);
+        OrderId = "Order" + Globals.randomNumber();
+        CustId = "Cust" + Globals.randomNumber();
+        Amount = "100";
+        doGenerateChecksum();
+
+//        startActivityForResult(new Intent(SellerDashboardActivity.this, AddHostelPGActivity.class), Dashboard_REQUEST_CODE);
     }
+
+    String OrderId = "", CustId = "", Amount = "";
+
+    private void doGenerateChecksum() {
+        JSONObject postData = HttpRequestHandler.getInstance().doGenerateChecksumParam(OrderId, CustId, Amount);
+        if (postData != null) {
+
+            new PostRequest(this, getString(R.string.main_url), getString(R.string.generateChecksum), postData, true, new PostRequest.OnPostServiceCallListener() {
+                @Override
+                public void onSucceedToPostCall(JSONObject response) {
+                    CheckSumModel checkSumModel = new Gson().fromJson(response.toString(), CheckSumModel.class);
+                    onStartTransaction(checkSumModel.CHECKSUMHASH);
+                }
+
+                @Override
+                public void onFailedToPostCall(int statusCode, String msg) {
+                    Toaster.shortToast(msg);
+                }
+            }).execute();
+        }
+        Globals.hideKeyboard(this);
+    }
+
+
+    public void onStartTransaction(String CHECKSUMHASH) {
+        PaytmPGService Service = PaytmPGService.getProductionService();
+
+        HashMap<String, String> paramMap = new HashMap<>();
+        paramMap.put(Constant.MID, Constant.MID_Value);
+// Key in your staging and production MID available in your dashboard
+        paramMap.put(Constant.ORDER_ID, OrderId);
+        paramMap.put(Constant.CUST_ID, CustId);
+//        paramMap.put(Constant.MOBILE_NO, "9978261182");
+//        paramMap.put(Constant.EMAIL, "chiragfriend.143@gmail.com");
+        paramMap.put(Constant.CHANNEL_ID, Constant.CHANNEL_ID_Value);
+        paramMap.put(Constant.TXN_AMOUNT, Amount);
+        paramMap.put(Constant.WEBSITE, Constant.WEBSITE_Value);
+// This is the staging value. Production value is available in your dashboard
+        paramMap.put(Constant.INDUSTRY_TYPE_ID, Constant.INDUSTRY_TYPE_ID_Value);
+// This is the staging value. Production value is available in your dashboard
+        paramMap.put(Constant.CALLBACK_URL, Constant.CALLBACK_URL_Value);//+ OrderId);
+        //"https://securegw-stage.paytm.in/theia/paytmCallback?ORDER_ID=order1");
+        paramMap.put(Constant.CHECKSUMHASH, CHECKSUMHASH);
+
+        PaytmOrder Order = new PaytmOrder(paramMap);
+
+		/*PaytmMerchant Merchant = new PaytmMerchant(
+				"https://pguat.paytm.com/paytmchecksum/paytmCheckSumGenerator.jsp",
+				"https://pguat.paytm.com/paytmchecksum/paytmCheckSumVerify.jsp");*/
+
+        Service.initialize(Order, null);
+
+        Service.startPaymentTransaction(this, true, true,
+                new PaytmPaymentTransactionCallback() {
+                    @Override
+                    public void someUIErrorOccurred(String inErrorMessage) {
+                        // Some UI Error Occurred in Payment Gateway Activity.
+                        // // This may be due to initialization of views in
+                        // Payment Gateway Activity or may be due to //
+                        // initialization of webview. // Error Message details
+                        // the error occurred.
+                    }
+
+
+                    @Override
+                    public void onTransactionResponse(Bundle inResponse) {
+                        Logger.e("LOG", "Payment Transaction is successful " + inResponse);
+                        Toast.makeText(getApplicationContext(), "Payment Transaction response " + inResponse.toString(), Toast.LENGTH_LONG).show();
+                    }
+
+                    @Override
+                    public void networkNotAvailable() { // If network is not
+                        // available, then this
+                        // method gets called.
+                    }
+
+                    @Override
+                    public void clientAuthenticationFailed(String inErrorMessage) {
+                        // This method gets called if client authentication
+                        // failed. // Failure may be due to following reasons //
+                        // 1. Server error or downtime. // 2. Server unable to
+                        // generate checksum or checksum response is not in
+                        // proper format. // 3. Server failed to authenticate
+                        // that client. That is value of payt_STATUS is 2. //
+                        // Error Message describes the reason for failure.
+                    }
+
+                    @Override
+                    public void onErrorLoadingWebPage(int iniErrorCode, String inErrorMessage, String inFailingUrl) {
+
+                    }
+
+                    // had to be added: NOTE
+                    @Override
+                    public void onBackPressedCancelTransaction() {
+                        Toast.makeText(SellerDashboardActivity.this, "Back pressed. Transaction cancelled", Toast.LENGTH_LONG).show();
+                    }
+
+                    @Override
+                    public void onTransactionCancel(String inErrorMessage, Bundle inResponse) {
+                        Logger.d("LOG", "Payment Transaction Failed " + inErrorMessage);
+                        Toast.makeText(getBaseContext(), "Payment Transaction Failed ", Toast.LENGTH_LONG).show();
+                    }
+
+                });
+    }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -444,7 +566,7 @@ public class SellerDashboardActivity extends BaseActivity implements NavigationV
 
         if (requestCode == Dashboard_REQUEST_CODE) {
 //            if (resultCode == RESULT_OK) {
-                setFragment(new FragmentSellerHome());
+            setFragment(new FragmentSellerHome());
 //            }
         }
         if (requestCode == UpdateCode) {

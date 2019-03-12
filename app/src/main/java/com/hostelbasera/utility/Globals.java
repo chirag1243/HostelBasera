@@ -15,6 +15,7 @@ import android.net.Network;
 import android.net.NetworkInfo;
 import android.os.Build;
 import android.provider.Settings;
+import android.support.multidex.MultiDex;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.util.Patterns;
@@ -36,6 +37,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
+import java.util.Random;
 
 public class Globals extends CoreApp {
     SharedPreferences sp;
@@ -51,6 +53,12 @@ public class Globals extends CoreApp {
         super.onCreate();
         Fabric.with(this, new Crashlytics());
         context = getApplicationContext();
+    }
+
+    @Override
+    protected void attachBaseContext(Context context) {
+        super.attachBaseContext(context);
+        MultiDex.install(this);
     }
 
     public SharedPreferences.Editor getEditor() {
@@ -382,4 +390,9 @@ public class Globals extends CoreApp {
         return fileSizeInMB > Constant.MAX_FILE_SIZE;
     }
 
+    public static int randomNumber(){
+        final int min = 10;
+        final int max = 10000;
+        return new Random().nextInt((max - min) + 1) + min;
+    }
 }

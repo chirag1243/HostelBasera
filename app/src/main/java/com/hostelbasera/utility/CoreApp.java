@@ -49,6 +49,7 @@ public class CoreApp extends MultiDexApplication {
         LeakCanary.install(this);*/
     }
 
+
     public static synchronized CoreApp getInstance() {
         return instance;
     }
