@@ -447,7 +447,7 @@ public class SellerDashboardActivity extends BaseActivity implements NavigationV
     public void doAddHostel() {
         OrderId = "Order" + Globals.randomNumber();
         CustId = "Cust" + Globals.randomNumber();
-        Amount = "100";
+        Amount = "100.00";
         doGenerateChecksum();
 
 //        startActivityForResult(new Intent(SellerDashboardActivity.this, AddHostelPGActivity.class), Dashboard_REQUEST_CODE);
@@ -486,13 +486,14 @@ public class SellerDashboardActivity extends BaseActivity implements NavigationV
         paramMap.put(Constant.CUST_ID, CustId);
 //        paramMap.put(Constant.MOBILE_NO, "9978261182");
 //        paramMap.put(Constant.EMAIL, "chiragfriend.143@gmail.com");
+        paramMap.put(Constant.INDUSTRY_TYPE_ID, Constant.INDUSTRY_TYPE_ID_Value);
         paramMap.put(Constant.CHANNEL_ID, Constant.CHANNEL_ID_Value);
         paramMap.put(Constant.TXN_AMOUNT, Amount);
         paramMap.put(Constant.WEBSITE, Constant.WEBSITE_Value);
 // This is the staging value. Production value is available in your dashboard
-        paramMap.put(Constant.INDUSTRY_TYPE_ID, Constant.INDUSTRY_TYPE_ID_Value);
+
 // This is the staging value. Production value is available in your dashboard
-        paramMap.put(Constant.CALLBACK_URL, Constant.CALLBACK_URL_Value);//+ OrderId);
+        paramMap.put(Constant.CALLBACK_URL, Constant.CALLBACK_URL_Value+ OrderId);
         //"https://securegw-stage.paytm.in/theia/paytmCallback?ORDER_ID=order1");
         paramMap.put(Constant.CHECKSUMHASH, CHECKSUMHASH);
 
