@@ -13,8 +13,8 @@
     <string name="msg_server_error">The server might be down, please try again later.</string>
     <string name="error_msg_connection_timeout">The request timed out please try again.</string>
 
-    <string name="rationale_message">we need permission for <b>Attachment</b> &amp; <b>Address</b></string>
-    <string name="denied_message">If you reject permission, you can not use this attachment &amp; address feature.</string>
+    <string name="rationale_message">we need permission for <b>Attachment, Address</b> &amp; <b>OTP</b> </string>
+    <string name="denied_message">If you reject permission, you can not use this attachment,address &amp; OTP feature.</string>
     <string name="back_again">Please click BACK again to exit</string>
     <string name="ok">OK</string>
 

@@ -63,6 +63,7 @@ import com.hostelbasera.main.CategoryListActivity;
 import com.hostelbasera.model.AddImageAttachmentModel;
 import com.hostelbasera.model.AddRoomModel;
 import com.hostelbasera.model.CheckSellerPaymentDataModel;
+import com.hostelbasera.model.CheckSumModel;
 import com.hostelbasera.model.FileUploadModel;
 import com.hostelbasera.model.GetPropertyDetModel;
 import com.hostelbasera.model.SellerDropdownModel;
@@ -71,12 +72,17 @@ import com.hostelbasera.utility.Constant;
 import com.hostelbasera.utility.Globals;
 import com.hostelbasera.utility.Toaster;
 import com.loopj.android.http.RequestParams;
+import com.orhanobut.logger.Logger;
+import com.paytm.pgsdk.PaytmOrder;
+import com.paytm.pgsdk.PaytmPGService;
+import com.paytm.pgsdk.PaytmPaymentTransactionCallback;
 
 import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import butterknife.BindView;
@@ -218,7 +224,9 @@ public class AddHostelPGActivity extends BaseActivity implements PermissionListe
                 .setRationaleMessage(R.string.rationale_message)
                 .setDeniedMessage(R.string.denied_message)
                 .setGotoSettingButtonText(R.string.ok)
-                .setPermissions(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA, Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)
+                .setPermissions(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE,
+                        Manifest.permission.CAMERA, Manifest.permission.ACCESS_FINE_LOCATION,
+                        Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.READ_SMS, Manifest.permission.RECEIVE_SMS)
                 .check();
     }
 
@@ -561,7 +569,7 @@ public class AddHostelPGActivity extends BaseActivity implements PermissionListe
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == PLACE_PICKER_REQUEST) {
-                Place place = PlacePicker.getPlace(this, data);
+            Place place = PlacePicker.getPlace(this, data);
                 /*
                 StringBuilder stBuilder = new StringBuilder();
                 String placename = String.format("%s", place.getName());
@@ -579,11 +587,11 @@ public class AddHostelPGActivity extends BaseActivity implements PermissionListe
                 stBuilder.append("\n");
                 stBuilder.append("Address: ");
                 stBuilder.append(address);*/
-                latitude = place.getLatLng().latitude;
-                longitude = place.getLatLng().longitude;
+            latitude = place.getLatLng().latitude;
+            longitude = place.getLatLng().longitude;
 
-                edtAddress.setText(String.format("%s", place.getAddress()));
-            }
+            edtAddress.setText(String.format("%s", place.getAddress()));
+        }
 
 
         if (requestCode == FilePickerConst.REQUEST_CODE_PHOTO) {
@@ -1082,11 +1090,17 @@ TODO :
                                     if (checkSellerPaymentDataModel.priceBlockDetails.size() > 0) {
                                         priceBlockDialog(checkSellerPaymentDataModel.priceBlockDetails);
                                     } else {
-                                        startActivityForResult(new Intent(AddHostelPGActivity.this, PayMentGateWay.class)
-                                                .putExtra(Constant.Full_name, edtName.getText().toString())
-                                                .putExtra(Constant.Phone_number, arrContact.get(0))
-                                                .putExtra(Constant.Email, edtEmail.getText().toString())
-                                                .putExtra(Constant.Price, "" + checkSellerPaymentDataModel.payment_value), PAYMENT_CODE);
+                                        if (Globals.isNetworkAvailable(AddHostelPGActivity.this)) {
+                                            doGenerateChecksum("" + checkSellerPaymentDataModel.payment_value);
+                                        } else {
+                                            Toaster.shortToast(getString(R.string.no_internet_msg));
+                                        }
+
+//                                        startActivityForResult(new Intent(AddHostelPGActivity.this, PayMentGateWay.class)
+//                                                .putExtra(Constant.Full_name, edtName.getText().toString())
+//                                                .putExtra(Constant.Phone_number, arrContact.get(0))
+//                                                .putExtra(Constant.Email, edtEmail.getText().toString())
+//                                                .putExtra(Constant.Price, "" + checkSellerPaymentDataModel.payment_value), PAYMENT_CODE);
                                     }
                                 } else {
                                     if (arrAddImageAttachment.size() > 0) {
@@ -1143,12 +1157,19 @@ TODO :
         adapterPricing.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                startActivityForResult(new Intent(AddHostelPGActivity.this, PayMentGateWay.class)
-                        .putExtra(Constant.Full_name, edtName.getText().toString())
-                        .putExtra(Constant.Phone_number, arrContact.get(0))
-                        .putExtra(Constant.Email, edtEmail.getText().toString())
-                        .putExtra(Constant.Price, "" + arrPriceBlockDetails.get(position).price), PAYMENT_CODE);
-                alertDialog.dismiss();
+                if (Globals.isNetworkAvailable(AddHostelPGActivity.this)) {
+                    alertDialog.dismiss();
+                    doGenerateChecksum("" + arrPriceBlockDetails.get(position).price);
+                } else {
+                    Toaster.shortToast(getString(R.string.no_internet_msg));
+                }
+
+//                startActivityForResult(new Intent(AddHostelPGActivity.this, PayMentGateWay.class)
+//                        .putExtra(Constant.Full_name, edtName.getText().toString())
+//                        .putExtra(Constant.Phone_number, arrContact.get(0))
+//                        .putExtra(Constant.Email, edtEmail.getText().toString())
+//                        .putExtra(Constant.Price, "" + arrPriceBlockDetails.get(position).price), PAYMENT_CODE);
+
             }
         });
         alertDialog.show();
@@ -1484,6 +1505,132 @@ TODO :
         super.onDestroy();
         if (easyWayLocation != null)
             easyWayLocation.endUpdates();
+    }
+
+
+    String OrderId = "", CustId = "";
+
+    private void doGenerateChecksum(String amount) {
+        OrderId = "Order" + Globals.randomNumber();
+        CustId = "Cust" + Globals.randomNumber();
+        JSONObject postData = HttpRequestHandler.getInstance().doGenerateChecksumParam(OrderId, CustId, amount);
+        if (postData != null) {
+
+            new PostRequest(this, getString(R.string.main_url), getString(R.string.generateChecksum), postData, true, new PostRequest.OnPostServiceCallListener() {
+                @Override
+                public void onSucceedToPostCall(JSONObject response) {
+                    CheckSumModel checkSumModel = new Gson().fromJson(response.toString(), CheckSumModel.class);
+                    if (Globals.isNetworkAvailable(AddHostelPGActivity.this)) {
+                        onStartTransaction(checkSumModel.CHECKSUMHASH, amount);
+                    } else {
+                        Toaster.shortToast(getString(R.string.no_internet_msg));
+                    }
+
+                }
+
+                @Override
+                public void onFailedToPostCall(int statusCode, String msg) {
+                    Toaster.shortToast(msg);
+                }
+            }).execute();
+        }
+        Globals.hideKeyboard(this);
+    }
+
+
+    public void onStartTransaction(String CHECKSUMHASH, String Amount) {
+        PaytmPGService Service = PaytmPGService.getProductionService();
+
+        HashMap<String, String> paramMap = new HashMap<>();
+        paramMap.put(Constant.MID, Constant.MID_Value);
+        paramMap.put(Constant.ORDER_ID, OrderId);
+        paramMap.put(Constant.CUST_ID, CustId);
+        paramMap.put(Constant.INDUSTRY_TYPE_ID, Constant.INDUSTRY_TYPE_ID_Value);
+        paramMap.put(Constant.CHANNEL_ID, Constant.CHANNEL_ID_Value);
+        paramMap.put(Constant.TXN_AMOUNT, Amount);
+        paramMap.put(Constant.WEBSITE, Constant.WEBSITE_Value);
+        paramMap.put(Constant.CALLBACK_URL, Constant.CALLBACK_URL_Value + OrderId);
+        paramMap.put(Constant.CHECKSUMHASH, CHECKSUMHASH);
+
+        PaytmOrder Order = new PaytmOrder(paramMap);
+
+        Service.initialize(Order, null);
+
+        Service.startPaymentTransaction(this, true, true,
+                new PaytmPaymentTransactionCallback() {
+                    @Override
+                    public void someUIErrorOccurred(String inErrorMessage) {
+                        Toaster.longToast(inErrorMessage);
+                        // Some UI Error Occurred in Payment Gateway Activity.
+                        // // This may be due to initialization of views in
+                        // Payment Gateway Activity or may be due to //
+                        // initialization of webview. // Error Message details
+                        // the error occurred.
+                    }
+
+
+                    @Override
+                    public void onTransactionResponse(Bundle inResponse) {
+                        Logger.e("LOG", "Payment Transaction is  " + inResponse);
+
+                        if (inResponse.containsKey("STATUS") && inResponse.getString("STATUS").equals("TXN_SUCCESS")) {
+                            Toaster.shortToast("Payment Transaction is successful");
+                            paymentId = inResponse.containsKey("BANKTXNID") ? inResponse.getString("BANKTXNID") : "";
+
+                            if (arrAddImageAttachment.size() > 0) {
+                                setProgressDialog(arrAddImageAttachment.size());
+                                for (int i = 0; i < arrAddImageAttachment.size(); i++) {
+                                    doUploadFile(new File(arrAddImageAttachment.get(i).FilePath), i);
+                                }
+                            } else if (arrAddMenuAttachment.size() > 0) {
+                                setProgressDialog(arrAddMenuAttachment.size());
+                                for (int i = 0; i < arrAddMenuAttachment.size(); i++) {
+                                    doUploadMenuFile(new File(arrAddMenuAttachment.get(i).FilePath), i);
+                                }
+                            } else {
+                                doAddHostelPG();
+                            }
+                        } else {
+                            Toaster.longToast("Payment Transaction response (" + (inResponse.containsKey("RESPMSG") ? inResponse.getString("RESPMSG") : "Failure") + ")");
+                        }
+                    }
+
+                    @Override
+                    public void networkNotAvailable() { // If network is not
+                        Toaster.longToast(getString(R.string.no_internet_msg));
+                    }
+
+                    @Override
+                    public void clientAuthenticationFailed(String inErrorMessage) {
+                        Toaster.longToast(inErrorMessage);
+                        // This method gets called if client authentication
+                        // failed. // Failure may be due to following reasons //
+                        // 1. Server error or downtime. // 2. Server unable to
+                        // generate checksum or checksum response is not in
+                        // proper format. // 3. Server failed to authenticate
+                        // that client. That is value of payt_STATUS is 2. //
+                        // Error Message describes the reason for failure.
+
+                    }
+
+                    @Override
+                    public void onErrorLoadingWebPage(int iniErrorCode, String inErrorMessage, String inFailingUrl) {
+                        Toaster.longToast(inErrorMessage);
+                    }
+
+                    // had to be added: NOTE
+                    @Override
+                    public void onBackPressedCancelTransaction() {
+                        Toaster.longToast("Back pressed. Transaction cancelled");
+                    }
+
+                    @Override
+                    public void onTransactionCancel(String inErrorMessage, Bundle inResponse) {
+                        Toaster.longToast("Payment Transaction Failed " + inErrorMessage);
+                        Logger.e("LOG", "Payment Transaction Failed " + inErrorMessage);
+                    }
+
+                });
     }
 }
 
