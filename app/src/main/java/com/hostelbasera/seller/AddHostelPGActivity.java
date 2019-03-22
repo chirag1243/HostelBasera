@@ -1068,7 +1068,6 @@ TODO :
             doCheckSellerPaymentData();
         } else {
             Toaster.shortToast(R.string.no_internet_msg);
-            return;
         }
     }
 

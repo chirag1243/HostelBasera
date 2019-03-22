@@ -335,7 +335,7 @@ public class LoginActivity extends BaseActivity {
         doLogin();
     }
 
-    String version = "1.0.8";
+    String version = "1.0.9";
 
     @SuppressLint("HardwareIds")
     public void doLogin() {

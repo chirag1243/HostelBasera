@@ -24,6 +24,7 @@ import com.google.gson.Gson;
 import com.hostelbasera.R;
 import com.hostelbasera.apis.HttpRequestHandler;
 import com.hostelbasera.apis.PostRequest;
+import com.hostelbasera.model.CheckSumModel;
 import com.hostelbasera.model.GetPropertyDetModel;
 import com.hostelbasera.model.SellerPropertyModel;
 import com.hostelbasera.model.UserDetailModel;
@@ -31,12 +32,18 @@ import com.hostelbasera.utility.Constant;
 import com.hostelbasera.utility.Globals;
 import com.hostelbasera.utility.PaginationProgressBarAdapter;
 import com.hostelbasera.utility.Toaster;
+import com.orhanobut.logger.Logger;
 import com.paginate.Paginate;
+import com.paytm.pgsdk.PaytmOrder;
+import com.paytm.pgsdk.PaytmPGService;
+import com.paytm.pgsdk.PaytmPaymentTransactionCallback;
 import com.victor.loading.rotate.RotateLoading;
 
 import org.json.JSONObject;
 
+import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -210,7 +217,7 @@ public class FragmentSellerHome extends Fragment implements Paginate.Callbacks, 
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 //                ToDO : Edit Option pending
 //                startActivity(new Intent(getActivity(), AddHostelPGActivity.class)
-//                        .putExtra(Constant.Property_id, arrPropertyDetailArrayList.get(position).propertyId)
+//                        .putExtra(Constant.Property_id, arrPropertyDetailArrayList.get(position).property_id)
 //                        .putExtra(Constant.Property_name, arrPropertyDetailArrayList.get(position).property_name));
             }
         });
@@ -296,11 +303,16 @@ public class FragmentSellerHome extends Fragment implements Paginate.Callbacks, 
         renewPrice = renew_price;
         propertyId = property_id;
         sellerId = seller_id;
-        startActivityForResult(new Intent(getContext(), PayMentGateWay.class)
-                .putExtra(Constant.Full_name, loginSellerDetail.name)
-                .putExtra(Constant.Phone_number, loginSellerDetail.contact_no)
-                .putExtra(Constant.Email, loginSellerDetail.email)
-                .putExtra(Constant.Price, renew_price), PAYMENT_CODE);
+//        startActivityForResult(new Intent(getContext(), PayMentGateWay.class)
+//                .putExtra(Constant.Full_name, loginSellerDetail.name)
+//                .putExtra(Constant.Phone_number, loginSellerDetail.contact_no)
+//                .putExtra(Constant.Email, loginSellerDetail.email)
+//                .putExtra(Constant.Price, renew_price), PAYMENT_CODE);
+        if (Globals.isNetworkAvailable(getActivity())) {
+            doGenerateChecksum("" + renew_price);
+        } else {
+            Toaster.shortToast(getString(R.string.no_internet_msg));
+        }
     }
 
     @Override
@@ -341,4 +353,117 @@ public class FragmentSellerHome extends Fragment implements Paginate.Callbacks, 
                     }).execute();
         }
     }
+
+    String OrderId = "", CustId = "";
+
+    private void doGenerateChecksum(String amount) {
+        OrderId = "Order" + Globals.randomNumber();
+        CustId = "Cust" + Globals.randomNumber();
+        JSONObject postData = HttpRequestHandler.getInstance().doGenerateChecksumParam(OrderId, CustId, amount);
+        if (postData != null) {
+
+            new PostRequest(getActivity(), getString(R.string.main_url), getString(R.string.generateChecksum), postData, true, new PostRequest.OnPostServiceCallListener() {
+                @Override
+                public void onSucceedToPostCall(JSONObject response) {
+                    CheckSumModel checkSumModel = new Gson().fromJson(response.toString(), CheckSumModel.class);
+                    if (Globals.isNetworkAvailable(getActivity())) {
+                        onStartTransaction(checkSumModel.CHECKSUMHASH, amount);
+                    } else {
+                        Toaster.shortToast(getString(R.string.no_internet_msg));
+                    }
+
+                }
+
+                @Override
+                public void onFailedToPostCall(int statusCode, String msg) {
+                    Toaster.shortToast(msg);
+                }
+            }).execute();
+        }
+        Globals.hideKeyboard(getActivity());
+    }
+
+
+    public void onStartTransaction(String CHECKSUMHASH, String Amount) {
+        PaytmPGService Service = PaytmPGService.getProductionService();
+
+        HashMap<String, String> paramMap = new HashMap<>();
+        paramMap.put(Constant.MID, Constant.MID_Value);
+        paramMap.put(Constant.ORDER_ID, OrderId);
+        paramMap.put(Constant.CUST_ID, CustId);
+        paramMap.put(Constant.INDUSTRY_TYPE_ID, Constant.INDUSTRY_TYPE_ID_Value);
+        paramMap.put(Constant.CHANNEL_ID, Constant.CHANNEL_ID_Value);
+        paramMap.put(Constant.TXN_AMOUNT, Amount);
+        paramMap.put(Constant.WEBSITE, Constant.WEBSITE_Value);
+        paramMap.put(Constant.CALLBACK_URL, Constant.CALLBACK_URL_Value + OrderId);
+        paramMap.put(Constant.CHECKSUMHASH, CHECKSUMHASH);
+
+        PaytmOrder Order = new PaytmOrder(paramMap);
+
+        Service.initialize(Order, null);
+
+        Service.startPaymentTransaction(getActivity(), true, true,
+                new PaytmPaymentTransactionCallback() {
+                    @Override
+                    public void someUIErrorOccurred(String inErrorMessage) {
+                        Toaster.longToast(inErrorMessage);
+                        // Some UI Error Occurred in Payment Gateway Activity.
+                        // // This may be due to initialization of views in
+                        // Payment Gateway Activity or may be due to //
+                        // initialization of webview. // Error Message details
+                        // the error occurred.
+                    }
+
+
+                    @Override
+                    public void onTransactionResponse(Bundle inResponse) {
+                        Logger.e("LOG", "Payment Transaction is  " + inResponse);
+
+                        if (inResponse.containsKey("STATUS") && inResponse.getString("STATUS").equals("TXN_SUCCESS")) {
+                            Toaster.shortToast("Payment Transaction is successful");
+                            doRenewProperty(inResponse.containsKey("BANKTXNID") ? inResponse.getString("BANKTXNID") : "");
+                        } else {
+                            Toaster.longToast("Payment Transaction response (" + (inResponse.containsKey("RESPMSG") ? inResponse.getString("RESPMSG") : "Failure") + ")");
+                        }
+                    }
+
+                    @Override
+                    public void networkNotAvailable() { // If network is not
+                        Toaster.longToast(getString(R.string.no_internet_msg));
+                    }
+
+                    @Override
+                    public void clientAuthenticationFailed(String inErrorMessage) {
+                        Toaster.longToast(inErrorMessage);
+                        // This method gets called if client authentication
+                        // failed. // Failure may be due to following reasons //
+                        // 1. Server error or downtime. // 2. Server unable to
+                        // generate checksum or checksum response is not in
+                        // proper format. // 3. Server failed to authenticate
+                        // that client. That is value of payt_STATUS is 2. //
+                        // Error Message describes the reason for failure.
+
+                    }
+
+                    @Override
+                    public void onErrorLoadingWebPage(int iniErrorCode, String inErrorMessage, String inFailingUrl) {
+                        Toaster.longToast(inErrorMessage);
+                    }
+
+                    // had to be added: NOTE
+                    @Override
+                    public void onBackPressedCancelTransaction() {
+                        Toaster.longToast("Back pressed. Transaction cancelled");
+                    }
+
+                    @Override
+                    public void onTransactionCancel(String inErrorMessage, Bundle inResponse) {
+                        Toaster.longToast("Payment Transaction Failed " + inErrorMessage);
+                        Logger.e("LOG", "Payment Transaction Failed " + inErrorMessage);
+                    }
+
+                });
+    }
 }
+
+
