@@ -1,7 +1,6 @@
 package com.hostelbasera.main;
 
 import android.Manifest;
-import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.PorterDuff;
@@ -44,7 +43,6 @@ import com.hostelbasera.apis.HttpRequestHandler;
 import com.hostelbasera.apis.PostRequest;
 import com.hostelbasera.model.PropertyDetailModel;
 import com.hostelbasera.model.UserDetailModel;
-import com.hostelbasera.seller.FragmentSellerHome;
 import com.hostelbasera.utility.BaseActivity;
 import com.hostelbasera.utility.Globals;
 import com.hostelbasera.utility.Toaster;
@@ -470,7 +468,7 @@ public class DashboardActivity extends BaseActivity implements NavigationView.On
 
     public void doLogout() {
         globals.setUserDetails(null);
-        globals.setUserId(0);
+        globals.setNewUserId(0);
         globals.clearAllSharedPreferences();
         startActivity(new Intent(DashboardActivity.this, LoginActivity.class));
         finish();

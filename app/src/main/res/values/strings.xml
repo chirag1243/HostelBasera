@@ -13,8 +13,8 @@
     <string name="msg_server_error">The server might be down, please try again later.</string>
     <string name="error_msg_connection_timeout">The request timed out please try again.</string>
 
-    <string name="rationale_message">we need permission for <b>Attachment, Address</b> &amp; <b>OTP</b> </string>
-    <string name="denied_message">If you reject permission, you can not use this attachment,address &amp; OTP feature.</string>
+    <string name="rationale_message">we need permission for <b>Attachment &amp; Address</b> <!--&amp; <b>OTP</b>--> </string>
+    <string name="denied_message">If you reject permission, you can not use this attachment &amp; address <!--&amp; OTP--> feature.</string>
     <string name="back_again">Please click BACK again to exit</string>
     <string name="ok">OK</string>
 
@@ -58,6 +58,7 @@
     <string name="type_of_property">Type of Property</string>
     <string name="size_of_property">Size of Property</string>
     <string name="hostel_for">Hostel for</string>
+    <string name="pg_for">PG for</string>
     <string name="amenities">Amenities</string>
     <string name="price">Price</string>
     <string name="book_now">Book Now</string>
@@ -131,4 +132,5 @@
 
     <string name="contact_us">Contact Us</string>
     <string name="renew">Renew</string>
+    <string name="powered_by_cg_3d_world">Powered by : CG 3D World</string>
 </resources>

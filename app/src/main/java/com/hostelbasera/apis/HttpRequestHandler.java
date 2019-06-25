@@ -260,7 +260,7 @@ public class HttpRequestHandler {
             params = setDefaultParameters();
 
             jsonObject.put(Constant.Property_id, property_id);
-            jsonObject.put(Constant.User_id, globals.getUserId());
+            jsonObject.put(Constant.User_id, globals.getNewUserId());
 
             params.put(Constant.GetPropertyData, jsonObject);
         } catch (Exception e) {
@@ -276,7 +276,7 @@ public class HttpRequestHandler {
             params = setDefaultParameters();
 
             jsonObject.put(Constant.Property_id, property_id);
-            jsonObject.put(Constant.User_id, globals.getUserId());
+            jsonObject.put(Constant.User_id, globals.getNewUserId());
             jsonObject.put(Constant.Is_remove, is_remove);
 
             params.put(Constant.AddBookmarkData, jsonObject);
@@ -307,7 +307,7 @@ public class HttpRequestHandler {
             jsonObject.put(Constant.Property_id, property_id);
             jsonObject.put(Constant.Review, review);
             jsonObject.put(Constant.Rating, rating);
-            jsonObject.put(Constant.User_id, globals.getUserId());
+            jsonObject.put(Constant.User_id, globals.getNewUserId());
 
             params.put(Constant.AddReviewData, jsonObject);
         } catch (Exception e) {
@@ -324,7 +324,7 @@ public class HttpRequestHandler {
 
             jsonObject.put(Constant.Property_id, property_id);
             jsonObject.put(Constant.Description, description);
-            jsonObject.put(Constant.User_id, globals.getUserId());
+            jsonObject.put(Constant.User_id, globals.getNewUserId());
 
             params.put(Constant.AddInquiryData, jsonObject);
         } catch (Exception e) {
@@ -355,7 +355,7 @@ public class HttpRequestHandler {
             params = setDefaultParameters();
             jsonObject.put(Constant.Property_id, property_id);
             jsonObject.put(Constant.Room_id, room_id);
-            jsonObject.put(Constant.User_id, globals.getUserId());
+            jsonObject.put(Constant.User_id, globals.getNewUserId());
             params.put(Constant.AddOrderData, jsonObject);
         } catch (Exception e) {
             e.printStackTrace();
@@ -422,7 +422,7 @@ public class HttpRequestHandler {
         JSONObject params = new JSONObject();
         try {
             params = setDefaultParameters();
-            params.put(Constant.Seller_id, globals.getUserId());
+            params.put(Constant.Seller_id, globals.getNewUserId());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -506,7 +506,7 @@ public class HttpRequestHandler {
                 params.put(Constant.Property_id, "" + property_id);
             }
             jsonObject.put(Constant.Type_id, type_id);
-            jsonObject.put(Constant.Seller_id, globals.getUserId());
+            jsonObject.put(Constant.Seller_id, globals.getNewUserId());
             jsonObject.put(Constant.Property_name, property_name);
 
             jsonObject.put(Constant.Property_category_id, property_category_id);
@@ -584,7 +584,7 @@ public class HttpRequestHandler {
         JSONObject params = new JSONObject();
         try {
             params = setDefaultParameters();
-            params.put(Constant.Seller_id, globals.getUserId());
+            params.put(Constant.Seller_id, globals.getNewUserId());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -754,7 +754,7 @@ public class HttpRequestHandler {
             //TODO : Change as per required
             mParams.put(Constant.Token, Constant.Token_Value);//globals.getUserDetails().loginUserDetail.token);
             mParams.put(Constant.DeviceType, Constant.AndroidDeviceType);
-            mParams.put(Constant.User_id, globals.getUserId());
+            mParams.put(Constant.User_id, globals.getNewUserId());
         } catch (JSONException e) {
             e.printStackTrace();
         }

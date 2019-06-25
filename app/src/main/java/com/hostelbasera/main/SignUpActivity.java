@@ -124,7 +124,7 @@ public class SignUpActivity extends BaseActivity {
 
     @SuppressLint("HardwareIds")
     public void doRegisterUser() {
-        String version = "1.0.9";
+        String version = "1.1.1";
         try {
             PackageInfo pInfo = this.getPackageManager().getPackageInfo(getPackageName(), 0);
             version = pInfo.versionName;
@@ -144,10 +144,10 @@ public class SignUpActivity extends BaseActivity {
                             if (userDetailModel.status == 0) {
                                 if (isSeller) {
                                     userDetailModel.loginSellerDetail.password = edtPassword.getText().toString();
-                                    globals.setUserId(userDetailModel.loginSellerDetail.seller_reg_Id);
+                                    globals.setNewUserId(userDetailModel.loginSellerDetail.seller_reg_Id);
                                 } else {
                                     userDetailModel.loginUserDetail.password = edtPassword.getText().toString();
-                                    globals.setUserId(userDetailModel.loginUserDetail.user_reg_Id);
+                                    globals.setNewUserId(userDetailModel.loginUserDetail.user_reg_Id);
                                 }
                                 globals.setIsSeller(isSeller);
                                 globals.setUserDetails(userDetailModel);

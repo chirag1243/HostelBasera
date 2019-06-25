@@ -29,6 +29,8 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.hostelbasera.R;
 import com.hostelbasera.model.UserDetailModel;
+import com.orhanobut.logger.AndroidLogAdapter;
+import com.orhanobut.logger.Logger;
 
 import io.fabric.sdk.android.Fabric;
 import java.io.BufferedReader;
@@ -52,6 +54,7 @@ public class Globals extends CoreApp {
     public void onCreate() {
         super.onCreate();
         Fabric.with(this, new Crashlytics());
+        Logger.addLogAdapter(new AndroidLogAdapter());
         context = getApplicationContext();
     }
 
@@ -312,12 +315,12 @@ public class Globals extends CoreApp {
         }.getType());
     }
 
-    public void setUserId(int userId) {
+    public void setNewUserId(int userId) {
         getEditor().putInt(Constant.User_id, userId);
         getEditor().commit();
     }
 
-    public int getUserId() {
+    public int getNewUserId() {
         return getSharedPref().getInt(Constant.User_id, 0);
     }
 

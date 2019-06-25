@@ -77,7 +77,7 @@
             android:gravity="center"
             android:padding="@dimen/dim_5dp"
             android:background="@drawable/rounded_price_bg"
-            android:text="Powered by : CG 3D World" />
+            android:text="@string/powered_by_cg_3d_world" />
 
     </LinearLayout>
 </LinearLayout>

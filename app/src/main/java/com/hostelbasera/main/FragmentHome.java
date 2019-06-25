@@ -254,7 +254,7 @@ public class FragmentHome extends Fragment implements Paginate.Callbacks, SwipeR
     }
 
     public void getPropertyListData(boolean showProgress) {
-        JSONObject postData = HttpRequestHandler.getInstance().getPropertyListDataParam(pageNo, new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>(),new ArrayList<>());
+        JSONObject postData = HttpRequestHandler.getInstance().getPropertyListDataParam(pageNo, new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
 
         if (postData != null) {
             if (!swipeRefreshLayout.isRefreshing() && showProgress)
@@ -272,9 +272,13 @@ public class FragmentHome extends Fragment implements Paginate.Callbacks, SwipeR
                     if (getPropertyDetailModel.propertyDetail != null && !getPropertyDetailModel.propertyDetail.isEmpty()) {
                         if (swipeRefreshLayout.isRefreshing()) {
                             stopRefreshing();
-                            rvHostel.setAdapter(null);
-                            arrPropertyDetailArrayList.clear();
-                            adapterHomePropertyDetail.notifyDataSetChanged();
+                            try {
+                                rvHostel.setAdapter(null);
+                                arrPropertyDetailArrayList.clear();
+                                adapterHomePropertyDetail.notifyDataSetChanged();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
                         }
                         setupList(getPropertyDetailModel.propertyDetail);
                     } else {

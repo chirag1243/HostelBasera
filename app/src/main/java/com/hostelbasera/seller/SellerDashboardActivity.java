@@ -29,7 +29,6 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -44,22 +43,15 @@ import com.hostelbasera.R;
 import com.hostelbasera.apis.HttpRequestHandler;
 import com.hostelbasera.apis.PostRequest;
 import com.hostelbasera.main.LoginActivity;
-import com.hostelbasera.model.CheckSumModel;
 import com.hostelbasera.model.PropertyDetailModel;
 import com.hostelbasera.model.UserDetailModel;
 import com.hostelbasera.utility.BaseActivity;
-import com.hostelbasera.utility.Constant;
 import com.hostelbasera.utility.Globals;
 import com.hostelbasera.utility.Toaster;
-import com.orhanobut.logger.Logger;
-import com.paytm.pgsdk.PaytmOrder;
-import com.paytm.pgsdk.PaytmPGService;
-import com.paytm.pgsdk.PaytmPaymentTransactionCallback;
 
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -421,7 +413,7 @@ public class SellerDashboardActivity extends BaseActivity implements NavigationV
 
     public void doLogout() {
         globals.setUserDetails(null);
-        globals.setUserId(0);
+        globals.setNewUserId(0);
         globals.clearAllSharedPreferences();
         startActivity(new Intent(SellerDashboardActivity.this, LoginActivity.class));
         finish();

@@ -62,7 +62,7 @@ public class PropertyDetailModel implements Serializable {
         @SerializedName("property_size_id")
         public String property_size_id;
         @SerializedName("type_id")
-        public String type_id;
+        public int type_id;
         @SerializedName("property_type_id")
         public String property_type_id;
         @SerializedName("property_category_id")

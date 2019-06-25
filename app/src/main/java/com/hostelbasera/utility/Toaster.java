@@ -1,13 +1,19 @@
 package com.hostelbasera.utility;
 
+import android.annotation.SuppressLint;
+import android.graphics.PorterDuff;
 import android.graphics.Rect;
 import android.support.annotation.IntDef;
 import android.support.annotation.StringRes;
+import android.support.v4.content.ContextCompat;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import com.hostelbasera.R;
 
 /**
  * Created by Chirag.
@@ -58,11 +64,23 @@ public class Toaster {
         show(text, Toast.LENGTH_LONG);
     }
 
+    @SuppressLint("ShowToast")
     private static Toast makeToast(String text, @ToastLength int length) {
-        return Toast.makeText(CoreApp.getInstance(), text, length);
+        Toast toast = Toast.makeText(CoreApp.getInstance(), text, Toast.LENGTH_SHORT);
+        View view = toast.getView();
+
+        //Gets the actual oval background of the Toast then sets the colour filter
+        view.getBackground().setColorFilter(ContextCompat.getColor(CoreApp.getInstance(), R.color.colorPrimary), PorterDuff.Mode.SRC_IN);
+
+        //Gets the TextView from the Toast so it can be editted
+        TextView textView = view.findViewById(android.R.id.message);
+        textView.setTextColor(ContextCompat.getColor(CoreApp.getInstance(), R.color.white));
+        return toast;//Toast.makeText(CoreApp.getInstance(), text, length);
     }
 
     private static void show(String text, @ToastLength int length) {
         makeToast(text, length).show();
     }
+
+
 }

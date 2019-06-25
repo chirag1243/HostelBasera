@@ -6,9 +6,9 @@ import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Typeface;
+import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
-import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
@@ -22,8 +22,6 @@ import com.hostelbasera.model.UserDetailModel;
 import com.hostelbasera.seller.SellerDashboardActivity;
 import com.hostelbasera.utility.Globals;
 import com.hostelbasera.utility.Toaster;
-import com.orhanobut.logger.AndroidLogAdapter;
-import com.orhanobut.logger.Logger;
 import com.victor.loading.rotate.RotateLoading;
 
 import org.json.JSONObject;
@@ -55,7 +53,6 @@ public class SplashActivity extends Activity {
         globals = ((Globals) getApplicationContext());
         ButterKnife.bind(this);
         tvPoweredBy.setTypeface(tvPoweredBy.getTypeface(), Typeface.BOLD);
-        Logger.addLogAdapter(new AndroidLogAdapter());
         isSeller = globals.getIsSeller();
         userModel = globals.getUserDetails();
         init();
@@ -79,7 +76,7 @@ public class SplashActivity extends Activity {
 
     @SuppressLint("HardwareIds")
     public void doLogin() {
-        String version = "1.0.9";
+        String version = "1.1.1";
         try {
             PackageInfo pInfo = this.getPackageManager().getPackageInfo(getPackageName(), 0);
             version = pInfo.versionName;
@@ -99,10 +96,10 @@ public class SplashActivity extends Activity {
                     if (userDetailModel.status == 0) {
                         if (isSeller) {
                             userDetailModel.loginSellerDetail.password = userModel.loginSellerDetail.password;
-                            globals.setUserId(userDetailModel.loginSellerDetail.seller_reg_Id);
+                            globals.setNewUserId(userDetailModel.loginSellerDetail.seller_reg_Id);
                         } else {
                             userDetailModel.loginUserDetail.password = userModel.loginUserDetail.password;
-                            globals.setUserId(userDetailModel.loginUserDetail.user_reg_Id);
+                            globals.setNewUserId(userDetailModel.loginUserDetail.user_reg_Id);
                         }
                         globals.setIsSeller(isSeller);
                         globals.setUserDetails(userDetailModel);

@@ -4,15 +4,12 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.content.pm.Signature;
 import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.AppCompatEditText;
-import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -36,21 +33,13 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.common.api.Status;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.gson.Gson;
 import com.hostelbasera.R;
 import com.hostelbasera.apis.HttpRequestHandler;
 import com.hostelbasera.apis.PostRequest;
-import com.hostelbasera.model.PropertyDetailModel;
-import com.hostelbasera.model.SellerDropdownModel;
 import com.hostelbasera.model.UserDetailModel;
 import com.hostelbasera.seller.SellerDashboardActivity;
 import com.hostelbasera.utility.BaseActivity;
@@ -61,10 +50,7 @@ import com.hostelbasera.utility.Toaster;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -234,10 +220,10 @@ public class LoginActivity extends BaseActivity {
                             if (userDetailModel.status == 0 && userDetailModel.is_exiting == 1) {
                                 if (isSeller) {
 //                                    userDetailModel.loginSellerDetail.password = edtPassword.getText().toString();
-                                    globals.setUserId(userDetailModel.loginSellerDetail.seller_reg_Id);
+                                    globals.setNewUserId(userDetailModel.loginSellerDetail.seller_reg_Id);
                                 } else {
 //                                    userDetailModel.loginUserDetail.password = edtPassword.getText().toString();
-                                    globals.setUserId(userDetailModel.loginUserDetail.user_reg_Id);
+                                    globals.setNewUserId(userDetailModel.loginUserDetail.user_reg_Id);
                                 }
 
                                 globals.setIsSeller(isSeller);
@@ -335,7 +321,7 @@ public class LoginActivity extends BaseActivity {
         doLogin();
     }
 
-    String version = "1.0.9";
+    String version = "1.1.1";
 
     @SuppressLint("HardwareIds")
     public void doLogin() {
@@ -359,10 +345,10 @@ public class LoginActivity extends BaseActivity {
                             if (userDetailModel.status == 0) {
                                 if (isSeller) {
                                     userDetailModel.loginSellerDetail.password = edtPassword.getText().toString();
-                                    globals.setUserId(userDetailModel.loginSellerDetail.seller_reg_Id);
+                                    globals.setNewUserId(userDetailModel.loginSellerDetail.seller_reg_Id);
                                 } else {
                                     userDetailModel.loginUserDetail.password = edtPassword.getText().toString();
-                                    globals.setUserId(userDetailModel.loginUserDetail.user_reg_Id);
+                                    globals.setNewUserId(userDetailModel.loginUserDetail.user_reg_Id);
                                 }
                                 globals.setIsSeller(isSeller);
                                 globals.setUserDetails(userDetailModel);

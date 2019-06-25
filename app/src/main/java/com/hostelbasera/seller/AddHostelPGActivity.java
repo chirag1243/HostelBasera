@@ -8,6 +8,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.graphics.Typeface;
 import android.location.Address;
 import android.location.Geocoder;
@@ -19,6 +20,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.CardView;
@@ -225,9 +227,9 @@ public class AddHostelPGActivity extends BaseActivity implements PermissionListe
                 .setDeniedMessage(R.string.denied_message)
                 .setGotoSettingButtonText(R.string.ok)
                 .setPermissions(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE,
-                        Manifest.permission.CAMERA, Manifest.permission.ACCESS_FINE_LOCATION,
-                        Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.READ_SMS, Manifest.permission.RECEIVE_SMS)
+                        Manifest.permission.CAMERA, Manifest.permission.ACCESS_FINE_LOCATION)
                 .check();
+        //                        Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.READ_SMS, Manifest.permission.RECEIVE_SMS)
     }
 
     double lng = 0;
@@ -563,14 +565,7 @@ public class AddHostelPGActivity extends BaseActivity implements PermissionListe
         }
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (requestCode == PLACE_PICKER_REQUEST) {
-            Place place = PlacePicker.getPlace(this, data);
-                /*
+    /*
                 StringBuilder stBuilder = new StringBuilder();
                 String placename = String.format("%s", place.getName());
                 String latitude = String.valueOf(place.getLatLng().latitude);
@@ -587,12 +582,24 @@ public class AddHostelPGActivity extends BaseActivity implements PermissionListe
                 stBuilder.append("\n");
                 stBuilder.append("Address: ");
                 stBuilder.append(address);*/
-            latitude = place.getLatLng().latitude;
-            longitude = place.getLatLng().longitude;
 
-            edtAddress.setText(String.format("%s", place.getAddress()));
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == PLACE_PICKER_REQUEST) {
+            if (data != null) {
+                Place place = PlacePicker.getPlace(this, data);
+
+                latitude = place.getLatLng().latitude;
+                longitude = place.getLatLng().longitude;
+
+                edtAddress.setText(String.format("%s", place.getAddress()));
+            } else {
+                Toaster.shortToast("No Address selected");
+            }
         }
-
 
         if (requestCode == FilePickerConst.REQUEST_CODE_PHOTO) {
             if (resultCode == Activity.RESULT_OK && data != null) {

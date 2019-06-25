@@ -4,21 +4,15 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.content.res.Resources;
-import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.AppCompatTextView;
@@ -28,25 +22,13 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.DisplayMetrics;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.Priority;
-import com.bumptech.glide.load.DataSource;
-import com.bumptech.glide.load.engine.GlideException;
-import com.bumptech.glide.request.RequestListener;
-import com.bumptech.glide.request.RequestOptions;
-import com.bumptech.glide.request.target.Target;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -76,11 +58,8 @@ import com.stepstone.apprating.listener.RatingDialogListener;
 
 import org.json.JSONObject;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
-import java.util.Locale;
 import java.util.Timer;
 
 import butterknife.BindView;
@@ -143,6 +122,9 @@ public class HostelDetailActivity extends BaseActivity implements RatingDialogLi
     CardView cvDescription;
     @BindView(R.id.tv_description)
     TextView tvDescription;
+
+    @BindView(R.id.tv_hostel_pg_for)
+    TextView tvHostelPgFor;
 
     PropertyDetailModel.PropertyDetails propertyDetails;
     Timer timer;
@@ -385,6 +367,7 @@ public class HostelDetailActivity extends BaseActivity implements RatingDialogLi
     }
 
     public void setHostelFor() {
+        tvHostelPgFor.setText(getString(propertyDetails.type_id == 1 ? R.string.hostel_for : R.string.pg_for));
         if (propertyDetails.property_category_id == 1) {
             imgMale.setImageResource(R.drawable.male_select);
             imgFemale.setImageResource(R.drawable.female_de_select);
@@ -526,7 +509,7 @@ public class HostelDetailActivity extends BaseActivity implements RatingDialogLi
         AlertDialog alertDialog = dialogBuilder.create();
 
         tvTitle.setTypeface(tvTitle.getTypeface(), Typeface.BOLD);
-        tvTitle.setText("Enquiry for " + propertyDetails.property_name);
+        tvTitle.setText("Enquiry for " + (propertyDetails.property_name != null ? propertyDetails.property_name : ""));
         tvSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -611,7 +594,7 @@ public class HostelDetailActivity extends BaseActivity implements RatingDialogLi
     }
 
     @Override
-    public void onPositiveButtonClicked(int rating, String review) {
+    public void onPositiveButtonClicked(int rating, @NonNull String review) {
         if (!Globals.isNetworkAvailable(this)) {
             Toaster.shortToast(R.string.no_internet_msg);
             return;
