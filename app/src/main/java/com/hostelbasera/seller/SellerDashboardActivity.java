@@ -387,7 +387,7 @@ public class SellerDashboardActivity extends BaseActivity implements NavigationV
     }
 
     private void doChangePassword(String password) {
-        JSONObject postData = HttpRequestHandler.getInstance().getChangePasswordParam(true, password);
+        JSONObject postData = HttpRequestHandler.getInstance().getChangePasswordParam(true, password,globals.getUserDetails().loginSellerDetail.seller_reg_Id);
         if (postData != null) {
 
             new PostRequest(this, getString(R.string.changePassword), postData, true, new PostRequest.OnPostServiceCallListener() {

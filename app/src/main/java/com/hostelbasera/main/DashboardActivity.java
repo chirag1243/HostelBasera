@@ -442,7 +442,7 @@ public class DashboardActivity extends BaseActivity implements NavigationView.On
     }
 
     private void doChangePassword(String password) {
-        JSONObject postData = HttpRequestHandler.getInstance().getChangePasswordParam(false, password);
+        JSONObject postData = HttpRequestHandler.getInstance().getChangePasswordParam(false, password,globals.getUserDetails().loginUserDetail.user_reg_Id);
         if (postData != null) {
 
             new PostRequest(this, getString(R.string.changePassword), postData, true, new PostRequest.OnPostServiceCallListener() {

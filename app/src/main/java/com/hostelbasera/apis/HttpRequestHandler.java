@@ -649,12 +649,12 @@ public class HttpRequestHandler {
     }
 
 
-    public JSONObject getChangePasswordParam(boolean isSeller, String password) {
+    public JSONObject getChangePasswordParam(boolean isSeller, String password,int user_id) {
         JSONObject params = new JSONObject();
         try {
             params.put(Constant.Token, Constant.Token_Value);
             params.put(Constant.DeviceType, Constant.AndroidDeviceType);
-            params.put(Constant.User_id, isSeller ? globals.getUserDetails().loginSellerDetail.seller_reg_Id : globals.getUserDetails().loginUserDetail.user_reg_Id);
+            params.put(Constant.User_id, user_id);
             params.put(Constant.Is_seller, isSeller);
             params.put(Constant.Password, password);
         } catch (Exception e) {

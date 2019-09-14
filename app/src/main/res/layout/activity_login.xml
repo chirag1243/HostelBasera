@@ -135,7 +135,7 @@
                 android:layout_width="@dimen/dim_30dp"
                 android:layout_height="@dimen/dim_30dp"
                 android:layout_gravity="center"
-                android:src="@drawable/com_facebook_button_icon_blue" />
+                android:src="@drawable/com_facebook_button_icon" />
 
             <ImageView
                 android:id="@+id/sign_in_button"

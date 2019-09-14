@@ -40,6 +40,7 @@ import com.google.gson.Gson;
 import com.hostelbasera.R;
 import com.hostelbasera.apis.HttpRequestHandler;
 import com.hostelbasera.apis.PostRequest;
+import com.hostelbasera.model.CheckMobilenoForOtpModel;
 import com.hostelbasera.model.UserDetailModel;
 import com.hostelbasera.seller.SellerDashboardActivity;
 import com.hostelbasera.utility.BaseActivity;
@@ -321,7 +322,7 @@ public class LoginActivity extends BaseActivity {
         doLogin();
     }
 
-    String version = "1.1.1";
+    String version = "1.1.2";
 
     @SuppressLint("HardwareIds")
     public void doLogin() {
@@ -368,6 +369,7 @@ public class LoginActivity extends BaseActivity {
     }
 
     AlertDialog alertDialog;
+    int user_id;
 
     @OnClick(R.id.tv_forget_password)
     public void onTvForgetPasswordClicked() {
@@ -447,10 +449,11 @@ public class LoginActivity extends BaseActivity {
                     new PostRequest.OnPostServiceCallListener() {
                         @Override
                         public void onSucceedToPostCall(JSONObject response) {
-                            UserDetailModel userDetailModel = new Gson().fromJson(response.toString(), UserDetailModel.class);
-                            /*if (userDetailModel.status == 0) {
+                            CheckMobilenoForOtpModel mobilenoForOtpModel = new Gson().fromJson(response.toString(), CheckMobilenoForOtpModel.class);
+                            /*if (mobilenoForOtpModel.status == 0) {
                             } */
-                            Toaster.shortToast(userDetailModel.message);
+                            Toaster.shortToast(mobilenoForOtpModel.message);
+                            user_id = mobilenoForOtpModel.user_id;
                         }
 
                         @Override
@@ -553,7 +556,7 @@ public class LoginActivity extends BaseActivity {
     }
 
     private void doChangePassword(String mobile_no, String password) {
-        JSONObject postData = HttpRequestHandler.getInstance().getChangePasswordParam(isSeller, password);
+        JSONObject postData = HttpRequestHandler.getInstance().getChangePasswordParam(isSeller, password, user_id);
         if (postData != null) {
 
             new PostRequest(this, getString(R.string.changePassword), postData, true, new PostRequest.OnPostServiceCallListener() {
