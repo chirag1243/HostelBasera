@@ -7,8 +7,6 @@ import com.hostelbasera.utility.BaseActivity;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import kotlin.Unit;
-import kotlin.jvm.functions.Function2;
 
 public class RatingViewActivity extends BaseActivity {
 

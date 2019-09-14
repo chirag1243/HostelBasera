@@ -123,9 +123,9 @@ public class LoginActivity extends BaseActivity {
         btnSignIn.setTypeface(btnSignIn.getTypeface(), Typeface.BOLD);
         signUp.setTypeface(signUp.getTypeface(), Typeface.BOLD);
 
-
+//getString(R.string.default_web_client_id)) TODO : Temp Added fix
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(getString(R.string.default_web_client_id))
+                .requestIdToken("128654680645-kisp1nlcidhaa2rgrr5vq21upufqtjl0.apps.googleusercontent.com")
                 .requestEmail()
                 .requestId()
                 .build();
@@ -322,7 +322,7 @@ public class LoginActivity extends BaseActivity {
         doLogin();
     }
 
-    String version = "1.1.2";
+    String version = "1.1.3";
 
     @SuppressLint("HardwareIds")
     public void doLogin() {
