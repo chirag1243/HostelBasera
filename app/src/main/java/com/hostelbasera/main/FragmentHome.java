@@ -317,6 +317,8 @@ public class FragmentHome extends Fragment implements Paginate.Callbacks, SwipeR
             showNoRecordFound(getString(R.string.no_data_found));
     }
 
+    /*Test*/
+
     private void setAdapter() {
         hideNoRecordFound();
         if (adapterHomePropertyDetail == null) {
