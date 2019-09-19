@@ -61,6 +61,12 @@
         <item name="android:windowBackground">@android:color/white</item>
     </style>
 
+    <style name="ImagePickerTheme" parent="ef_BaseTheme">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
     <style name="customTabLayout" parent="TextAppearance.Design.Tab">
         <item name="tabIndicatorColor">@color/colorAccent</item>
         <item name="textAllCaps">false</item>

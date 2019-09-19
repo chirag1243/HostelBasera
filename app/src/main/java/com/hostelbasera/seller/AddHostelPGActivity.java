@@ -42,6 +42,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.esafirm.imagepicker.features.ImagePicker;
+import com.esafirm.imagepicker.model.Image;
 import com.example.easywaylocation.EasyWayLocation;
 import com.example.easywaylocation.Listener;
 import com.google.android.gms.common.ConnectionResult;
@@ -516,7 +518,16 @@ public class AddHostelPGActivity extends BaseActivity implements PermissionListe
     @OnClick(R.id.tv_add_image)
     public void doAddImage() {
         isImage = true;
-        FilePickerBuilder.getInstance()
+        ImagePicker.create(this)
+                .showCamera(false)
+                .theme(R.style.ImagePickerTheme)
+                .limit(10)
+                .folderMode(true)
+                .includeVideo(false)
+                .toolbarFolderTitle(getString(R.string.select_image))
+                .start();
+
+        /*FilePickerBuilder.getInstance()
                 .setMaxCount(10)
 //                    .setSelectedFiles(photoPaths)
                 .setActivityTheme(R.style.LibAppTheme)
@@ -527,14 +538,24 @@ public class AddHostelPGActivity extends BaseActivity implements PermissionListe
                 .enableImagePicker(true)
                 .enableDocSupport(true)
                 .withOrientation(Orientation.UNSPECIFIED)
-                .pickPhoto(this);
+                .pickPhoto(this);*/
 
     }
 
     @OnClick(R.id.tv_add_menu)
     public void doAddMenuImage() {
         isImage = false;
-        FilePickerBuilder.getInstance()
+
+        ImagePicker.create(this)
+                .showCamera(false)
+                .theme(R.style.ImagePickerTheme)
+                .limit(10)
+                .folderMode(true)
+                .includeVideo(false)
+                .toolbarFolderTitle(getString(R.string.select_image))
+                .start();
+
+        /*FilePickerBuilder.getInstance()
                 .setMaxCount(10)
 //                    .setSelectedFiles(photoPaths)
                 .setActivityTheme(R.style.LibAppTheme)
@@ -545,7 +566,7 @@ public class AddHostelPGActivity extends BaseActivity implements PermissionListe
                 .enableImagePicker(true)
                 .enableDocSupport(true)
                 .withOrientation(Orientation.UNSPECIFIED)
-                .pickPhoto(this);
+                .pickPhoto(this);*/
 
     }
 
@@ -587,6 +608,17 @@ public class AddHostelPGActivity extends BaseActivity implements PermissionListe
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
+        if (ImagePicker.shouldHandle(requestCode, resultCode, data)) {
+            // Get a list of picked images
+            List<Image> images = ImagePicker.getImages(data);
+
+            for (int i = 0; i < images.size(); i++) {
+                arrFile = new ArrayList<>();
+                arrFile.add(images.get(i).getPath());
+                doAttachment();
+            }
+        }
 
         if (requestCode == PLACE_PICKER_REQUEST) {
             if (data != null) {
