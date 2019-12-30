@@ -13,9 +13,9 @@
         <LinearLayout
             android:id="@+id/card_view1"
             android:layout_width="0dp"
-            android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/dim_8dp">
+            android:layout_margin="@dimen/dim_8dp"
+            android:layout_weight="1">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -50,6 +50,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/dim_5dp"
+                    android:layout_marginTop="@dimen/dim_3dp"
                     android:text="₹ 1500"
                     android:textColor="@color/colorAccent"
                     android:textSize="@dimen/dim_text16"
@@ -78,12 +79,25 @@
                     android:rating="2.5" />
 
                 <TextView
+                    android:id="@+id/tv_area"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/dim_5dp"
+                    android:layout_marginTop="@dimen/dim_5dp"
+                    android:background="@drawable/rounded_area_bg"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:text="Ffdfgdgf fhfhgfh"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="@dimen/dim_text14" />
+
+                <TextView
                     android:id="@+id/tv_location"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/dim_10dp"
                     android:layout_marginLeft="@dimen/dim_5dp"
                     android:layout_marginTop="@dimen/dim_5dp"
+                    android:layout_marginBottom="@dimen/dim_10dp"
                     android:ellipsize="end"
                     android:maxLines="1"
                     android:text="Lonavala"

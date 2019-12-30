@@ -92,13 +92,13 @@ public class FilterActivity extends BaseActivity {
                 filterModel.filterDetail.get(i).data.get(j).isSelected = false;
             }
         }
-        setResult(Activity.RESULT_OK, new Intent(this, CategoryListActivity.class).putExtra(Constant.FilterModel, filterModel).putExtra(Constant.IsClearAll, true));
+        setResult(Activity.RESULT_OK, new Intent().putExtra(Constant.FilterModel, filterModel).putExtra(Constant.IsClearAll, true));
         finish();
     }
 
     @OnClick(R.id.tv_apply)
     public void onApplyClicked() {
-        setResult(Activity.RESULT_OK, new Intent(this, CategoryListActivity.class).putExtra(Constant.FilterModel, filterModel).putExtra(Constant.IsClearAll, false));
+        setResult(Activity.RESULT_OK, new Intent().putExtra(Constant.FilterModel, filterModel).putExtra(Constant.IsClearAll, false));
         finish();
     }
 }

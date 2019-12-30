@@ -14,7 +14,8 @@
     <string name="error_msg_connection_timeout">The request timed out please try again.</string>
 
     <string name="rationale_message">we need permission for <b>Attachment &amp; Address</b> <!--&amp; <b>OTP</b>--> </string>
-    <string name="denied_message">If you reject permission, you can not use this attachment &amp; address <!--&amp; OTP--> feature.</string>
+    <string name="denied_message">If you reject permission, you can not use this attachment &amp; address <!--&amp; OTP-->
+        feature.</string>
     <string name="back_again">Please click BACK again to exit</string>
     <string name="ok">OK</string>
 
@@ -34,14 +35,14 @@
     <string name="sign_in">Sign In</string>
     <string name="email">Email</string>
     <string name="password">Password</string>
-    <string name="forget_password_">Forget Password?</string>
-    <string name="forget_password">Forget Password</string>
+    <string name="forget_password_">Forgot Password?</string>
+    <string name="forget_password">Forgot Password</string>
     <string name="don_t_have_an_account_">Don\'t have an account?</string>
     <string name="sign_up">Sign up</string>
     <string name="name">Name</string>
     <string name="mobile_no">Mobile No.</string>
     <string name="address">Address</string>
-    <string name="find_your_hostel">Find Your Hostel</string>
+    <string name="all_cities">All Cities</string>
     <string name="pg_hostel">PG/Hostel</string>
     <string name="bookmarks">Bookmarks</string>
     <string name="my_pg_hostel">My PG/Hostel</string>
@@ -135,4 +136,9 @@
     <string name="powered_by_cg_3d_world">Powered by : CG 3D World</string>
 
     <string name="select_image">Select Image</string>
+    <string name="select_a_city">Select a City</string>
+    <string name="popular_cities">Popular Cities</string>
+    <string name="all">All</string>
+    <string name="enter_area">Enter Area</string>
+    <string name="area">Area</string>
 </resources>

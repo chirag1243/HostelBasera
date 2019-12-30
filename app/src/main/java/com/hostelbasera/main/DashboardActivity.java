@@ -44,6 +44,7 @@ import com.hostelbasera.apis.PostRequest;
 import com.hostelbasera.model.PropertyDetailModel;
 import com.hostelbasera.model.UserDetailModel;
 import com.hostelbasera.utility.BaseActivity;
+import com.hostelbasera.utility.Constant;
 import com.hostelbasera.utility.Globals;
 import com.hostelbasera.utility.Toaster;
 
@@ -55,9 +56,10 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 
+
 public class DashboardActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener, PermissionListener {
 
-    private static final int UpdateCode = 2212;
+    private static final int UpdateCode = 2212, filterCode = 1005;
 
     boolean doubleBackToExitPressedOnce = false;
     @BindView(R.id.toolbar_title)
@@ -124,7 +126,16 @@ public class DashboardActivity extends BaseActivity implements NavigationView.On
             }
         });
 
-        setToolbarTitle(R.string.find_your_hostel);
+        setToolbarTitle(R.string.all_cities);
+        toolbarTitle.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.down_arrow, 0);
+        toolbarTitle.setCompoundDrawablePadding(5);
+        globals.setCityId(0);
+        toolbarTitle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivityForResult(new Intent(DashboardActivity.this, CityActivity.class), Constant.CityCode);
+            }
+        });
 
         tvNavTitle.setText(globals.getIsSeller() ? globals.getUserDetails().loginSellerDetail.name : globals.getUserDetails().loginUserDetail.name);
 
@@ -181,10 +192,23 @@ public class DashboardActivity extends BaseActivity implements NavigationView.On
         if (requestCode == UpdateCode) {
             updateChecker();
         }
+
+        if (requestCode == Constant.CityCode && data != null) {
+            toolbarTitle.setText(data.getStringExtra(Constant.City_Name).equals(getString(R.string.all)) ? getString(R.string.all_cities) : data.getStringExtra(Constant.City_Name));
+            setFragment(new FragmentHome());
+        }
+
+        if(requestCode== filterCode){
+            for (Fragment fragment : getSupportFragmentManager().getFragments()) {
+                fragment.onActivityResult(requestCode, resultCode, data);
+            }
+        }
     }
 
     public void setToolbarTitle(int title) {
         toolbarTitle.setText(title);
+        toolbarTitle.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+        toolbarTitle.setCompoundDrawablePadding(0);
     }
 
     public void setFragment(Fragment fragment) {
@@ -223,6 +247,7 @@ public class DashboardActivity extends BaseActivity implements NavigationView.On
         }
     }
 
+
     public void doCloseDrawer() {
         drawer.closeDrawer(GravityCompat.START);
     }
@@ -231,7 +256,10 @@ public class DashboardActivity extends BaseActivity implements NavigationView.On
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.nav_pg_hostel:
-                setToolbarTitle(R.string.find_your_hostel);
+                setToolbarTitle(R.string.all_cities);
+                globals.setCityId(0);
+                toolbarTitle.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.down_arrow, 0);
+                toolbarTitle.setCompoundDrawablePadding(5);
                 setFragment(new FragmentHome());
                 break;
             case R.id.nav_bookmarks:
@@ -442,7 +470,7 @@ public class DashboardActivity extends BaseActivity implements NavigationView.On
     }
 
     private void doChangePassword(String password) {
-        JSONObject postData = HttpRequestHandler.getInstance().getChangePasswordParam(false, password,globals.getUserDetails().loginUserDetail.user_reg_Id);
+        JSONObject postData = HttpRequestHandler.getInstance().getChangePasswordParam(false, password, globals.getUserDetails().loginUserDetail.user_reg_Id);
         if (postData != null) {
 
             new PostRequest(this, getString(R.string.changePassword), postData, true, new PostRequest.OnPostServiceCallListener() {

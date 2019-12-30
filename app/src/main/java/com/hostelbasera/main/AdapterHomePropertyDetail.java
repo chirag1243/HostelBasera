@@ -81,6 +81,9 @@ public class AdapterHomePropertyDetail extends RecyclerView.Adapter<RecyclerView
         @BindView(R.id.card_view1)
         CardView cardView1;
 
+        @BindView(R.id.tv_area)
+        TextView tvArea;
+
         ItemViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
@@ -94,6 +97,13 @@ public class AdapterHomePropertyDetail extends RecyclerView.Adapter<RecyclerView
             tvPrice.setText("₹ " + mItem.price);
             tvPrice.setTypeface(tvPrice.getTypeface(), Typeface.BOLD);
             tvLocation.setText("" + mItem.city_name);
+            tvLocation.setTypeface(tvLocation.getTypeface(), Typeface.BOLD);
+
+            if (mItem.property_area != null && !mItem.property_area.isEmpty()) {
+                tvArea.setVisibility(View.VISIBLE);
+                tvArea.setText(mItem.property_area);
+            } else
+                tvArea.setVisibility(View.GONE);
 
             simpleRatingBar.setRating(mItem.rating);
 

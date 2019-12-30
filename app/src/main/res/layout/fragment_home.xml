@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/home_bg"
     android:orientation="vertical">
 
@@ -90,12 +91,28 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/rv_hostel"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:visibility="gone" />
+                android:layout_height="match_parent"
+                android:nestedScrollingEnabled="false"
+                android:background="@color/white" />
+
+                <android.support.design.widget.FloatingActionButton
+                    android:id="@+id/fa_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom|right"
+                    android:layout_margin="16dp"
+                    android:src="@drawable/filter"
+                    android:tint="@color/white"
+                    app:backgroundTint="@color/colorPrimary"
+                    app:fabSize="normal" />
+            </FrameLayout>
 
             <include
                 android:id="@+id/progress"

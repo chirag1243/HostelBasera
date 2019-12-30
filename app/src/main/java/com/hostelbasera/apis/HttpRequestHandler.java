@@ -190,6 +190,8 @@ public class HttpRequestHandler {
             }
             jsonFilters.put(Constant.Property_price, jsonArray);
 
+            jsonFilters.put(Constant.Property_city_id, globals.getCityId());
+
             jsonObject.put(Constant.Filters, jsonFilters);
             jsonObject.put(Constant.Limit, 0);
             jsonObject.put(Constant.Page, pageNo);
@@ -369,6 +371,7 @@ public class HttpRequestHandler {
         try {
             params = setDefaultParameters();
             jsonObject.put(Constant.Searchtext, search_text);
+            jsonObject.put(Constant.City_id, globals.getCityId());
             params.put(Constant.GetSearchData, jsonObject);
         } catch (Exception e) {
             e.printStackTrace();
@@ -394,6 +397,8 @@ public class HttpRequestHandler {
             jsonObject.put(Constant.Page, page);
             jsonObject.put(Constant.Limit, 0);
             jsonObject.put(Constant.Searchtext, search_text);
+            jsonObject.put(Constant.City_id, globals.getCityId());
+
             params.put(Constant.GetSearchData, jsonObject);
         } catch (Exception e) {
             e.printStackTrace();
@@ -496,7 +501,7 @@ public class HttpRequestHandler {
                                           String timing, String water_timing, String laundry_fees, ArrayList<AddImageAttachmentModel> arrAddMenuAttachment,
                                           String price, ArrayList<SellerDropdownModel.FacilityList> arrFacilityList,
                                           ArrayList<AddImageAttachmentModel> arrAddImageAttachment, ArrayList<AddRoomModel> arrRoomDetails,
-                                          String payment_id, String price_plan) {
+                                          String payment_id, String price_plan, String area) {
         JSONObject params = new JSONObject();
         JSONObject jsonObject = new JSONObject();
         JSONArray jsonArray;
@@ -525,6 +530,8 @@ public class HttpRequestHandler {
 
             jsonObject.put(Constant.Payment_id, payment_id);
             jsonObject.put(Constant.Price_plan, price_plan);
+
+            jsonObject.put(Constant.Property_area, area);
 
 
             StringBuilder cooking_menu = new StringBuilder();
@@ -745,6 +752,10 @@ public class HttpRequestHandler {
         }
         return params;
     }*/
+
+    public JSONObject getCityListParam() {
+        return setDefaultParameters();
+    }
 
     private JSONObject mParams;
 

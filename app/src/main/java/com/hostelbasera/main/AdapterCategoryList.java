@@ -33,13 +33,15 @@ public class AdapterCategoryList extends RecyclerView.Adapter<AdapterCategoryLis
     private ArrayList<GetPropertyDetailModel.PropertyDetail> mValues;
     private final Context mContext;
     private AdapterView.OnItemClickListener onItemClickListener;
+    boolean isNearMe;
 
     AdapterCategoryList(Context context) {
         mContext = context;
     }
 
-    public void doRefresh(ArrayList<GetPropertyDetailModel.PropertyDetail> arrPropertyDetails) {
+    public void doRefresh(ArrayList<GetPropertyDetailModel.PropertyDetail> arrPropertyDetails, boolean isNearMe) {
         mValues = arrPropertyDetails;
+        this.isNearMe = isNearMe;
         notifyDataSetChanged();
     }
 
@@ -69,6 +71,10 @@ public class AdapterCategoryList extends RecyclerView.Adapter<AdapterCategoryLis
         @BindView(R.id.vw_bottom_border)
         View vwBottomBorder;
 
+        @BindView(R.id.tv_area)
+        TextView tvArea;
+
+
         ViewHolder(View itemView, AdapterCategoryList adapterCategoryList) {
             super(itemView);
             this.adapterCategoryList = adapterCategoryList;
@@ -89,7 +95,14 @@ public class AdapterCategoryList extends RecyclerView.Adapter<AdapterCategoryLis
             tvName.setTypeface(tvName.getTypeface(), Typeface.BOLD);
             tvPrice.setText("₹ " + mItem.price);
             tvPrice.setTypeface(tvPrice.getTypeface(), Typeface.BOLD);
-            tvLocation.setText("" + mItem.city_name);
+            if (!isNearMe && mItem.property_area != null && !mItem.property_area.isEmpty()) {
+                tvArea.setVisibility(View.VISIBLE);
+                tvArea.setText(mItem.property_area);
+            } else
+                tvArea.setVisibility(View.GONE);
+
+            tvLocation.setText("" + (isNearMe && mItem.property_area != null && !mItem.property_area.isEmpty() ? mItem.property_area : mItem.city_name));
+            tvLocation.setTypeface(tvLocation.getTypeface(), Typeface.BOLD);
 
             simpleRatingBar.setRating(mItem.rating);
 

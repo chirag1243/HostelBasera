@@ -108,7 +108,7 @@ public class PostRequest {
             return;
         }
 
-        if (isLoaderRequired && pb == null) {
+        if (isLoaderRequired) { //&& pb == null
             dialog = HttpRequestHandler.getInstance().getProgressBar(context);
         }
         Logger.d("URL :=>", url);

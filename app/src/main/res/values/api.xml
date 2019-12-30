@@ -5,6 +5,7 @@
     <string name="server_url">http://hostelbasera.com/services/</string>
     <string name="image_url">http://hostelbasera.com/hostelbaseraadmin/assets/images/hostel/</string>
     <string name="facility_url">http://hostelbasera.com/hostelbaseraadmin/assets/images/facility/</string>
+    <string name="city_url">http://hostelbasera.com/hostelbaseraadmin/assets/images/city/</string>
 
     <string name="registerUser">Login/registerUser</string>
     <string name="loginUser">Login/loginUser</string>
@@ -49,5 +50,8 @@
 
     <string name="main_url">http://hostelbasera.com/</string>
     <string name="generateChecksum">paytm/generateChecksum.php</string>
+
+    <string name="getCityList">user/getCityList</string>
+
 
 </resources>

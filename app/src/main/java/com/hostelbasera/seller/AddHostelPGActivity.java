@@ -170,6 +170,10 @@ public class AddHostelPGActivity extends BaseActivity implements PermissionListe
     CardView cvCookingMenu;
     EasyWayLocation easyWayLocation;
 
+    @BindView(R.id.edt_area)
+    EditText edtArea;
+
+
     Globals globals;
     SellerDropdownModel.SellerDropdownDetail sellerDropdownDetail;
     ArrayList<SellerDropdownModel.TypesList> arrProperty;
@@ -1369,7 +1373,7 @@ TODO :
                 property_category_id, property_size_id, edtEmail.getText().toString(), edtAddress.getText().toString(), longitude, latitude,
                 contact_no.deleteCharAt(contact_no.length() - 2).toString(), edtDescription.getText().toString(), state_id, city_id, edtOpenHours.getText().toString(),
                 edtWaterTimings.getText().toString(), edtLaundryFees.getText().toString(), arrAddMenuAttachment, edtPrice.getText().toString(), arrFacilityList,
-                arrAddImageAttachment, arrRoomDetails, paymentId, price_plan);
+                arrAddImageAttachment, arrRoomDetails, paymentId, price_plan,edtArea.getText().toString());
 
 
         if (postData != null) {
@@ -1434,6 +1438,11 @@ TODO :
             Toaster.shortToast("Please select city");
             return false;
         }
+        if (edtArea.getText().toString().trim().isEmpty()) {
+            Toaster.shortToast("Please enter area");
+            return false;
+        }
+
         if (!doSelectedFacility()) {
             Toaster.shortToast("Please select facility");
             return false;

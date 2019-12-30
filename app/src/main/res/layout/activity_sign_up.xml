@@ -137,6 +137,7 @@
                     android:layout_height="wrap_content"
                     android:backgroundTint="@android:color/white"
                     android:inputType="phone"
+                    android:maxLength="10"
                     android:textColor="@color/white" />
             </android.support.design.widget.TextInputLayout>
 

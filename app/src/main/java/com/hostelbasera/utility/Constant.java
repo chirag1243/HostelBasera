@@ -186,6 +186,13 @@ public class Constant {
     public static final String EMAIL = "EMAIL";
     public static final String CHECKSUMHASH = "CHECKSUMHASH";
 
+    public static final String Property_city_id = "property_city_id";
+
+    public static final int CityCode = 3445;
+    public static final String City_Name = "City_Name";
+
+    public static final String Property_area = "property_area";
+
 
     //"https://securegw.paytm.in/theia/paytmCallback?ORDER_ID=";
     //"https://pguat.paytm.com/paytmchecksum/paytmCallback.jsp";

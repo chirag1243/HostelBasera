@@ -2,6 +2,7 @@ package com.hostelbasera.main;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -17,6 +18,15 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.gson.Gson;
 import com.hostelbasera.R;
 import com.hostelbasera.apis.HttpRequestHandler;
@@ -29,6 +39,8 @@ import com.hostelbasera.utility.Globals;
 import com.hostelbasera.utility.PaginationProgressBarAdapter;
 import com.hostelbasera.utility.Toaster;
 import com.paginate.Paginate;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.Picasso;
 import com.victor.loading.rotate.RotateLoading;
 
 import org.json.JSONObject;
@@ -39,7 +51,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class CategoryListActivity extends BaseActivity implements Paginate.Callbacks, SwipeRefreshLayout.OnRefreshListener {
+public class CategoryListActivity extends BaseActivity implements Paginate.Callbacks, SwipeRefreshLayout.OnRefreshListener, OnMapReadyCallback {
 
     @BindView(R.id.toolbar_title)
     TextView toolbarTitle;
@@ -115,6 +127,9 @@ public class CategoryListActivity extends BaseActivity implements Paginate.Callb
         arrPropertySizeId = new ArrayList<>();
         arrPropertyCategoryId = new ArrayList<>();
 
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
+
         if (getIntent().hasExtra(Constant.ArrPropertyCategoryId)) {
             arrPropertyCategoryId = getIntent().getStringArrayListExtra(Constant.ArrPropertyCategoryId);
         }
@@ -126,7 +141,7 @@ public class CategoryListActivity extends BaseActivity implements Paginate.Callb
         }
 
         if (Globals.isNetworkAvailable(this)) {
-            getPropertyListData(true);
+            getPropertyListData(true, false);
             getFiltersData();
         } else {
             showNoRecordFound(getString(R.string.no_data_found));
@@ -154,12 +169,97 @@ public class CategoryListActivity extends BaseActivity implements Paginate.Callb
         });
     }
 
-    public void getPropertyListData(boolean showProgress) {
+    GoogleMap googleMap;
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        try {
+
+            this.googleMap = googleMap;
+            LatLng latLng = new LatLng(23.010336, 72.505890);
+            googleMap.addMarker(new MarkerOptions().position(latLng)
+                    .title("Test")
+                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.location)));
+
+            googleMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
+                @Override
+                public View getInfoWindow(Marker marker) {
+                    Context mContext = CategoryListActivity.this;
+                    View view = ((Activity) mContext).getLayoutInflater().inflate(R.layout.marker_info_window, null);
+
+                    TextView name_tv = view.findViewById(R.id.tv_title);
+                    ImageView img = view.findViewById(R.id.img_hostel);
+
+                    name_tv.setText(marker.getTitle());
+
+                   /* if (img.getDrawable() == null) {
+                        Picasso.get()
+                                .load(mContext.getString(R.string.image_url) +
+                                        (propertyDetails.productImages != null && !propertyDetails.productImages.isEmpty() ? propertyDetails.productImages.get(0) : ""))
+                                .error(R.mipmap.ic_launcher)
+                                .into(img, new InfoWindowRefresher(marker));
+                    } else {
+                        Picasso.get()
+                                .load(mContext.getString(R.string.image_url) +
+                                        (propertyDetails.productImages != null && !propertyDetails.productImages.isEmpty() ? propertyDetails.productImages.get(0) : ""))
+                                .error(R.mipmap.ic_launcher)
+                                .into(img);
+                    }*/
+
+
+                    return view;
+                }
+
+                @Override
+                public View getInfoContents(Marker marker) {
+                    return null;
+                }
+            });
+
+            googleMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+
+            CameraPosition cameraPosition = new CameraPosition.Builder().target(latLng).zoom(15).build();
+
+            googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+
+            googleMap.getUiSettings().setZoomControlsEnabled(true);
+            googleMap.getUiSettings().setZoomGesturesEnabled(false);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    public class InfoWindowRefresher implements Callback {
+        private Marker markerToRefresh;
+
+        public InfoWindowRefresher(Marker markerToRefresh) {
+            this.markerToRefresh = markerToRefresh;
+        }
+
+        @Override
+        public void onSuccess() {
+            markerToRefresh.showInfoWindow();
+        }
+
+        @Override
+        public void onError(Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+
+    public void getPropertyListData(boolean showProgress, boolean isFilter) {
         JSONObject postData;
+//        latitude = 23.010353;
+//        longitude = 72.5054966;
+//        23.0226819
+//        72.5797763
         if (isNearMe) {
-            postData = HttpRequestHandler.getInstance().getNearbyPropertyDataParam(pageNo, arrPropertyCategoryId, arrPropertyTypeId, arrTypeId, arrPropertySizeId,arrPriceId, latitude, longitude);
+            postData = HttpRequestHandler.getInstance().getNearbyPropertyDataParam(pageNo, arrPropertyCategoryId, arrPropertyTypeId, arrTypeId, arrPropertySizeId, arrPriceId, latitude, longitude);//23.010336, 72.505890);
         } else {
-            postData = HttpRequestHandler.getInstance().getPropertyListDataParam(pageNo, arrPropertyCategoryId, arrPropertyTypeId, arrTypeId, arrPropertySizeId,arrPriceId);
+            postData = HttpRequestHandler.getInstance().getPropertyListDataParam(pageNo, arrPropertyCategoryId, arrPropertyTypeId, arrTypeId, arrPropertySizeId, arrPriceId);
         }
 
         if (postData != null) {
@@ -168,7 +268,7 @@ public class CategoryListActivity extends BaseActivity implements Paginate.Callb
 //            startLoader();
 
             new PostRequest(this, isNearMe ? getString(R.string.getNearbyProperty) : getString(R.string.getPropertyList),
-                    postData, false, new PostRequest.OnPostServiceCallListener() {
+                    postData, isFilter, new PostRequest.OnPostServiceCallListener() {
                 @Override
                 public void onSucceedToPostCall(JSONObject response) {
                     if (progressBar.getVisibility() == View.VISIBLE)
@@ -185,6 +285,9 @@ public class CategoryListActivity extends BaseActivity implements Paginate.Callb
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
+                        }
+                        if (isFilter) {
+                            arrPropertyDetailArrayList = new ArrayList<>();
                         }
                         setupList(getPropertyDetailModel.propertyDetail);
                     } else {
@@ -257,9 +360,65 @@ public class CategoryListActivity extends BaseActivity implements Paginate.Callb
     private void setupList(ArrayList<GetPropertyDetailModel.PropertyDetail> homePageStoresDetailArrayList) {
         if (homePageStoresDetailArrayList != null && !homePageStoresDetailArrayList.isEmpty()) {
             arrPropertyDetailArrayList.addAll(homePageStoresDetailArrayList);
+//            setAllMarkers();
             setAdapter();
         } else
             showNoRecordFound(getString(R.string.no_data_found));
+    }
+
+    private void setAllMarkers() {
+
+        for (int i = 0; i < arrPropertyDetailArrayList.size(); i++) {
+            if (arrPropertyDetailArrayList.get(i).latitude != null && !arrPropertyDetailArrayList.get(i).latitude.isEmpty() && arrPropertyDetailArrayList.get(i).longitude != null && !arrPropertyDetailArrayList.get(i).longitude.isEmpty()) {
+
+                LatLng latLng = new LatLng(Double.parseDouble(arrPropertyDetailArrayList.get(i).latitude), Double.parseDouble(arrPropertyDetailArrayList.get(i).longitude));
+                googleMap.addMarker(new MarkerOptions().position(latLng)
+                        .title(arrPropertyDetailArrayList.get(i).property_name)
+                        .snippet(arrPropertyDetailArrayList.get(i).image)
+                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.location)));
+
+                googleMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
+                    @Override
+                    public View getInfoWindow(Marker marker) {
+                        Context mContext = CategoryListActivity.this;
+                        View view = ((Activity) mContext).getLayoutInflater().inflate(R.layout.marker_info_window, null);
+
+                        TextView name_tv = view.findViewById(R.id.tv_title);
+                        ImageView img = view.findViewById(R.id.img_hostel);
+
+                        name_tv.setText(marker.getTitle());
+
+                        if (img.getDrawable() == null) {
+                            Picasso.get()
+                                    .load(mContext.getString(R.string.image_url) + marker.getSnippet())
+                                    .error(R.mipmap.ic_launcher)
+                                    .into(img, new InfoWindowRefresher(marker));
+                        } else {
+                            Picasso.get()
+                                    .load(mContext.getString(R.string.image_url) + marker.getSnippet())
+                                    .error(R.mipmap.ic_launcher)
+                                    .into(img);
+                        }
+
+                        return view;
+                    }
+
+                    @Override
+                    public View getInfoContents(Marker marker) {
+                        return null;
+                    }
+                });
+
+                googleMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+
+                CameraPosition cameraPosition = new CameraPosition.Builder().target(latLng).zoom(12).build();
+
+                googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+
+                googleMap.getUiSettings().setZoomControlsEnabled(true);
+                googleMap.getUiSettings().setZoomGesturesEnabled(false);
+            }
+        }
     }
 
     private void setAdapter() {
@@ -271,7 +430,7 @@ public class CategoryListActivity extends BaseActivity implements Paginate.Callb
             adapterCategoryList = new AdapterCategoryList(this);
         }
         loading = false;
-        adapterCategoryList.doRefresh(arrPropertyDetailArrayList);
+        adapterCategoryList.doRefresh(arrPropertyDetailArrayList, isNearMe);
 
         if (rvHostelList.getAdapter() == null) {
             rvHostelList.setHasFixedSize(false);
@@ -367,14 +526,19 @@ public class CategoryListActivity extends BaseActivity implements Paginate.Callb
                 }
             }
         }
-        getPropertyListData(true);
+//        if (adapterCategoryList != null) {
+//            arrPropertyDetailArrayList = new ArrayList<>();
+//            adapterCategoryList.doRefresh(arrPropertyDetailArrayList, isNearMe);
+//        }
+        pageNo = 1;
+        getPropertyListData(true, true);
     }
 
     @Override
     public void onRefresh() {
         if (Globals.isNetworkAvailable(this)) {
             pageNo = 1;
-            getPropertyListData(true);
+            getPropertyListData(true, false);
         } else {
             Toaster.shortToast(R.string.no_internet_msg);
         }
@@ -384,7 +548,7 @@ public class CategoryListActivity extends BaseActivity implements Paginate.Callb
     public void onLoadMore() {
         loading = true;
         pageNo++;
-        getPropertyListData(false);
+        getPropertyListData(false, false);
     }
 
     @Override

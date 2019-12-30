@@ -338,6 +338,16 @@ public class Globals extends CoreApp {
         getEditor().commit();
     }
 
+    public void setCityId(int cityId) {
+        getEditor().putInt(Constant.City_id, cityId);
+        getEditor().commit();
+    }
+
+    public int getCityId() {
+        return getSharedPref().getInt(Constant.City_id, 0);
+    }
+
+
     public String getFCMDeviceToken() {
         return getSharedPref().getString(Constant.Fcm_token, "");
     }

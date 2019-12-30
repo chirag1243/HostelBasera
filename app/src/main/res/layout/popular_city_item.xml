@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:padding="@dimen/dim_3dp"
+    android:gravity="center"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/img_city"
+        android:layout_width="@dimen/dim_70dp"
+        android:layout_height="@dimen/dim_70dp"
+        android:src="@mipmap/ic_launcher"
+        app:civ_border_color="@color/border_gray"
+        app:civ_border_width="@dimen/dim_1dp" />
+
+    <TextView
+        android:id="@+id/tv_city"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/dim_5dp"
+        android:text=""
+        android:layout_gravity="center"
+        android:textColor="@color/white"
+        android:textSize="@dimen/dim_text12"
+        android:textStyle="bold" />
+
+</LinearLayout>

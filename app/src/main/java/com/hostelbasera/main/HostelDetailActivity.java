@@ -245,6 +245,8 @@ public class HostelDetailActivity extends BaseActivity implements RatingDialogLi
         }
     }
 
+
+
     @Override
     public void onMapReady(GoogleMap googleMap) {
         try {

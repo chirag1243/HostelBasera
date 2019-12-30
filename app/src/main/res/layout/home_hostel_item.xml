@@ -73,6 +73,19 @@
                 android:rating="2.5" />
 
             <TextView
+                android:id="@+id/tv_area"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dim_5dp"
+                android:layout_marginTop="@dimen/dim_5dp"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:background="@drawable/rounded_area_bg"
+                android:text=""
+                android:textColor="@color/colorPrimary"
+                android:textSize="@dimen/dim_text14" />
+
+            <TextView
                 android:id="@+id/tv_location"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

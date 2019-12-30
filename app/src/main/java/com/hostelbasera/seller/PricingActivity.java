@@ -8,18 +8,10 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.google.gson.Gson;
 import com.hostelbasera.R;
-import com.hostelbasera.apis.HttpRequestHandler;
-import com.hostelbasera.apis.PostRequest;
 import com.hostelbasera.model.CheckSellerPaymentDataModel;
-import com.hostelbasera.model.PriceBlockDetailModel;
 import com.hostelbasera.utility.BaseActivity;
 import com.hostelbasera.utility.Constant;
-import com.hostelbasera.utility.Globals;
-import com.hostelbasera.utility.Toaster;
-
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 
@@ -48,7 +40,7 @@ public class PricingActivity extends BaseActivity {
         ButterKnife.bind(this);
         toolbarTitle.setText(getString(R.string.pricing));
         imgBack.setVisibility(View.VISIBLE);
-
+        arrPriceBlockDetails = new ArrayList<>();
         arrPriceBlockDetails = (ArrayList<CheckSellerPaymentDataModel.PriceBlockDetails>) getIntent().getSerializableExtra(Constant.ArrPriceBlockDetails);
         if (arrPriceBlockDetails != null && !arrPriceBlockDetails.isEmpty()) {
             setAdapter();
