@@ -9,6 +9,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.AdapterView;
@@ -79,13 +80,14 @@ public class CategoryListActivity extends BaseActivity implements Paginate.Callb
     @BindView(R.id.floating_action_button)
     FloatingActionButton floatingActionButton;
 
+    @BindView(R.id.map)
+    FrameLayout map;
+
     private Paginate paginate;
     private boolean loading = false;
     Globals globals;
 
     int pageNo = 1;
-
-
 
     GetPropertyDetailModel getPropertyDetailModel;
     ArrayList<GetPropertyDetailModel.PropertyDetail> arrPropertyDetailArrayList;
@@ -102,13 +104,12 @@ public class CategoryListActivity extends BaseActivity implements Paginate.Callb
     double latitude = 0, longitude = 0;
     boolean isNearMe;
 
-    //Test
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_category_list);
         ButterKnife.bind(this);
+        map.setVisibility(View.GONE);
         init();
     }
 
@@ -256,8 +257,9 @@ public class CategoryListActivity extends BaseActivity implements Paginate.Callb
 
     public void getPropertyListData(boolean showProgress, boolean isFilter) {
         JSONObject postData;
-//        latitude = 23.010353;
-//        longitude = 72.5054966;
+        //TODO :Remove
+        latitude = 23.010353;
+        longitude = 72.5054966;
 //        23.0226819
 //        72.5797763
         if (isNearMe) {
@@ -438,7 +440,11 @@ public class CategoryListActivity extends BaseActivity implements Paginate.Callb
 
         if (rvHostelList.getAdapter() == null) {
             rvHostelList.setHasFixedSize(false);
-            rvHostelList.setLayoutManager(new GridLayoutManager(this, Constant.GRID_SPAN));
+//            if (isNearMe) {
+//                rvHostelList.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+//            }else {
+                rvHostelList.setLayoutManager(new GridLayoutManager(this, Constant.GRID_SPAN));
+//            }
             rvHostelList.setItemAnimator(new DefaultItemAnimator());
             rvHostelList.setAdapter(adapterCategoryList);
             if (arrPropertyDetailArrayList.size() < getPropertyDetailModel.total_properties && rvHostelList != null) {

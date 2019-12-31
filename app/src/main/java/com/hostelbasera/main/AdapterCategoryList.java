@@ -22,6 +22,7 @@ import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
 import com.hostelbasera.R;
 import com.hostelbasera.model.GetPropertyDetailModel;
+import com.hostelbasera.utility.Globals;
 
 import java.util.ArrayList;
 
@@ -73,7 +74,8 @@ public class AdapterCategoryList extends RecyclerView.Adapter<AdapterCategoryLis
 
         @BindView(R.id.tv_area)
         TextView tvArea;
-
+        @BindView(R.id.tv_boys_girls)
+        TextView tvBoysGirls;
 
         ViewHolder(View itemView, AdapterCategoryList adapterCategoryList) {
             super(itemView);
@@ -100,6 +102,18 @@ public class AdapterCategoryList extends RecyclerView.Adapter<AdapterCategoryLis
                 tvArea.setText(mItem.property_area);
             } else
                 tvArea.setVisibility(View.GONE);
+
+            Globals.doBoldTextView(tvBoysGirls);
+            String category = "";
+            if (mItem.property_category_id == 1) {
+                category = mContext.getString(R.string.boys);
+            } else if (mItem.property_category_id == 2) {
+                category = mContext.getString(R.string.girls);
+            } else if (mItem.property_category_id == 4) {
+                category = mContext.getString(R.string.both);
+            }
+
+            tvBoysGirls.setText(category);
 
             tvLocation.setText("" + (isNearMe && mItem.property_area != null && !mItem.property_area.isEmpty() ? mItem.property_area : mItem.city_name));
             tvLocation.setTypeface(tvLocation.getTypeface(), Typeface.BOLD);

@@ -10,6 +10,7 @@ import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.Point;
+import android.graphics.Typeface;
 import android.net.ConnectivityManager;
 import android.net.Network;
 import android.net.NetworkInfo;
@@ -23,6 +24,7 @@ import android.view.Display;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
 import com.google.gson.Gson;
@@ -407,5 +409,9 @@ public class Globals extends CoreApp {
         final int min = 10;
         final int max = 10000;
         return new Random().nextInt((max - min) + 1) + min;
+    }
+
+    public static void doBoldTextView(TextView textView){
+        textView.setTypeface(textView.getTypeface(), Typeface.BOLD);
     }
 }

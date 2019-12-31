@@ -25,6 +25,7 @@ import com.bumptech.glide.request.target.Target;
 import com.hostelbasera.R;
 import com.hostelbasera.model.GetPropertyDetailModel;
 import com.hostelbasera.utility.Constant;
+import com.hostelbasera.utility.Globals;
 
 import java.util.ArrayList;
 
@@ -84,6 +85,9 @@ public class AdapterHomePropertyDetail extends RecyclerView.Adapter<RecyclerView
         @BindView(R.id.tv_area)
         TextView tvArea;
 
+        @BindView(R.id.tv_boys_girls)
+        TextView tvBoysGirls;
+
         ItemViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
@@ -98,6 +102,18 @@ public class AdapterHomePropertyDetail extends RecyclerView.Adapter<RecyclerView
             tvPrice.setTypeface(tvPrice.getTypeface(), Typeface.BOLD);
             tvLocation.setText("" + mItem.city_name);
             tvLocation.setTypeface(tvLocation.getTypeface(), Typeface.BOLD);
+
+            Globals.doBoldTextView(tvBoysGirls);
+            String category = "";
+            if (mItem.property_category_id == 1) {
+                category = mContext.getString(R.string.boys);
+            } else if (mItem.property_category_id == 2) {
+                category = mContext.getString(R.string.girls);
+            } else if (mItem.property_category_id == 4) {
+                category = mContext.getString(R.string.both);
+            }
+
+            tvBoysGirls.setText(category);
 
             if (mItem.property_area != null && !mItem.property_area.isEmpty()) {
                 tvArea.setVisibility(View.VISIBLE);
