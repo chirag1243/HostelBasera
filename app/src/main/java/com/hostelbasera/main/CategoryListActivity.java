@@ -102,6 +102,8 @@ public class CategoryListActivity extends BaseActivity implements Paginate.Callb
     double latitude = 0, longitude = 0;
     boolean isNearMe;
 
+    //Test
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
