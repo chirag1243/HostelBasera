@@ -85,6 +85,8 @@ public class CategoryListActivity extends BaseActivity implements Paginate.Callb
 
     int pageNo = 1;
 
+
+
     GetPropertyDetailModel getPropertyDetailModel;
     ArrayList<GetPropertyDetailModel.PropertyDetail> arrPropertyDetailArrayList;
 
