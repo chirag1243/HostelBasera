@@ -46,6 +46,7 @@ import com.hostelbasera.seller.SellerDashboardActivity;
 import com.hostelbasera.utility.BaseActivity;
 import com.hostelbasera.utility.Constant;
 import com.hostelbasera.utility.Globals;
+import com.hostelbasera.utility.OtpEditText;
 import com.hostelbasera.utility.Toaster;
 
 import org.json.JSONException;
@@ -67,20 +68,25 @@ public class LoginActivity extends BaseActivity {
     RadioButton rbSeller;
     @BindView(R.id.segmented_group)
     SegmentedGroup segmentedGroup;
-    @BindView(R.id.edt_email)
-    AppCompatEditText edtEmail;
-    @BindView(R.id.edt_password)
-    AppCompatEditText edtPassword;
+    @BindView(R.id.edt_mobile_no)
+    AppCompatEditText edtMobileNo;
+    //    @BindView(R.id.edt_password)
+//    AppCompatEditText edtPassword;
     @BindView(R.id.btn_sign_in)
     Button btnSignIn;
-    @BindView(R.id.tv_forget_password)
-    TextView tvForgetPassword;
+    //    @BindView(R.id.tv_forget_password)
+//    TextView tvForgetPassword;
     @BindView(R.id.tv_don_t_have_an_account_)
     TextView tvDonTHaveAnAccount;
     @BindView(R.id.sign_up)
     TextView signUp;
     @BindView(R.id.ll_sign_up)
     LinearLayout llSignUp;
+
+    @BindView(R.id.tv_mobile_no)
+    TextView tvMobileNo;
+    @BindView(R.id.tv_otp)
+    TextView tvOtp;
 
     @BindView(R.id.sign_in_button)
     ImageView signInButton;
@@ -90,6 +96,9 @@ public class LoginActivity extends BaseActivity {
     GoogleSignInClient mGoogleSignInClient;
     GoogleApiClient mGoogleApiClient;
 
+    @BindView(R.id.edt_otp)
+    OtpEditText edtOtp;
+
     private static final int RC_SIGN_IN = 12121;
 
     @Override
@@ -98,6 +107,9 @@ public class LoginActivity extends BaseActivity {
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
         globals = ((Globals) getApplicationContext());
+
+        Globals.doBoldTextView(tvMobileNo);
+        Globals.doBoldTextView(tvOtp);
 
         //TODO : Google Login remove comment once issue solved
         signInButton.setVisibility(View.GONE);
@@ -309,14 +321,17 @@ public class LoginActivity extends BaseActivity {
 
     @OnClick(R.id.btn_sign_in)
     public void onBtnSignInClicked() {
-        if (edtEmail.getText().toString().trim().isEmpty()) {
-            Toaster.shortToast("Please enter email id/mobile number.");
+        if (edtMobileNo.getText().toString().trim().isEmpty()) {
+            Toaster.shortToast("Please enter mobile no.");
             return;
-        } else if (edtPassword.getText().toString().trim().isEmpty()) {
-            Toaster.shortToast("Please enter password.");
+        } else if (edtMobileNo.getText().toString().trim().length() != 10) {
+            Toaster.shortToast("Please enter valid mobile no.");
             return;
-        } else if (edtPassword.getText().toString().length() < 6) {
-            Toaster.shortToast("Password must be min 6 character.");
+        } else if (edtOtp.getText().toString().trim().isEmpty()) {
+            Toaster.shortToast("Please enter otp.");
+            return;
+        } else if (edtOtp.getText().toString().length() < 6) {
+            Toaster.shortToast("Please enter otp.");
             return;
         }
         doLogin();
@@ -335,7 +350,7 @@ public class LoginActivity extends BaseActivity {
         }
 
         JSONObject postData = HttpRequestHandler.getInstance().getLoginUserParam(Settings.Secure.getString(this.getContentResolver(),
-                Settings.Secure.ANDROID_ID), edtEmail.getText().toString(), edtPassword.getText().toString(), isSeller, version);
+                Settings.Secure.ANDROID_ID), edtMobileNo.getText().toString(), edtOtp.getText().toString(), isSeller, version);
 
         if (postData != null) {
             new PostRequest(this, isSeller ? getString(R.string.loginSeller) : getString(R.string.loginUser), postData, true,
@@ -345,10 +360,10 @@ public class LoginActivity extends BaseActivity {
                             UserDetailModel userDetailModel = new Gson().fromJson(response.toString(), UserDetailModel.class);
                             if (userDetailModel.status == 0) {
                                 if (isSeller) {
-                                    userDetailModel.loginSellerDetail.password = edtPassword.getText().toString();
+                                    userDetailModel.loginSellerDetail.password = edtOtp.getText().toString();
                                     globals.setNewUserId(userDetailModel.loginSellerDetail.seller_reg_Id);
                                 } else {
-                                    userDetailModel.loginUserDetail.password = edtPassword.getText().toString();
+                                    userDetailModel.loginUserDetail.password = edtOtp.getText().toString();
                                     globals.setNewUserId(userDetailModel.loginUserDetail.user_reg_Id);
                                 }
                                 globals.setIsSeller(isSeller);
@@ -566,8 +581,8 @@ public class LoginActivity extends BaseActivity {
                     UserDetailModel userDetailModel = new Gson().fromJson(response.toString(), UserDetailModel.class);
                     Toaster.shortToast(userDetailModel.message);
                     if (userDetailModel.status == 1) {
-                        edtEmail.setText(mobile_no);
-                        edtPassword.setText(password);
+                        edtMobileNo.setText(mobile_no);
+//                        edtPassword.setText(password);
                         if (Globals.isNetworkAvailable(LoginActivity.this)) {
                             doLogin();
                         } else {

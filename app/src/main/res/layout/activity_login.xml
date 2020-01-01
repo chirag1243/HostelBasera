@@ -69,22 +69,30 @@
         </info.hoang8f.android.segmented.SegmentedGroup>
 
 
-        <android.support.v7.widget.AppCompatEditText
-            android:id="@+id/edt_email"
-            android:layout_width="match_parent"
+        <TextView
+            android:id="@+id/tv_mobile_no"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/dim_40dp"
             android:layout_marginTop="@dimen/dim_20dp"
+            android:text="@string/mobile_no"
+            android:textColor="@color/colorAccent"
+            android:textStyle="bold" />
+
+        <android.support.v7.widget.AppCompatEditText
+            android:id="@+id/edt_mobile_no"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/dim_40dp"
             android:layout_marginRight="@dimen/dim_40dp"
             android:backgroundTint="@android:color/white"
-            android:drawableLeft="@drawable/user"
             android:drawablePadding="@dimen/dim_15dp"
-            android:hint="@string/email_mobile"
-            android:inputType="textEmailAddress"
+            android:inputType="number"
+            android:maxLength="10"
             android:textColor="@color/white"
             android:textColorHint="@color/colorAccent" />
 
-        <android.support.v7.widget.AppCompatEditText
+        <!--<android.support.v7.widget.AppCompatEditText
             android:id="@+id/edt_password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -94,10 +102,35 @@
             android:backgroundTint="@android:color/white"
             android:drawableLeft="@drawable/password"
             android:drawablePadding="@dimen/dim_15dp"
-            android:hint="@string/password"
+            android:hint="@string/otp"
+            android:maxLength="6"
+            android:visibility="gone"
             android:inputType="textPassword"
             android:textColor="@color/white"
-            android:textColorHint="@color/colorAccent" />
+            android:textColorHint="@color/colorAccent" />-->
+
+        <TextView
+            android:id="@+id/tv_otp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/dim_40dp"
+            android:layout_marginTop="@dimen/dim_10dp"
+            android:text="@string/otp"
+            android:textColor="@color/colorAccent"
+            android:textStyle="bold" />
+
+        <com.hostelbasera.utility.OtpEditText
+            android:id="@+id/edt_otp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/dim_40dp"
+            android:layout_marginRight="@dimen/dim_40dp"
+            android:cursorVisible="false"
+            android:digits="1234567890"
+            android:inputType="numberPassword"
+            android:maxLength="6"
+            android:textIsSelectable="false"
+            android:textSize="20sp" />
 
         <Button
             android:id="@+id/btn_sign_in"
@@ -105,7 +138,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginLeft="@dimen/dim_40dp"
-            android:layout_marginTop="@dimen/dim_15dp"
+            android:layout_marginTop="@dimen/dim_30dp"
             android:layout_marginRight="@dimen/dim_40dp"
             android:background="@drawable/rounded_sign_in_bg"
             android:padding="@dimen/dim_10dp"
@@ -128,6 +161,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/dim_15dp"
+            android:visibility="gone"
             android:gravity="center">
 
             <ImageView
@@ -163,6 +197,7 @@
             android:layout_gravity="center"
             android:layout_marginTop="@dimen/dim_5dp"
             android:padding="@dimen/dim_5dp"
+            android:visibility="gone"
             android:text="@string/forget_password_"
             android:textColor="@color/white"
             android:textSize="@dimen/dim_text14" />
@@ -172,7 +207,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
-            android:layout_marginTop="@dimen/dim_5dp"
+            android:layout_marginTop="@dimen/dim_30dp"
             android:background="@color/white"
             android:gravity="center"
             android:padding="@dimen/dim_10dp">

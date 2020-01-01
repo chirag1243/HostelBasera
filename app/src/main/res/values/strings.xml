@@ -141,4 +141,6 @@
     <string name="all">All</string>
     <string name="enter_area">Enter Area</string>
     <string name="area">Area</string>
+    <string name="mobile">Mobile</string>
+    <string name="otp">OTP</string>
 </resources>

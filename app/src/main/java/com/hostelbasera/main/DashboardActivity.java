@@ -270,11 +270,11 @@ public class DashboardActivity extends BaseActivity implements NavigationView.On
                 setToolbarTitle(R.string.my_pg_hostel);
                 setFragment(new FragmentOrderList());
                 break;*/
-            case R.id.nav_change_password:
+            /*case R.id.nav_change_password:
                 setToolbarTitle(R.string.change_password);
                 onChangePasswordClicked();
                 doCloseDrawer();
-                return false;
+                return false;*/
             case R.id.nav_feedback:
                 onFeedbackClicked();
                 doCloseDrawer();

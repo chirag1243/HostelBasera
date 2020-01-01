@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
@@ -52,7 +53,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class CategoryListActivity extends BaseActivity implements Paginate.Callbacks, SwipeRefreshLayout.OnRefreshListener, OnMapReadyCallback {
+public class CategoryListActivity extends BaseActivity implements Paginate.Callbacks, SwipeRefreshLayout.OnRefreshListener/*, OnMapReadyCallback*/ {
 
     @BindView(R.id.toolbar_title)
     TextView toolbarTitle;
@@ -80,8 +81,8 @@ public class CategoryListActivity extends BaseActivity implements Paginate.Callb
     @BindView(R.id.floating_action_button)
     FloatingActionButton floatingActionButton;
 
-    @BindView(R.id.map)
-    FrameLayout map;
+//    @BindView(R.id.map)
+//    Fragment map;
 
     private Paginate paginate;
     private boolean loading = false;
@@ -109,7 +110,7 @@ public class CategoryListActivity extends BaseActivity implements Paginate.Callb
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_category_list);
         ButterKnife.bind(this);
-        map.setVisibility(View.GONE);
+//        map.setVisibility(View.GONE);
         init();
     }
 
@@ -132,8 +133,8 @@ public class CategoryListActivity extends BaseActivity implements Paginate.Callb
         arrPropertySizeId = new ArrayList<>();
         arrPropertyCategoryId = new ArrayList<>();
 
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
+//        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
+//        mapFragment.getMapAsync(this);
 
         if (getIntent().hasExtra(Constant.ArrPropertyCategoryId)) {
             arrPropertyCategoryId = getIntent().getStringArrayListExtra(Constant.ArrPropertyCategoryId);
@@ -174,7 +175,7 @@ public class CategoryListActivity extends BaseActivity implements Paginate.Callb
         });
     }
 
-    GoogleMap googleMap;
+    /*GoogleMap googleMap;
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
@@ -197,7 +198,7 @@ public class CategoryListActivity extends BaseActivity implements Paginate.Callb
 
                     name_tv.setText(marker.getTitle());
 
-                   /* if (img.getDrawable() == null) {
+                   *//* if (img.getDrawable() == null) {
                         Picasso.get()
                                 .load(mContext.getString(R.string.image_url) +
                                         (propertyDetails.productImages != null && !propertyDetails.productImages.isEmpty() ? propertyDetails.productImages.get(0) : ""))
@@ -209,7 +210,7 @@ public class CategoryListActivity extends BaseActivity implements Paginate.Callb
                                         (propertyDetails.productImages != null && !propertyDetails.productImages.isEmpty() ? propertyDetails.productImages.get(0) : ""))
                                 .error(R.mipmap.ic_launcher)
                                 .into(img);
-                    }*/
+                    }*//*
 
 
                     return view;
@@ -232,10 +233,10 @@ public class CategoryListActivity extends BaseActivity implements Paginate.Callb
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
+    }*/
 
 
-    public class InfoWindowRefresher implements Callback {
+    /*public class InfoWindowRefresher implements Callback {
         private Marker markerToRefresh;
 
         public InfoWindowRefresher(Marker markerToRefresh) {
@@ -252,14 +253,14 @@ public class CategoryListActivity extends BaseActivity implements Paginate.Callb
             e.printStackTrace();
         }
 
-    }
+    }*/
 
 
     public void getPropertyListData(boolean showProgress, boolean isFilter) {
         JSONObject postData;
         //TODO :Remove
-        latitude = 23.010353;
-        longitude = 72.5054966;
+//        latitude = 23.010353;
+//        longitude = 72.5054966;
 //        23.0226819
 //        72.5797763
         if (isNearMe) {
@@ -372,7 +373,7 @@ public class CategoryListActivity extends BaseActivity implements Paginate.Callb
             showNoRecordFound(getString(R.string.no_data_found));
     }
 
-    private void setAllMarkers() {
+   /* private void setAllMarkers() {
 
         for (int i = 0; i < arrPropertyDetailArrayList.size(); i++) {
             if (arrPropertyDetailArrayList.get(i).latitude != null && !arrPropertyDetailArrayList.get(i).latitude.isEmpty() && arrPropertyDetailArrayList.get(i).longitude != null && !arrPropertyDetailArrayList.get(i).longitude.isEmpty()) {
@@ -425,7 +426,7 @@ public class CategoryListActivity extends BaseActivity implements Paginate.Callb
                 googleMap.getUiSettings().setZoomGesturesEnabled(false);
             }
         }
-    }
+    }*/
 
     private void setAdapter() {
         hideNoRecordFound();
@@ -443,7 +444,7 @@ public class CategoryListActivity extends BaseActivity implements Paginate.Callb
 //            if (isNearMe) {
 //                rvHostelList.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
 //            }else {
-                rvHostelList.setLayoutManager(new GridLayoutManager(this, Constant.GRID_SPAN));
+            rvHostelList.setLayoutManager(new GridLayoutManager(this, Constant.GRID_SPAN));
 //            }
             rvHostelList.setItemAnimator(new DefaultItemAnimator());
             rvHostelList.setAdapter(adapterCategoryList);
