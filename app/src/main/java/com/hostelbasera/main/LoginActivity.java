@@ -10,6 +10,8 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.AppCompatEditText;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -58,6 +60,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import info.hoang8f.android.segmented.SegmentedGroup;
+
+import static com.hostelbasera.utility.Constant.Verify_ID_Login;
 
 public class LoginActivity extends BaseActivity {
 
@@ -114,6 +118,7 @@ public class LoginActivity extends BaseActivity {
         //TODO : Google Login remove comment once issue solved
         signInButton.setVisibility(View.GONE);
 
+
        /* try {
             PackageInfo info = getPackageManager().getPackageInfo(
                     getPackageName(),
@@ -160,6 +165,52 @@ public class LoginActivity extends BaseActivity {
                 isSeller = checkedId != R.id.rb_buyer;
             }
         });
+
+        edtMobileNo.addTextChangedListener(new TextWatcher() {
+
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (s.length() == 10) {
+                    if (Globals.isNetworkAvailable(LoginActivity.this)) {
+                        doCheckMobilenoForOtp(edtMobileNo.getText().toString(), Verify_ID_Login);
+                    } else {
+                        Toaster.shortToast(getString(R.string.no_internet_msg));
+                    }
+                }
+            }
+        });
+
+        edtOtp.addTextChangedListener(new TextWatcher() {
+
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (s.length() == 6) {
+                    if (Globals.isNetworkAvailable(LoginActivity.this)) {
+                        onBtnSignInClicked();
+                    } else {
+                        Toaster.shortToast(getString(R.string.no_internet_msg));
+                    }
+                }
+            }
+        });
+
+
     }
 
     @OnClick(R.id.login_button)
@@ -330,7 +381,7 @@ public class LoginActivity extends BaseActivity {
         } else if (edtOtp.getText().toString().trim().isEmpty()) {
             Toaster.shortToast("Please enter otp.");
             return;
-        } else if (edtOtp.getText().toString().length() < 6) {
+        } else if (edtOtp.getText().toString().length() != 6) {
             Toaster.shortToast("Please enter otp.");
             return;
         }
@@ -417,7 +468,7 @@ public class LoginActivity extends BaseActivity {
                     return;
                 }
                 if (Globals.isNetworkAvailable(LoginActivity.this)) {
-                    doCheckMobilenoForOtp(edtMobileNumber.getText().toString());
+                    doCheckMobilenoForOtp(edtMobileNumber.getText().toString(), 0);
                 } else {
                     Toaster.shortToast(getString(R.string.no_internet_msg));
                 }
@@ -456,8 +507,8 @@ public class LoginActivity extends BaseActivity {
         alertDialog.show();
     }
 
-    public void doCheckMobilenoForOtp(String mobile_no) {
-        JSONObject postData = HttpRequestHandler.getInstance().getCheckMobilenoForOtpParam(mobile_no, isSeller);
+    public void doCheckMobilenoForOtp(String mobile_no, int verify_type) {
+        JSONObject postData = HttpRequestHandler.getInstance().getCheckMobilenoForOtpParam(mobile_no, isSeller, verify_type);
 
         if (postData != null) {
             new PostRequest(this, getString(R.string.checkMobilenoForOtp), postData, true,

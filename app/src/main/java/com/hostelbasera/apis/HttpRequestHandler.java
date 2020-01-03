@@ -127,7 +127,7 @@ public class HttpRequestHandler {
     }
 
     public JSONObject getRegisterUserParam(String deviceId, String name, String password, String email, String mobile_no,
-                                           String address, boolean isSeller, String fb_id, String google_id, String version) {
+                                           String address, boolean isSeller, String fb_id, String google_id, String version, String gender, int city_id) {
         JSONObject params = new JSONObject();
         JSONObject jsonObject = new JSONObject();
         try {
@@ -144,6 +144,9 @@ public class HttpRequestHandler {
             jsonObject.put(Constant.Fb_id, fb_id);
             jsonObject.put(Constant.Google_id, google_id);
             jsonObject.put(Constant.Version, version);
+
+            jsonObject.put(Constant.User_gender,gender);
+            jsonObject.put(Constant.City_id,city_id);
 
             params.put(isSeller ? Constant.RegisterSellerData : Constant.RegisterUserData, jsonObject);
         } catch (Exception e) {
@@ -656,7 +659,7 @@ public class HttpRequestHandler {
     }
 
 
-    public JSONObject getChangePasswordParam(boolean isSeller, String password,int user_id) {
+    public JSONObject getChangePasswordParam(boolean isSeller, String password, int user_id) {
         JSONObject params = new JSONObject();
         try {
             params.put(Constant.Token, Constant.Token_Value);
@@ -671,13 +674,15 @@ public class HttpRequestHandler {
     }
 
 
-    public JSONObject getCheckMobilenoForOtpParam(String mobile_no, boolean isSeller) {
+    public JSONObject getCheckMobilenoForOtpParam(String mobile_no, boolean isSeller, int verify_type) {
         JSONObject params = new JSONObject();
         try {
             params.put(Constant.Token, Constant.Token_Value);
             params.put(Constant.DeviceType, Constant.AndroidDeviceType);
             params.put(Constant.Mobile_no, mobile_no);
             params.put(Constant.Type, isSeller ? "seller" : "user");
+            if (verify_type > 0)
+                params.put(Constant.Verify_type, verify_type);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -752,6 +757,17 @@ public class HttpRequestHandler {
         }
         return params;
     }*/
+
+    public JSONObject getAllDropdownListParam() {
+        JSONObject params = new JSONObject();
+        try {
+            params.put(Constant.Token, Constant.Token_Value);//globals.getUserDetails().loginUserDetail.token);
+            params.put(Constant.DeviceType, Constant.AndroidDeviceType);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return params;
+    }
 
     public JSONObject getCityListParam() {
         return setDefaultParameters();

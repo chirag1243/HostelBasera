@@ -85,7 +85,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/dim_40dp"
             android:layout_marginRight="@dimen/dim_40dp"
-            android:backgroundTint="@android:color/white"
+            android:backgroundTint="@color/colorAccent"
             android:drawablePadding="@dimen/dim_15dp"
             android:inputType="number"
             android:maxLength="10"

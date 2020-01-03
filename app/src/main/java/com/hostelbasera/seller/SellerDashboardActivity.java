@@ -243,11 +243,11 @@ public class SellerDashboardActivity extends BaseActivity implements NavigationV
                 setToolbarTitle(R.string.enquiry);
                 setFragment(new FragmentOrderList());
                 break;*/
-            case R.id.nav_change_password:
+            /*case R.id.nav_change_password:
                 setToolbarTitle(R.string.change_password);
                 onChangePasswordClicked();
                 doCloseDrawer();
-                return false;
+                return false;*/
             case R.id.nav_contact_us:
                 new TedPermission(this)
                         .setPermissionListener(this)

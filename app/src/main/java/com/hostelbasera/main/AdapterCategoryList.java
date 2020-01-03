@@ -76,6 +76,8 @@ public class AdapterCategoryList extends RecyclerView.Adapter<AdapterCategoryLis
         TextView tvArea;
         @BindView(R.id.tv_boys_girls)
         TextView tvBoysGirls;
+        @BindView(R.id.tv_distance)
+        TextView tvDistance;
 
         ViewHolder(View itemView, AdapterCategoryList adapterCategoryList) {
             super(itemView);
@@ -84,7 +86,7 @@ public class AdapterCategoryList extends RecyclerView.Adapter<AdapterCategoryLis
             itemView.setOnClickListener(this);
         }
 
-        @SuppressLint("SetTextI18n")
+        @SuppressLint({"SetTextI18n", "DefaultLocale"})
         void setDataToView(GetPropertyDetailModel.PropertyDetail mItem, ViewHolder holder, int position) {
 
             if (position % 2 == 0) {
@@ -97,27 +99,41 @@ public class AdapterCategoryList extends RecyclerView.Adapter<AdapterCategoryLis
             tvName.setTypeface(tvName.getTypeface(), Typeface.BOLD);
             tvPrice.setText("₹ " + mItem.price);
             tvPrice.setTypeface(tvPrice.getTypeface(), Typeface.BOLD);
-            if (!isNearMe && mItem.property_area != null && !mItem.property_area.isEmpty()) {
-                tvArea.setVisibility(View.VISIBLE);
+            if (mItem.property_area != null && !mItem.property_area.isEmpty()) {
                 tvArea.setText(mItem.property_area);
             } else
-                tvArea.setVisibility(View.GONE);
+                tvArea.setText("");
 
-            Globals.doBoldTextView(tvBoysGirls);
-            String category = "";
-            if (mItem.property_category_id == 1) {
-                category = mContext.getString(R.string.boys);
-            } else if (mItem.property_category_id == 2) {
-                category = mContext.getString(R.string.girls);
-            } else if (mItem.property_category_id == 4) {
-                category = mContext.getString(R.string.both);
+            if (isNearMe) {
+                tvDistance.setVisibility(View.VISIBLE);
+                tvBoysGirls.setVisibility(View.VISIBLE);
+                Globals.doBoldTextView(tvBoysGirls);
+                String category = "";
+                if (mItem.property_category_id == 1) {
+                    category = mContext.getString(R.string.boys);
+                } else if (mItem.property_category_id == 2) {
+                    category = mContext.getString(R.string.girls);
+                } else if (mItem.property_category_id == 4) {
+                    category = mContext.getString(R.string.both);
+                }
+
+                tvBoysGirls.setText(category);
+
+                tvDistance.setText(String.format("%.2f", mItem.distance)+"km");
+
+            } else {
+                tvDistance.setVisibility(View.GONE);
+                tvBoysGirls.setVisibility(View.GONE);
             }
 
-            tvBoysGirls.setText(category);
-
-            tvLocation.setText("" + (isNearMe && mItem.property_area != null && !mItem.property_area.isEmpty() ? mItem.property_area : mItem.city_name));
-            tvLocation.setTypeface(tvLocation.getTypeface(), Typeface.BOLD);
-
+            if (isNearMe) {
+                tvLocation.setVisibility(View.GONE);
+            } else {
+                tvLocation.setVisibility(View.VISIBLE);
+                tvLocation.setText("" + mItem.city_name);
+                //"" + (isNearMe && mItem.property_area != null && !mItem.property_area.isEmpty() ? mItem.property_area : mItem.city_name)
+                tvLocation.setTypeface(tvLocation.getTypeface(), Typeface.BOLD);
+            }
             simpleRatingBar.setRating(mItem.rating);
 
             imgPlaceHolder.setVisibility(View.VISIBLE);

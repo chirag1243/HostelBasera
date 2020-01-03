@@ -1,11 +1,5 @@
 package com.hostelbasera.utility;
 
-import android.util.Property;
-
-import com.hostelbasera.model.FilterModel;
-
-import java.sql.Types;
-
 /**
  * Created by Chirag.
  */
@@ -192,6 +186,14 @@ public class Constant {
     public static final String City_Name = "City_Name";
 
     public static final String Property_area = "property_area";
+
+    public static final String Verify_type = "verify_type";
+
+    //verify_type
+    public static final int Verify_ID_Login = 1;
+    public static final int Verify_ID_Register = 2;
+
+    public static final String User_gender = "user_gender";
 
 
     //"https://securegw.paytm.in/theia/paytmCallback?ORDER_ID=";

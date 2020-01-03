@@ -4,7 +4,6 @@ import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.List;
 
 public class GetPropertyDetailModel implements Serializable {
 
@@ -84,6 +83,9 @@ public class GetPropertyDetailModel implements Serializable {
 
         @SerializedName("property_area")
         public String property_area;
+
+        @SerializedName("distance")
+        public double distance;
 
     }
 }

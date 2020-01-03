@@ -143,4 +143,7 @@
     <string name="area">Area</string>
     <string name="mobile">Mobile</string>
     <string name="otp">OTP</string>
+    <string name="verify">Verify</string>
+    <string name="male">Male</string>
+    <string name="female">Female</string>
 </resources>

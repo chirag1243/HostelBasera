@@ -17,10 +17,10 @@
             android:id="@+id/nav_enquiry"
             android:icon="@drawable/nav_feedback"
             android:title="@string/enquiry" />-->
-        <item
+        <!--<item
             android:id="@+id/nav_change_password"
             android:icon="@drawable/nav_change_pass"
-            android:title="@string/change_password" />
+            android:title="@string/change_password" />-->
         <item
             android:id="@+id/nav_share_app"
             android:icon="@drawable/nav_share"
