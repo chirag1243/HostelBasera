@@ -34,15 +34,16 @@ public class AdapterCategoryList extends RecyclerView.Adapter<AdapterCategoryLis
     private ArrayList<GetPropertyDetailModel.PropertyDetail> mValues;
     private final Context mContext;
     private AdapterView.OnItemClickListener onItemClickListener;
-    boolean isNearMe;
+    boolean isNearMe,isSearchList;
 
     AdapterCategoryList(Context context) {
         mContext = context;
     }
 
-    public void doRefresh(ArrayList<GetPropertyDetailModel.PropertyDetail> arrPropertyDetails, boolean isNearMe) {
+    public void doRefresh(ArrayList<GetPropertyDetailModel.PropertyDetail> arrPropertyDetails, boolean isNearMe,boolean isSearchList) {
         mValues = arrPropertyDetails;
         this.isNearMe = isNearMe;
+        this.isSearchList = isSearchList;
         notifyDataSetChanged();
     }
 
@@ -104,8 +105,7 @@ public class AdapterCategoryList extends RecyclerView.Adapter<AdapterCategoryLis
             } else
                 tvArea.setText("");
 
-            if (isNearMe) {
-                tvDistance.setVisibility(View.VISIBLE);
+            if (isSearchList || isNearMe){
                 tvBoysGirls.setVisibility(View.VISIBLE);
                 Globals.doBoldTextView(tvBoysGirls);
                 String category = "";
@@ -118,21 +118,22 @@ public class AdapterCategoryList extends RecyclerView.Adapter<AdapterCategoryLis
                 }
 
                 tvBoysGirls.setText(category);
-
-                tvDistance.setText(String.format("%.2f", mItem.distance)+"km");
-
-            } else {
-                tvDistance.setVisibility(View.GONE);
+            }else {
                 tvBoysGirls.setVisibility(View.GONE);
             }
 
             if (isNearMe) {
                 tvLocation.setVisibility(View.GONE);
+
+                tvDistance.setVisibility(View.VISIBLE);
+                tvDistance.setText(String.format("%.2f", mItem.distance)+"km");
             } else {
                 tvLocation.setVisibility(View.VISIBLE);
                 tvLocation.setText("" + mItem.city_name);
                 //"" + (isNearMe && mItem.property_area != null && !mItem.property_area.isEmpty() ? mItem.property_area : mItem.city_name)
                 tvLocation.setTypeface(tvLocation.getTypeface(), Typeface.BOLD);
+
+                tvDistance.setVisibility(View.GONE);
             }
             simpleRatingBar.setRating(mItem.rating);
 
