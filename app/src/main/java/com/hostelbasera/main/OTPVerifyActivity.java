@@ -68,7 +68,7 @@ public class OTPVerifyActivity extends BaseActivity {
         doLogin();
     }
 
-    String version = "1.1.7";
+    String version = "1.1.8";
 
     @SuppressLint("HardwareIds")
     public void doLogin() {

@@ -83,6 +83,14 @@ public class SignUpActivity extends BaseActivity {
     Intent intent;
     String fb_id = "", google_id = "", gender = "male";
     int city_id = 0;
+    @BindView(R.id.ll_city)
+    LinearLayout llCity;
+    @BindView(R.id.tv_already_have_an_account)
+    TextView tvAlreadyHaveAnAccount;
+    @BindView(R.id.tv_sign_in)
+    TextView tvSignIn;
+    @BindView(R.id.ll_back_sign)
+    LinearLayout llBackSign;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -202,6 +210,9 @@ public class SignUpActivity extends BaseActivity {
                 gender = text.toLowerCase();
             }
         });
+
+//        Globals.doBoldTextView(tvAlreadyHaveAnAccount);
+        Globals.doBoldTextView(tvSignIn);
     }
 
     @OnClick(R.id.btn_sign_up)
@@ -236,7 +247,7 @@ public class SignUpActivity extends BaseActivity {
 
     @SuppressLint("HardwareIds")
     public void doRegisterUser() {
-        String version = "1.1.7";
+        String version = "1.1.8";
         try {
             PackageInfo pInfo = this.getPackageManager().getPackageInfo(getPackageName(), 0);
             version = pInfo.versionName;
@@ -245,7 +256,7 @@ public class SignUpActivity extends BaseActivity {
         }
         JSONObject postData = HttpRequestHandler.getInstance().getRegisterUserParam(Settings.Secure.getString(this.getContentResolver(), Settings.Secure.ANDROID_ID),
                 edtName.getText().toString(), "", edtEmail.getText().toString(), edtMobileNo.getText().toString(),
-                "", isSeller, fb_id, google_id, version,gender,city_id);
+                "", isSeller, fb_id, google_id, version, gender, city_id);
 
         if (postData != null) {
             new PostRequest(this, isSeller ? getString(R.string.registerSeller) : getString(R.string.registerUser), postData, true,
@@ -318,4 +329,14 @@ public class SignUpActivity extends BaseActivity {
         Globals.hideKeyboard(this);
     }
 
+    @OnClick(R.id.ll_back_sign)
+    public void onBackSignClicked() {
+        onBackPressed();
+    }
+
+    @Override
+    public void onBackPressed() {
+        finish();
+        super.onBackPressed();
+    }
 }

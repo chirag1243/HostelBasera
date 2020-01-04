@@ -1,13 +1,16 @@
 package com.hostelbasera.main;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Paint;
 import android.graphics.Typeface;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.AppCompatEditText;
 import android.text.Editable;
@@ -23,6 +26,8 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
@@ -30,6 +35,7 @@ import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
+import com.github.javiersantos.materialstyleddialogs.MaterialStyledDialog;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -104,6 +110,7 @@ public class LoginActivity extends BaseActivity {
     OtpEditText edtOtp;
 
     private static final int RC_SIGN_IN = 12121;
+    private static final int UpdateCode = 2212;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -345,6 +352,14 @@ public class LoginActivity extends BaseActivity {
         } else {
             callbackManager.onActivityResult(requestCode, resultCode, data);
         }
+
+        if (requestCode == UpdateCode) {
+            if (resultCode == Activity.RESULT_OK) {
+                if (data != null) {
+                    updateChecker();
+                }
+            }
+        }
         super.onActivityResult(requestCode, resultCode, data);
     }
 
@@ -388,7 +403,7 @@ public class LoginActivity extends BaseActivity {
         doLogin();
     }
 
-    String version = "1.1.7";
+    String version = "1.1.8";
 
     @SuppressLint("HardwareIds")
     public void doLogin() {
@@ -419,8 +434,8 @@ public class LoginActivity extends BaseActivity {
                                 }
                                 globals.setIsSeller(isSeller);
                                 globals.setUserDetails(userDetailModel);
-                                startActivity(new Intent(LoginActivity.this, isSeller ? SellerDashboardActivity.class : DashboardActivity.class));
-                                finish();
+                                updateChecker();
+
                             }
                             Toaster.shortToast(userDetailModel.message);
                         }
@@ -432,6 +447,49 @@ public class LoginActivity extends BaseActivity {
                     }).execute();
         }
         Globals.hideKeyboard(this);
+    }
+
+
+    public void updateChecker() {
+        UserDetailModel.VersionDetail versionDetail = isSeller? globals.getUserDetails().loginSellerDetail.versionDetail: globals.getUserDetails().loginUserDetail.versionDetail;
+        if (versionDetail.is_update_available) {
+            MaterialStyledDialog.Builder builder = new MaterialStyledDialog.Builder(this);
+            builder.setTitle(R.string.new_update_available)
+                    .setDescription("Update ver." + versionDetail.latest_version + " is available to download. Downloading the latest update you will get the latest features, " + versionDetail.remark + " of HostelBasera.")
+                    .setCancelable(false)
+                    .setIcon(R.mipmap.ic_launcher)
+                    .setHeaderDrawable(R.drawable.nav_bg)
+                    .autoDismiss(false)
+                    .withDarkerOverlay(false)
+                    .setPositiveText("Update")
+                    .onPositive(new MaterialDialog.SingleButtonCallback() {
+                        @Override
+                        public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                            final String appPackageName = getPackageName();
+                            try {
+                                startActivityForResult(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName)), UpdateCode);
+                            } catch (android.content.ActivityNotFoundException anfe) {
+                                startActivityForResult(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName)), UpdateCode);
+                            }
+                            dialog.dismiss();
+                        }
+                    });
+            if (!versionDetail.force_update) {
+                builder.setNegativeText("Later")
+                        .onNegative(new MaterialDialog.SingleButtonCallback() {
+                            @Override
+                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                startActivity(new Intent(LoginActivity.this, isSeller ? SellerDashboardActivity.class : DashboardActivity.class));
+                                finish();
+                                dialog.dismiss();
+                            }
+                        });
+            }
+            builder.show();
+        }else {
+            startActivity(new Intent(LoginActivity.this, isSeller ? SellerDashboardActivity.class : DashboardActivity.class));
+            finish();
+        }
     }
 
     AlertDialog alertDialog;

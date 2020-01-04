@@ -1,19 +1,25 @@
 package com.hostelbasera.main;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Typeface;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
+import com.github.javiersantos.materialstyleddialogs.MaterialStyledDialog;
 import com.google.gson.Gson;
 import com.hostelbasera.R;
 import com.hostelbasera.apis.HttpRequestHandler;
@@ -45,6 +51,7 @@ public class SplashActivity extends AppCompatActivity {
 //    ImageView imgIcon;
     boolean isSeller;
     UserDetailModel userModel;
+    private static final int UpdateCode = 2212;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,7 +83,7 @@ public class SplashActivity extends AppCompatActivity {
 
     @SuppressLint("HardwareIds")
     public void doLogin() {
-        String version = "1.1.7";
+        String version = "1.1.8";
         try {
             PackageInfo pInfo = this.getPackageManager().getPackageInfo(getPackageName(), 0);
             version = pInfo.versionName;
@@ -104,12 +111,13 @@ public class SplashActivity extends AppCompatActivity {
                         globals.setIsSeller(isSeller);
                         globals.setUserDetails(userDetailModel);
 
-                        startActivity(new Intent(SplashActivity.this, isSeller ? SellerDashboardActivity.class : DashboardActivity.class));
+                        updateChecker();
+
                     } else {
                         Toaster.shortToast(userDetailModel.message);
                         startActivity(new Intent(SplashActivity.this, LoginActivity.class));
+                        finish();
                     }
-                    finish();
                 }
 
                 @Override
@@ -121,6 +129,51 @@ public class SplashActivity extends AppCompatActivity {
             }).execute();
         }
         Globals.hideKeyboard(this);
+    }
+
+    public void updateChecker() {
+        UserDetailModel.VersionDetail versionDetail = isSeller? globals.getUserDetails().loginSellerDetail.versionDetail: globals.getUserDetails().loginUserDetail.versionDetail;
+        if (versionDetail.is_update_available) {
+            MaterialStyledDialog.Builder builder = new MaterialStyledDialog.Builder(this);
+            builder.setTitle(R.string.new_update_available)
+                    .setDescription("Update ver." + versionDetail.latest_version + " is available to download. Downloading the latest update you will get the latest features, " + versionDetail.remark + " of HostelBasera.")
+                    .setCancelable(false)
+                    .setIcon(R.mipmap.ic_launcher)
+                    .setHeaderDrawable(R.drawable.nav_bg)
+                    .autoDismiss(false)
+                    .withDarkerOverlay(false)
+                    .setPositiveText("Update")
+                    .onPositive(new MaterialDialog.SingleButtonCallback() {
+                        @Override
+                        public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                            final String appPackageName = getPackageName();
+                            try {
+                                startActivityForResult(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName)), UpdateCode);
+                            } catch (android.content.ActivityNotFoundException anfe) {
+                                startActivityForResult(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName)), UpdateCode);
+                            }
+                            dialog.dismiss();
+                        }
+                    });
+            if (!versionDetail.force_update) {
+                builder.setNegativeText("Later")
+                        .onNegative(new MaterialDialog.SingleButtonCallback() {
+                            @Override
+                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                redirectDashboard();
+                                dialog.dismiss();
+                            }
+                        });
+            }
+            builder.show();
+        }else {
+            redirectDashboard();
+        }
+    }
+
+    public void redirectDashboard(){
+        startActivity(new Intent(SplashActivity.this, isSeller ? SellerDashboardActivity.class : DashboardActivity.class));
+        finish();
     }
 
     private void redirect() {
@@ -154,5 +207,19 @@ public class SplashActivity extends AppCompatActivity {
     @OnClick(R.id.btn_retry)
     public void onViewClicked() {
         init();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // Result returned from launching the Intent from GoogleSignInClient.getSignInIntent(...);
+
+        if (requestCode == UpdateCode) {
+            if (resultCode == Activity.RESULT_OK) {
+                if (data != null) {
+                    updateChecker();
+                }
+            }
+        }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 }

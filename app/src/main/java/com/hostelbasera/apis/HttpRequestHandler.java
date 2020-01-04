@@ -788,6 +788,5 @@ public class HttpRequestHandler {
         return mParams;
     }
 
-
 }
 

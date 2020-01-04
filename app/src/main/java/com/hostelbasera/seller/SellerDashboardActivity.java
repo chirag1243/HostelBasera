@@ -1,6 +1,7 @@
 package com.hostelbasera.seller;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.PorterDuff;
@@ -441,7 +442,11 @@ public class SellerDashboardActivity extends BaseActivity implements NavigationV
 //            }
         }
         if (requestCode == UpdateCode) {
-            updateChecker();
+            if (resultCode == Activity.RESULT_OK) {
+                if (data != null) {
+                    updateChecker();
+                }
+            }
         }
 
     }

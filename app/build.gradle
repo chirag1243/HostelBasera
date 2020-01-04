@@ -16,8 +16,8 @@ android {
         applicationId "com.hostelbasera"
         minSdkVersion 16
         targetSdkVersion 28
-        versionCode 17
-        versionName "1.1.7"
+        versionCode 18
+        versionName "1.1.8"
         multiDexEnabled true
     }
     buildTypes {
@@ -95,7 +95,7 @@ dependencies {
     implementation 'com.google.android.gms:play-services-location:16.0.0'
     implementation 'com.google.android.gms:play-services-base:16.1.0'
     implementation 'com.google.android.gms:play-services-places:16.1.0'
-//    implementation 'com.google.android.gms:play-services-auth-api-phone:16.1.0'
+//    implementation "com.google.android.gms:play-services-auth-api-phone:16.0.0"
 
     implementation 'com.github.GwonHyeok:StickySwitch:0.0.15'
 

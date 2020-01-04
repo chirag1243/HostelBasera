@@ -472,7 +472,7 @@ public class HostelDetailActivity extends BaseActivity implements RatingDialogLi
     public void onPermissionGranted() {
         String contact_no = "+917622885409";//Chintan
         if (propertyDetails != null && propertyDetails.cont_no != null) {
-            contact_no = propertyDetails.cont_no;
+            contact_no = propertyDetails.cont_no.substring(0, 10);
         }
 
         Intent callIntent = new Intent(Intent.ACTION_CALL);
