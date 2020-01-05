@@ -34,7 +34,6 @@ import com.hostelbasera.model.UserDetailModel;
 import com.orhanobut.logger.AndroidLogAdapter;
 import com.orhanobut.logger.Logger;
 
-import io.fabric.sdk.android.Fabric;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStream;
@@ -42,6 +41,8 @@ import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 import java.util.Random;
+
+import io.fabric.sdk.android.Fabric;
 
 public class Globals extends CoreApp {
     SharedPreferences sp;
@@ -340,6 +341,20 @@ public class Globals extends CoreApp {
         getEditor().commit();
     }
 
+    public String getFCMDeviceToken() {
+        return getSharedPref().getString(Constant.Fcm_token, "");
+    }
+
+    public void setHasKey(String hasKey) {
+        getEditor().putString(Constant.HasKey, hasKey);
+        getEditor().commit();
+    }
+
+    public String getHasKey() {
+        return getSharedPref().getString(Constant.HasKey, "");
+    }
+
+
     public void setCityId(int cityId) {
         getEditor().putInt(Constant.City_id, cityId);
         getEditor().commit();
@@ -349,10 +364,6 @@ public class Globals extends CoreApp {
         return getSharedPref().getInt(Constant.City_id, 0);
     }
 
-
-    public String getFCMDeviceToken() {
-        return getSharedPref().getString(Constant.Fcm_token, "");
-    }
 
 
     public static void darkenStatusBar(Activity activity, int color) {

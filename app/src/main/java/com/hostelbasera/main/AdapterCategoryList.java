@@ -34,13 +34,13 @@ public class AdapterCategoryList extends RecyclerView.Adapter<AdapterCategoryLis
     private ArrayList<GetPropertyDetailModel.PropertyDetail> mValues;
     private final Context mContext;
     private AdapterView.OnItemClickListener onItemClickListener;
-    boolean isNearMe,isSearchList;
+    boolean isNearMe, isSearchList;
 
     AdapterCategoryList(Context context) {
         mContext = context;
     }
 
-    public void doRefresh(ArrayList<GetPropertyDetailModel.PropertyDetail> arrPropertyDetails, boolean isNearMe,boolean isSearchList) {
+    public void doRefresh(ArrayList<GetPropertyDetailModel.PropertyDetail> arrPropertyDetails, boolean isNearMe, boolean isSearchList) {
         mValues = arrPropertyDetails;
         this.isNearMe = isNearMe;
         this.isSearchList = isSearchList;
@@ -105,7 +105,7 @@ public class AdapterCategoryList extends RecyclerView.Adapter<AdapterCategoryLis
             } else
                 tvArea.setText("");
 
-            if (isSearchList || isNearMe){
+            if (isSearchList || isNearMe) {
                 tvBoysGirls.setVisibility(View.VISIBLE);
                 Globals.doBoldTextView(tvBoysGirls);
                 String category = "";
@@ -118,7 +118,7 @@ public class AdapterCategoryList extends RecyclerView.Adapter<AdapterCategoryLis
                 }
 
                 tvBoysGirls.setText(category);
-            }else {
+            } else {
                 tvBoysGirls.setVisibility(View.GONE);
             }
 
@@ -126,7 +126,7 @@ public class AdapterCategoryList extends RecyclerView.Adapter<AdapterCategoryLis
                 tvLocation.setVisibility(View.GONE);
 
                 tvDistance.setVisibility(View.VISIBLE);
-                tvDistance.setText(String.format("%.2f", mItem.distance)+"km");
+                tvDistance.setText(String.format("%.2f", mItem.distance) + "km");
             } else {
                 tvLocation.setVisibility(View.VISIBLE);
                 tvLocation.setText("" + mItem.city_name);

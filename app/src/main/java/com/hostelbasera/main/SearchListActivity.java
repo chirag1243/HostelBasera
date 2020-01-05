@@ -198,7 +198,7 @@ public class SearchListActivity extends BaseActivity implements Paginate.Callbac
             adapterCategoryList = new AdapterCategoryList(this);
         }
         loading = false;
-        adapterCategoryList.doRefresh(arrPropertyDetailArrayList, false);
+        adapterCategoryList.doRefresh(arrPropertyDetailArrayList, false,true);
 
         if (rvHostelList.getAdapter() == null) {
             rvHostelList.setHasFixedSize(false);

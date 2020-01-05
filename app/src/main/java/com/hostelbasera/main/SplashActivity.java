@@ -26,6 +26,7 @@ import com.hostelbasera.apis.HttpRequestHandler;
 import com.hostelbasera.apis.PostRequest;
 import com.hostelbasera.model.UserDetailModel;
 import com.hostelbasera.seller.SellerDashboardActivity;
+import com.hostelbasera.utility.AppSignatureHelper;
 import com.hostelbasera.utility.Globals;
 import com.hostelbasera.utility.Toaster;
 import com.victor.loading.rotate.RotateLoading;
@@ -59,6 +60,13 @@ public class SplashActivity extends AppCompatActivity {
         setContentView(R.layout.activity_splash);
         globals = ((Globals) getApplicationContext());
         ButterKnife.bind(this);
+
+        AppSignatureHelper appSignatureHelper = new AppSignatureHelper(this);
+        appSignatureHelper.getAppSignatures();
+
+        Toaster.shortToast("Hash String is  " + appSignatureHelper.getAppSignatures().get(0));
+        globals.setHasKey(appSignatureHelper.getAppSignatures().get(0));
+
         tvPoweredBy.setTypeface(tvPoweredBy.getTypeface(), Typeface.BOLD);
         isSeller = globals.getIsSeller();
         userModel = globals.getUserDetails();

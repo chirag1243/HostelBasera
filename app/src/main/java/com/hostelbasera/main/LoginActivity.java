@@ -2,7 +2,10 @@ package com.hostelbasera.main;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.PendingIntent;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.IntentSender;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Paint;
@@ -11,6 +14,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.AppCompatEditText;
 import android.text.Editable;
@@ -29,20 +33,20 @@ import android.widget.TextView;
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.facebook.CallbackManager;
-import com.facebook.FacebookCallback;
-import com.facebook.FacebookException;
-import com.facebook.GraphRequest;
-import com.facebook.GraphResponse;
-import com.facebook.login.LoginManager;
-import com.facebook.login.LoginResult;
 import com.github.javiersantos.materialstyleddialogs.MaterialStyledDialog;
 import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.auth.api.credentials.Credential;
+import com.google.android.gms.auth.api.credentials.HintRequest;
+import com.google.android.gms.auth.api.phone.SmsRetriever;
+import com.google.android.gms.auth.api.phone.SmsRetrieverClient;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.gson.Gson;
 import com.hostelbasera.R;
@@ -55,12 +59,11 @@ import com.hostelbasera.utility.BaseActivity;
 import com.hostelbasera.utility.Constant;
 import com.hostelbasera.utility.Globals;
 import com.hostelbasera.utility.OtpEditText;
+import com.hostelbasera.utility.OtpReceivedInterface;
+import com.hostelbasera.utility.SmsBroadcastReceiver;
 import com.hostelbasera.utility.Toaster;
 
-import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.util.Arrays;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -69,7 +72,8 @@ import info.hoang8f.android.segmented.SegmentedGroup;
 
 import static com.hostelbasera.utility.Constant.Verify_ID_Login;
 
-public class LoginActivity extends BaseActivity {
+public class LoginActivity extends BaseActivity implements GoogleApiClient.ConnectionCallbacks,
+        OtpReceivedInterface, GoogleApiClient.OnConnectionFailedListener {
 
     private static final String TAG = "Login Activity";
     @BindView(R.id.rb_buyer)
@@ -105,6 +109,9 @@ public class LoginActivity extends BaseActivity {
     CallbackManager callbackManager;
     GoogleSignInClient mGoogleSignInClient;
     GoogleApiClient mGoogleApiClient;
+
+    SmsBroadcastReceiver mSmsBroadcastReceiver;
+    private int RESOLVE_HINT = 2;
 
     @BindView(R.id.edt_otp)
     OtpEditText edtOtp;
@@ -148,16 +155,31 @@ public class LoginActivity extends BaseActivity {
         signUp.setTypeface(signUp.getTypeface(), Typeface.BOLD);
 
 //getString(R.string.default_web_client_id)) TODO : Temp Added fix
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken("128654680645-kisp1nlcidhaa2rgrr5vq21upufqtjl0.apps.googleusercontent.com")
-                .requestEmail()
-                .requestId()
-                .build();
-        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+//        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+//                .requestIdToken("128654680645-kisp1nlcidhaa2rgrr5vq21upufqtjl0.apps.googleusercontent.com")
+//                .requestEmail()
+//                .requestId()
+//                .build();
+//        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+//        mGoogleApiClient = new GoogleApiClient.Builder(this)
+//                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
+//                .build();
+//        mGoogleApiClient.connect();
+
+        mSmsBroadcastReceiver = new SmsBroadcastReceiver();
+
         mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
+                .addConnectionCallbacks(this)
+                .enableAutoManage(this, this)
+                .addApi(Auth.CREDENTIALS_API)
                 .build();
-        mGoogleApiClient.connect();
+
+        mSmsBroadcastReceiver.setOnOtpListeners(this);
+//        IntentFilter intentFilter = new IntentFilter();
+//        intentFilter.addAction(SmsRetriever.SMS_RETRIEVED_ACTION);
+//        getApplicationContext().registerReceiver(mSmsBroadcastReceiver, intentFilter);
+
+//        getHintPhoneNumber();
 
         try {
             GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
@@ -220,7 +242,7 @@ public class LoginActivity extends BaseActivity {
 
     }
 
-    @OnClick(R.id.login_button)
+    /*@OnClick(R.id.login_button)
     public void facebookLogin() {
 
         try {
@@ -270,7 +292,7 @@ public class LoginActivity extends BaseActivity {
                         // App code
                     }
                 });
-    }
+    }*/
 
     public void doCheckExitingUser(String email, String name, String fb_id, String google_id) {
         try {
@@ -344,20 +366,31 @@ public class LoginActivity extends BaseActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         // Result returned from launching the Intent from GoogleSignInClient.getSignInIntent(...);
-        if (requestCode == RC_SIGN_IN) {
+       /* if (requestCode == RC_SIGN_IN) {
             // The Task returned from this call is always completed, no need to attach
             // a listener.
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
             handleSignInResult(task);
         } else {
             callbackManager.onActivityResult(requestCode, resultCode, data);
-        }
+        }*/
 
         if (requestCode == UpdateCode) {
             if (resultCode == Activity.RESULT_OK) {
                 if (data != null) {
                     updateChecker();
                 }
+            }
+        }
+
+        if (requestCode == RESOLVE_HINT) {
+            if (resultCode == Activity.RESULT_OK) {
+                if (data != null) {
+                    Credential credential = data.getParcelableExtra(Credential.EXTRA_KEY);
+                    // credential.getId();  <-- will need to process phone number string
+                    edtMobileNo.setText(credential.getId());
+                }
+
             }
         }
         super.onActivityResult(requestCode, resultCode, data);
@@ -451,7 +484,7 @@ public class LoginActivity extends BaseActivity {
 
 
     public void updateChecker() {
-        UserDetailModel.VersionDetail versionDetail = isSeller? globals.getUserDetails().loginSellerDetail.versionDetail: globals.getUserDetails().loginUserDetail.versionDetail;
+        UserDetailModel.VersionDetail versionDetail = isSeller ? globals.getUserDetails().loginSellerDetail.versionDetail : globals.getUserDetails().loginUserDetail.versionDetail;
         if (versionDetail.is_update_available) {
             MaterialStyledDialog.Builder builder = new MaterialStyledDialog.Builder(this);
             builder.setTitle(R.string.new_update_available)
@@ -486,7 +519,7 @@ public class LoginActivity extends BaseActivity {
                         });
             }
             builder.show();
-        }else {
+        } else {
             startActivity(new Intent(LoginActivity.this, isSeller ? SellerDashboardActivity.class : DashboardActivity.class));
             finish();
         }
@@ -573,11 +606,15 @@ public class LoginActivity extends BaseActivity {
                     new PostRequest.OnPostServiceCallListener() {
                         @Override
                         public void onSucceedToPostCall(JSONObject response) {
+                            if (verify_type == Constant.Verify_ID_Login) {
+                                startSMSListener();
+                            }
                             CheckMobilenoForOtpModel mobilenoForOtpModel = new Gson().fromJson(response.toString(), CheckMobilenoForOtpModel.class);
                             /*if (mobilenoForOtpModel.status == 0) {
                             } */
                             Toaster.shortToast(mobilenoForOtpModel.message);
                             user_id = mobilenoForOtpModel.user_id;
+
                         }
 
                         @Override
@@ -712,4 +749,65 @@ public class LoginActivity extends BaseActivity {
     public void onLlSignUpClicked() {
         startActivity(new Intent(this, SignUpActivity.class));
     }
+
+
+    @Override
+    public void onConnected(@Nullable Bundle bundle) {
+
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+
+    }
+
+    @Override
+    public void onOtpReceived(String otp) {
+        Toaster.shortToast("Otp Received " + otp);
+        edtOtp.setText(otp);
+    }
+
+    @Override
+    public void onOtpTimeout() {
+        Toaster.shortToast("Time out, please resend");
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
+    }
+
+    public void startSMSListener() {
+        SmsRetrieverClient mClient = SmsRetriever.getClient(this);
+        Task<Void> mTask = mClient.startSmsRetriever();
+        mTask.addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                Toaster.shortToast("SMS Retriever starts");
+                IntentFilter filter = new IntentFilter();
+                filter.addAction(SmsRetriever.SMS_RETRIEVED_ACTION);
+                registerReceiver(new SmsBroadcastReceiver(), filter);
+            }
+        });
+        mTask.addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toaster.shortToast("Error");
+            }
+        });
+    }
+
+    public void getHintPhoneNumber() {
+        HintRequest hintRequest =
+                new HintRequest.Builder()
+                        .setPhoneNumberIdentifierSupported(true)
+                        .build();
+        PendingIntent mIntent = Auth.CredentialsApi.getHintPickerIntent(mGoogleApiClient, hintRequest);
+        try {
+            startIntentSenderForResult(mIntent.getIntentSender(), RESOLVE_HINT, null, 0, 0, 0);
+        } catch (IntentSender.SendIntentException e) {
+            e.printStackTrace();
+        }
+    }
+
 }

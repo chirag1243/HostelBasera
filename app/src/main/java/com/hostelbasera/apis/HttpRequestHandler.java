@@ -57,8 +57,8 @@ public class HttpRequestHandler {
     void post(Context context, String url, JSONObject params, AsyncHttpResponseHandler responseHandler) {
 
         try {
-            Logger.e("Server Url:=> ", url);
-            Logger.json(params.toString());
+//            Logger.e("Server Url:=> "+ url);
+//            Logger.json(params.toString());
             StringEntity entity = new StringEntity(params.toString(), "UTF-8");
             client.post(context, url, entity, HEADER_TYPE_JSON, responseHandler);
         } catch (Exception e) {
@@ -145,8 +145,8 @@ public class HttpRequestHandler {
             jsonObject.put(Constant.Google_id, google_id);
             jsonObject.put(Constant.Version, version);
 
-            jsonObject.put(Constant.User_gender,gender);
-            jsonObject.put(Constant.City_id,city_id);
+            jsonObject.put(Constant.User_gender, gender);
+            jsonObject.put(Constant.City_id, city_id);
 
             params.put(isSeller ? Constant.RegisterSellerData : Constant.RegisterUserData, jsonObject);
         } catch (Exception e) {
@@ -684,6 +684,7 @@ public class HttpRequestHandler {
             if (verify_type > 0)
                 params.put(Constant.Verify_type, verify_type);
 
+            params.put(Constant.HasKey, globals.getHasKey()); //Todo : Extra Added
         } catch (Exception e) {
             e.printStackTrace();
         }

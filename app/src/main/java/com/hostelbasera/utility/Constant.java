@@ -195,6 +195,8 @@ public class Constant {
 
     public static final String User_gender = "user_gender";
 
+    public static final String HasKey = "has_key";
+
 
     //"https://securegw.paytm.in/theia/paytmCallback?ORDER_ID=";
     //"https://pguat.paytm.com/paytmchecksum/paytmCallback.jsp";

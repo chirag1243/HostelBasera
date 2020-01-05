@@ -423,7 +423,7 @@ public class CategoryListActivity extends BaseActivity implements Paginate.Callb
             adapterCategoryList = new AdapterCategoryList(this);
         }
         loading = false;
-        adapterCategoryList.doRefresh(arrPropertyDetailArrayList, isNearMe);
+        adapterCategoryList.doRefresh(arrPropertyDetailArrayList, isNearMe,false);
 
         if (rvHostelList.getAdapter() == null) {
             rvHostelList.setHasFixedSize(false);

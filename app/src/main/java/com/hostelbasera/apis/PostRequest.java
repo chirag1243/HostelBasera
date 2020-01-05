@@ -111,7 +111,7 @@ public class PostRequest {
         if (isLoaderRequired) { //&& pb == null
             dialog = HttpRequestHandler.getInstance().getProgressBar(context);
         }
-        Logger.d("URL :=>", url);
+        Logger.d("URL :=>"+ url);
         Logger.json(postData.toString());
         HttpRequestHandler.getInstance().post(context, url, postData, new JsonHttpResponseHandler() {
 
