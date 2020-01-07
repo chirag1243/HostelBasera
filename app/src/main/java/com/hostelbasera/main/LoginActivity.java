@@ -175,9 +175,9 @@ public class LoginActivity extends BaseActivity implements GoogleApiClient.Conne
                 .build();
 
         mSmsBroadcastReceiver.setOnOtpListeners(this);
-//        IntentFilter intentFilter = new IntentFilter();
-//        intentFilter.addAction(SmsRetriever.SMS_RETRIEVED_ACTION);
-//        getApplicationContext().registerReceiver(mSmsBroadcastReceiver, intentFilter);
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(SmsRetriever.SMS_RETRIEVED_ACTION);
+        getApplicationContext().registerReceiver(mSmsBroadcastReceiver, intentFilter);
 
 //        getHintPhoneNumber();
 
@@ -784,9 +784,9 @@ public class LoginActivity extends BaseActivity implements GoogleApiClient.Conne
             @Override
             public void onSuccess(Void aVoid) {
                 Toaster.shortToast("SMS Retriever starts");
-                IntentFilter filter = new IntentFilter();
-                filter.addAction(SmsRetriever.SMS_RETRIEVED_ACTION);
-                registerReceiver(new SmsBroadcastReceiver(), filter);
+//                IntentFilter filter = new IntentFilter();
+//                filter.addAction(SmsRetriever.SMS_RETRIEVED_ACTION);
+//                registerReceiver(new SmsBroadcastReceiver(), filter);
             }
         });
         mTask.addOnFailureListener(new OnFailureListener() {

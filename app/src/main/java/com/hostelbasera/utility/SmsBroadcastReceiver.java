@@ -31,7 +31,7 @@ public class SmsBroadcastReceiver extends BroadcastReceiver {
                     String message = (String) extras.get(SmsRetriever.EXTRA_SMS_MESSAGE);
                     Logger.d(TAG + " onReceive: failure " + message);
                     if (otpReceiveInterface != null) {
-                        String otp = message.substring(message.indexOf("> ") + 1, message.indexOf(" is"));
+                        String otp = message.substring(message.indexOf(">") + 2, message.indexOf(" is"));
 //                        <#> 669093 is the one-time password (OTP) for your login to the HostelBasera App. Please do not share with anyone /H6E5Z/7ag+
                         otpReceiveInterface.onOtpReceived(otp);
                     }
