@@ -3,24 +3,17 @@ package com.hostelbasera.seller;
 import android.Manifest;
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Color;
-import android.graphics.PorterDuff;
 import android.graphics.Typeface;
 import android.location.Address;
 import android.location.Geocoder;
-import android.location.Location;
-import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.CardView;
@@ -40,7 +33,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.esafirm.imagepicker.features.ImagePicker;
 import com.esafirm.imagepicker.model.Image;
@@ -50,7 +42,6 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.Places;
 import com.google.android.gms.location.places.ui.PlacePicker;
@@ -63,7 +54,6 @@ import com.hostelbasera.R;
 import com.hostelbasera.apis.HttpRequestHandler;
 import com.hostelbasera.apis.PostRequest;
 import com.hostelbasera.apis.PostWithRequestParam;
-import com.hostelbasera.main.CategoryListActivity;
 import com.hostelbasera.model.AddImageAttachmentModel;
 import com.hostelbasera.model.AddRoomModel;
 import com.hostelbasera.model.CheckSellerPaymentDataModel;
@@ -92,9 +82,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import droidninja.filepicker.FilePickerBuilder;
 import droidninja.filepicker.FilePickerConst;
-import droidninja.filepicker.utils.Orientation;
 
 import static com.hostelbasera.utility.Globals.checkFileSize;
 
@@ -172,7 +160,8 @@ public class AddHostelPGActivity extends BaseActivity implements PermissionListe
 
     @BindView(R.id.edt_area)
     EditText edtArea;
-
+    @BindView(R.id.edt_reference)
+    EditText edtReference;
 
     Globals globals;
     SellerDropdownModel.SellerDropdownDetail sellerDropdownDetail;
@@ -1373,7 +1362,7 @@ TODO :
                 property_category_id, property_size_id, edtEmail.getText().toString(), edtAddress.getText().toString(), longitude, latitude,
                 contact_no.deleteCharAt(contact_no.length() - 2).toString(), edtDescription.getText().toString(), state_id, city_id, edtOpenHours.getText().toString(),
                 edtWaterTimings.getText().toString(), edtLaundryFees.getText().toString(), arrAddMenuAttachment, edtPrice.getText().toString(), arrFacilityList,
-                arrAddImageAttachment, arrRoomDetails, paymentId, price_plan,edtArea.getText().toString());
+                arrAddImageAttachment, arrRoomDetails, paymentId, price_plan, edtArea.getText().toString(), edtReference.getText().toString());
 
 
         if (postData != null) {

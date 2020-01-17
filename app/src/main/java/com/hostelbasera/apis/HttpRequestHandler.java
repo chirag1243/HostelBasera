@@ -248,7 +248,7 @@ public class HttpRequestHandler {
             jsonFilters.put(Constant.Distance, "0");
 
             jsonObject.put(Constant.Filters, jsonFilters);
-            jsonObject.put(Constant.Limit, 0);
+            jsonObject.put(Constant.Limit, 100);
             jsonObject.put(Constant.Page, pageNo);
 
             params.put(Constant.GetNearbyPropertyData, jsonObject);
@@ -504,7 +504,7 @@ public class HttpRequestHandler {
                                           String timing, String water_timing, String laundry_fees, ArrayList<AddImageAttachmentModel> arrAddMenuAttachment,
                                           String price, ArrayList<SellerDropdownModel.FacilityList> arrFacilityList,
                                           ArrayList<AddImageAttachmentModel> arrAddImageAttachment, ArrayList<AddRoomModel> arrRoomDetails,
-                                          String payment_id, String price_plan, String area) {
+                                          String payment_id, String price_plan, String area,String reference) {
         JSONObject params = new JSONObject();
         JSONObject jsonObject = new JSONObject();
         JSONArray jsonArray;
@@ -535,6 +535,7 @@ public class HttpRequestHandler {
             jsonObject.put(Constant.Price_plan, price_plan);
 
             jsonObject.put(Constant.Property_area, area);
+            jsonObject.put(Constant.Reference_name, reference);
 
 
             StringBuilder cooking_menu = new StringBuilder();

@@ -44,7 +44,6 @@ import com.victor.loading.rotate.RotateLoading;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Objects;
 import java.util.Timer;
 
 import butterknife.BindView;
@@ -176,15 +175,15 @@ public class FragmentHome extends Fragment implements Paginate.Callbacks, SwipeR
         easyWayLocation.setListener(this);
 
         if (isNearMe) {
-            if (lati != 0 && longi != 0) {
-                startActivity(new Intent(getActivity(), CategoryListActivity.class)
+//            if (lati != 0 && longi != 0) { Todo : Remove
+                startActivity(new Intent(getActivity(), NearMeActivity.class)
                         .putExtra(Constant.Category_name, getString(R.string.near_me))
                         .putExtra(Constant.Latitude, lati)
                         .putExtra(Constant.Longitude, longi));
-            } else {
+            /*} else {
                 isNearMe = false;
                 Toaster.shortToast("Not getting your Location.");
-            }
+            }*/
         }
     }
 

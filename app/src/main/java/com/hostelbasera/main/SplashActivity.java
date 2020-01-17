@@ -64,7 +64,7 @@ public class SplashActivity extends AppCompatActivity {
         AppSignatureHelper appSignatureHelper = new AppSignatureHelper(this);
         appSignatureHelper.getAppSignatures();
 
-        Toaster.shortToast("Hash String is  " + appSignatureHelper.getAppSignatures().get(0));
+//        Toaster.shortToast("Hash String is  " + appSignatureHelper.getAppSignatures().get(0));
         globals.setHasKey(appSignatureHelper.getAppSignatures().get(0));
 
         tvPoweredBy.setTypeface(tvPoweredBy.getTypeface(), Typeface.BOLD);

@@ -24,6 +24,7 @@ import com.google.gson.Gson;
 import com.hostelbasera.R;
 import com.hostelbasera.apis.HttpRequestHandler;
 import com.hostelbasera.apis.PostRequest;
+import com.hostelbasera.main.HostelDetailActivity;
 import com.hostelbasera.model.CheckSumModel;
 import com.hostelbasera.model.GetPropertyDetModel;
 import com.hostelbasera.model.SellerPropertyModel;
@@ -41,7 +42,6 @@ import com.victor.loading.rotate.RotateLoading;
 
 import org.json.JSONObject;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -219,6 +219,11 @@ public class FragmentSellerHome extends Fragment implements Paginate.Callbacks, 
 //                startActivity(new Intent(getActivity(), AddHostelPGActivity.class)
 //                        .putExtra(Constant.Property_id, arrPropertyDetailArrayList.get(position).property_id)
 //                        .putExtra(Constant.Property_name, arrPropertyDetailArrayList.get(position).property_name));
+
+                startActivity(new Intent(getActivity(), HostelDetailActivity.class)
+                        .putExtra(Constant.Property_id, arrPropertyDetailArrayList.get(position).property_id)
+                        .putExtra(Constant.Property_name, arrPropertyDetailArrayList.get(position).property_name));
+
             }
         });
     }

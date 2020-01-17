@@ -161,92 +161,14 @@ public class CategoryListActivity extends BaseActivity implements Paginate.Callb
         });
     }
 
-    /*GoogleMap googleMap;
 
-    @Override
-    public void onMapReady(GoogleMap googleMap) {
-        try {
-
-            this.googleMap = googleMap;
-            LatLng latLng = new LatLng(23.010336, 72.505890);
-            googleMap.addMarker(new MarkerOptions().position(latLng)
-                    .title("Test")
-                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.location)));
-
-            googleMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
-                @Override
-                public View getInfoWindow(Marker marker) {
-                    Context mContext = CategoryListActivity.this;
-                    View view = ((Activity) mContext).getLayoutInflater().inflate(R.layout.marker_info_window, null);
-
-                    TextView name_tv = view.findViewById(R.id.tv_title);
-                    ImageView img = view.findViewById(R.id.img_hostel);
-
-                    name_tv.setText(marker.getTitle());
-
-                   *//* if (img.getDrawable() == null) {
-                        Picasso.get()
-                                .load(mContext.getString(R.string.image_url) +
-                                        (propertyDetails.productImages != null && !propertyDetails.productImages.isEmpty() ? propertyDetails.productImages.get(0) : ""))
-                                .error(R.mipmap.ic_launcher)
-                                .into(img, new InfoWindowRefresher(marker));
-                    } else {
-                        Picasso.get()
-                                .load(mContext.getString(R.string.image_url) +
-                                        (propertyDetails.productImages != null && !propertyDetails.productImages.isEmpty() ? propertyDetails.productImages.get(0) : ""))
-                                .error(R.mipmap.ic_launcher)
-                                .into(img);
-                    }*//*
-
-
-                    return view;
-                }
-
-                @Override
-                public View getInfoContents(Marker marker) {
-                    return null;
-                }
-            });
-
-            googleMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-
-            CameraPosition cameraPosition = new CameraPosition.Builder().target(latLng).zoom(15).build();
-
-            googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-
-            googleMap.getUiSettings().setZoomControlsEnabled(true);
-            googleMap.getUiSettings().setZoomGesturesEnabled(false);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }*/
-
-
-    /*public class InfoWindowRefresher implements Callback {
-        private Marker markerToRefresh;
-
-        public InfoWindowRefresher(Marker markerToRefresh) {
-            this.markerToRefresh = markerToRefresh;
-        }
-
-        @Override
-        public void onSuccess() {
-            markerToRefresh.showInfoWindow();
-        }
-
-        @Override
-        public void onError(Exception e) {
-            e.printStackTrace();
-        }
-
-    }*/
 
 
     public void getPropertyListData(boolean showProgress, boolean isFilter) {
         JSONObject postData;
         //TODO :Remove
-//        latitude = 23.010353;
-//        longitude = 72.5054966;
+        latitude = 23.010353;
+        longitude = 72.5054966;
 //        23.0226819
 //        72.5797763
         if (isNearMe) {
@@ -359,60 +281,7 @@ public class CategoryListActivity extends BaseActivity implements Paginate.Callb
             showNoRecordFound(getString(R.string.no_data_found));
     }
 
-   /* private void setAllMarkers() {
 
-        for (int i = 0; i < arrPropertyDetailArrayList.size(); i++) {
-            if (arrPropertyDetailArrayList.get(i).latitude != null && !arrPropertyDetailArrayList.get(i).latitude.isEmpty() && arrPropertyDetailArrayList.get(i).longitude != null && !arrPropertyDetailArrayList.get(i).longitude.isEmpty()) {
-
-                LatLng latLng = new LatLng(Double.parseDouble(arrPropertyDetailArrayList.get(i).latitude), Double.parseDouble(arrPropertyDetailArrayList.get(i).longitude));
-                googleMap.addMarker(new MarkerOptions().position(latLng)
-                        .title(arrPropertyDetailArrayList.get(i).property_name)
-                        .snippet(arrPropertyDetailArrayList.get(i).image)
-                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.location)));
-
-                googleMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
-                    @Override
-                    public View getInfoWindow(Marker marker) {
-                        Context mContext = CategoryListActivity.this;
-                        View view = ((Activity) mContext).getLayoutInflater().inflate(R.layout.marker_info_window, null);
-
-                        TextView name_tv = view.findViewById(R.id.tv_title);
-                        ImageView img = view.findViewById(R.id.img_hostel);
-
-                        name_tv.setText(marker.getTitle());
-
-                        if (img.getDrawable() == null) {
-                            Picasso.get()
-                                    .load(mContext.getString(R.string.image_url) + marker.getSnippet())
-                                    .error(R.mipmap.ic_launcher)
-                                    .into(img, new InfoWindowRefresher(marker));
-                        } else {
-                            Picasso.get()
-                                    .load(mContext.getString(R.string.image_url) + marker.getSnippet())
-                                    .error(R.mipmap.ic_launcher)
-                                    .into(img);
-                        }
-
-                        return view;
-                    }
-
-                    @Override
-                    public View getInfoContents(Marker marker) {
-                        return null;
-                    }
-                });
-
-                googleMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-
-                CameraPosition cameraPosition = new CameraPosition.Builder().target(latLng).zoom(12).build();
-
-                googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-
-                googleMap.getUiSettings().setZoomControlsEnabled(true);
-                googleMap.getUiSettings().setZoomGesturesEnabled(false);
-            }
-        }
-    }*/
 
     private void setAdapter() {
         hideNoRecordFound();

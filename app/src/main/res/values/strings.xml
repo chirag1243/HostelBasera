@@ -147,4 +147,6 @@
     <string name="male">Male</string>
     <string name="female">Female</string>
     <string name="already_have_an_account_">Already have an account ?</string>
+    <string name="refer_by">Refer By</string>
+    <string name="enter_refer_by">Enter Refer By</string>
 </resources>

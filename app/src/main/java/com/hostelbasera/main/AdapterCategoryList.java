@@ -49,7 +49,12 @@ public class AdapterCategoryList extends RecyclerView.Adapter<AdapterCategoryLis
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.category_list_item, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(isNearMe ? R.layout.near_me_list_item : R.layout.category_list_item, parent, false);
+        if (isNearMe && mValues.size() > 1) {
+            ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
+            layoutParams.width = (int) (parent.getWidth() * 0.9);
+            view.setLayoutParams(layoutParams);
+        }
         return new ViewHolder(view, this);
     }
 

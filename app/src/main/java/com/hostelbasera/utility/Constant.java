@@ -168,12 +168,12 @@ public class Constant {
     public static final String TXN_AMOUNT = "TXN_AMOUNT";
     public static final String WEBSITE = "WEBSITE";
 
-    public static final String MID_Value = "EaIFcN67369119029789";//TODO : Live MID : EaIFcN67369119029789
+    public static final String MID_Value = "Hostel43804177878709";//"Hostel18046436735915";//TODO : Live MID : EaIFcN67369119029789
     public static final String CHANNEL_ID_Value = "WAP";
     public static final String WEBSITE_Value = "DEFAULT";
     public static final String CALLBACK_URL_Value = "https://securegw.paytm.in/theia/paytmCallback?ORDER_ID=";
 
-    public static final String INDUSTRY_TYPE_ID_Value = "Retail";
+    public static final String INDUSTRY_TYPE_ID_Value = "Retail105";
 
 
     public static final String MOBILE_NO = "MOBILE_NO";
@@ -196,6 +196,8 @@ public class Constant {
     public static final String User_gender = "user_gender";
 
     public static final String HasKey = "has_key";
+
+    public static final String Reference_name = "reference_name";
 
 
     //"https://securegw.paytm.in/theia/paytmCallback?ORDER_ID=";
