@@ -1,6 +1,8 @@
 package com.hostelbasera.main;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -194,7 +196,7 @@ public class NearMeActivity extends BaseActivity implements OnMapReadyCallback {
                 @Override
                 public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                     super.onScrollStateChanged(recyclerView, newState);
-                    if (newState == RecyclerView.SCROLL_STATE_IDLE){
+                    if (newState == RecyclerView.SCROLL_STATE_IDLE) {
                         int position = getCurrentItem();
                         onPageChanged(position);
                     }
@@ -212,7 +214,11 @@ public class NearMeActivity extends BaseActivity implements OnMapReadyCallback {
                         .putExtra(Constant.Property_name, arrPropertyDetailArrayList.get(position).property_name));
             }
         });
+        onPageChanged(0);
     }
+
+    ArrayList<Marker> markerArrayList;
+    int oldPosition = 0;
 
     private void onPageChanged(int position) {
         if (arrPropertyDetailArrayList.get(position).latitude != null && !arrPropertyDetailArrayList.get(position).latitude.isEmpty()
@@ -227,17 +233,39 @@ public class NearMeActivity extends BaseActivity implements OnMapReadyCallback {
             googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
 
             googleMap.getUiSettings().setZoomControlsEnabled(true);
-            googleMap.getUiSettings().setZoomGesturesEnabled(false);
+            googleMap.getUiSettings().setZoomGesturesEnabled(true);
 
+            markerArrayList.get(oldPosition).hideInfoWindow();
+
+            oldPosition = position;
+            markerArrayList.get(position).showInfoWindow();
+
+            /*googleMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
+                @Override
+                public View getInfoWindow(Marker marker) {
+                    Context mContext = NearMeActivity.this;
+                    View view = ((Activity) mContext).getLayoutInflater().inflate(R.layout.marker_info_title_window, null);
+
+                    TextView name_tv = view.findViewById(R.id.tv_title);
+                    name_tv.setText(marker.getTitle());
+
+                    return view;
+                }
+
+                @Override
+                public View getInfoContents(Marker marker) {
+                    return null;
+                }
+            });*/
 //            Marker marker = googleMap.addMarker(new MarkerOptions().position(latLng).title(arrPropertyDetailArrayList.get(position).property_name));
 //            marker.showInfoWindow();
 
         }
     }
 
-    private int getCurrentItem(){
-        return ((LinearLayoutManager)rvHostelList.getLayoutManager())
-                .findFirstVisibleItemPosition()+1;
+    private int getCurrentItem() {
+        return ((LinearLayoutManager) rvHostelList.getLayoutManager())
+                .findFirstVisibleItemPosition() + 1;
     }
 
     @OnClick(R.id.img_back)
@@ -301,18 +329,16 @@ public class NearMeActivity extends BaseActivity implements OnMapReadyCallback {
                     .title("My Location")
                     .icon(BitmapDescriptorFactory.fromResource(R.drawable.near)));
 
-            /*googleMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
+            googleMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
                 @Override
                 public View getInfoWindow(Marker marker) {
                     Context mContext = NearMeActivity.this;
-                    View view = ((Activity) mContext).getLayoutInflater().inflate(R.layout.marker_info_window, null);
+                    View view = ((Activity) mContext).getLayoutInflater().inflate(R.layout.marker_info_title_window, null);
 
                     TextView name_tv = view.findViewById(R.id.tv_title);
-                    ImageView img = view.findViewById(R.id.img_hostel);
-
                     name_tv.setText(marker.getTitle());
 
-                    *//*if (img.getDrawable() == null) {
+                    /*if (img.getDrawable() == null) {
                         Picasso.get()
                                 .load(mContext.getString(R.string.image_url) +
                                         (propertyDetails.productImages != null && !propertyDetails.productImages.isEmpty() ? propertyDetails.productImages.get(0) : ""))
@@ -324,8 +350,7 @@ public class NearMeActivity extends BaseActivity implements OnMapReadyCallback {
                                         (propertyDetails.productImages != null && !propertyDetails.productImages.isEmpty() ? propertyDetails.productImages.get(0) : ""))
                                 .error(R.mipmap.ic_launcher)
                                 .into(img);
-                    }*//*
-
+                    }*/
 
                     return view;
                 }
@@ -334,7 +359,7 @@ public class NearMeActivity extends BaseActivity implements OnMapReadyCallback {
                 public View getInfoContents(Marker marker) {
                     return null;
                 }
-            });*/
+            });
 
             googleMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
 
@@ -370,17 +395,46 @@ public class NearMeActivity extends BaseActivity implements OnMapReadyCallback {
 
     }
 
+    private int getMarkerPosition(Marker marker) {
+        for (int i = 0; i < markerArrayList.size(); i++) {
+            if (markerArrayList.get(i).getTitle().equals(marker.getTitle())) {
+                return i;
+            }
+        }
+        return 0;
+    }
 
     private void setAllMarkers() {
+
+        googleMap.getUiSettings().setZoomGesturesEnabled(true);
+        markerArrayList = new ArrayList<>();
+
+        googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(Marker marker) {
+                rvHostelList.getLayoutManager().scrollToPosition(getMarkerPosition(marker));
+                return false;
+            }
+        });
 
         for (int i = 0; i < arrPropertyDetailArrayList.size(); i++) {
             if (arrPropertyDetailArrayList.get(i).latitude != null && !arrPropertyDetailArrayList.get(i).latitude.isEmpty() && arrPropertyDetailArrayList.get(i).longitude != null && !arrPropertyDetailArrayList.get(i).longitude.isEmpty()) {
 
                 LatLng latLng = new LatLng(Double.parseDouble(arrPropertyDetailArrayList.get(i).latitude), Double.parseDouble(arrPropertyDetailArrayList.get(i).longitude));
-                googleMap.addMarker(new MarkerOptions().position(latLng)
-                        .title(arrPropertyDetailArrayList.get(i).property_name)
-//                        .snippet(arrPropertyDetailArrayList.get(i).image)
-                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.nav_my_pg_hostel)));
+
+                MarkerOptions pin = new MarkerOptions();
+                pin.position(latLng);
+                pin.title(arrPropertyDetailArrayList.get(i).property_name);
+                pin.icon(BitmapDescriptorFactory.fromResource(R.drawable.map_logo));
+
+                Marker marker = googleMap.addMarker(pin);
+
+                markerArrayList.add(marker);
+
+//                googleMap.addMarker(new MarkerOptions().position(latLng)
+//                        .title(arrPropertyDetailArrayList.get(i).property_name)
+////                        .snippet(arrPropertyDetailArrayList.get(i).image)
+//                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.map_logo)));
 
                 /*googleMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
                     @Override
