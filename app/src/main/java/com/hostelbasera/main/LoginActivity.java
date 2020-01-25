@@ -763,7 +763,7 @@ public class LoginActivity extends BaseActivity implements GoogleApiClient.Conne
 
     @Override
     public void onOtpReceived(String otp) {
-        Toaster.shortToast("Otp Received " + otp);
+        Toaster.shortToast("Otp Received");
         edtOtp.setText(otp);
     }
 
@@ -783,7 +783,7 @@ public class LoginActivity extends BaseActivity implements GoogleApiClient.Conne
         mTask.addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
-                Toaster.shortToast("SMS Retriever starts");
+//                Toaster.shortToast("SMS Retriever starts");
 //                IntentFilter filter = new IntentFilter();
 //                filter.addAction(SmsRetriever.SMS_RETRIEVED_ACTION);
 //                registerReceiver(new SmsBroadcastReceiver(), filter);

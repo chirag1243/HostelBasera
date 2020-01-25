@@ -685,7 +685,7 @@ public class HttpRequestHandler {
             if (verify_type > 0)
                 params.put(Constant.Verify_type, verify_type);
 
-            params.put(Constant.HasKey, globals.getHasKey()); //Todo : Extra Added
+//            params.put(Constant.HasKey, globals.getHasKey());
         } catch (Exception e) {
             e.printStackTrace();
         }

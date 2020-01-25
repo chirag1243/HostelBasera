@@ -1,6 +1,7 @@
 package com.hostelbasera.seller;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -92,6 +93,7 @@ public class SellerDashboardActivity extends BaseActivity implements NavigationV
         init();
     }
 
+    @SuppressLint("RestrictedApi")
     public void init() {
         globals = ((Globals) getApplicationContext());
         fbAddHostel.setVisibility(View.VISIBLE);

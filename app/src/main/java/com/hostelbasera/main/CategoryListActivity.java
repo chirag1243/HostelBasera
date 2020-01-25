@@ -166,11 +166,9 @@ public class CategoryListActivity extends BaseActivity implements Paginate.Callb
 
     public void getPropertyListData(boolean showProgress, boolean isFilter) {
         JSONObject postData;
-        //TODO :Remove
-        latitude = 23.010353;
-        longitude = 72.5054966;
-//        23.0226819
-//        72.5797763
+//        //TODO :Remove
+//        latitude = 23.010353;
+//        longitude = 72.5054966;
         if (isNearMe) {
             postData = HttpRequestHandler.getInstance().getNearbyPropertyDataParam(pageNo, arrPropertyCategoryId, arrPropertyTypeId, arrTypeId, arrPropertySizeId, arrPriceId, latitude, longitude);//23.010336, 72.505890);
         } else {

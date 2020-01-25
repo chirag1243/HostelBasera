@@ -220,10 +220,10 @@ public class SignUpActivity extends BaseActivity {
         if (edtName.getText().toString().trim().isEmpty()) {
             Toaster.shortToast("Please enter name.");
             return;
-        } else if (edtEmail.getText().toString().trim().isEmpty()) {
+        } /*else if (edtEmail.getText().toString().trim().isEmpty()) {
             Toaster.shortToast("Please enter email id.");
             return;
-        } else if (city_id == 0) {
+        }*/ else if (city_id == 0) {
             Toaster.shortToast("Please select city.");
             return;
         }/*else if (edtPassword.getText().toString().trim().isEmpty()) {

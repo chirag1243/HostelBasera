@@ -13,6 +13,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ShareCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.AppCompatTextView;
@@ -153,7 +154,7 @@ public class HostelDetailActivity extends BaseActivity implements RatingDialogLi
         property_id = getIntent().getIntExtra(Constant.Property_id, 0);
         toolbarTitle.setText(getIntent().getStringExtra(Constant.Property_name));
         imgBack.setVisibility(View.VISIBLE);
-        imgShare.setVisibility(View.GONE);
+        imgShare.setVisibility(View.VISIBLE);
 //        btnBookNow.setTypeface(btnBookNow.getTypeface(), Typeface.BOLD);
         if (Globals.isNetworkAvailable(this)) {
             getPropertyListData();
@@ -244,7 +245,6 @@ public class HostelDetailActivity extends BaseActivity implements RatingDialogLi
             rvRoomPrice.setAdapter(adapterRoom);
         }
     }
-
 
 
     @Override
@@ -661,7 +661,20 @@ public class HostelDetailActivity extends BaseActivity implements RatingDialogLi
 
     @OnClick(R.id.img_share)
     public void onImgShareClicked() {
-        Toaster.shortToast("Share");
+//        Toaster.shortToast("Share");
+       /* if (propertyDetails.productImages == null || propertyDetails.productImages.isEmpty()) {
+            ArrayList<String> arrayList = new ArrayList<>();
+            arrayList.add("");
+            propertyDetails.productImages = arrayList;
+        }*/
+
+        ShareCompat.IntentBuilder.from(this)
+                .setType("text/plain")
+                .setChooserTitle("Share via")
+//                .setStream()
+                .setText(propertyDetails.property_name +
+                        "\nhttp://hostelbasera.com/view/" + propertyDetails.property_name.replaceAll(" ", "-") + "/" + propertyDetails.property_id)
+                .startChooser();
     }
 
     @Override

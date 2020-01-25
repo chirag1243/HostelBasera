@@ -27,6 +27,7 @@ import com.hostelbasera.apis.PostRequest;
 import com.hostelbasera.model.UserDetailModel;
 import com.hostelbasera.seller.SellerDashboardActivity;
 import com.hostelbasera.utility.AppSignatureHelper;
+import com.hostelbasera.utility.Constant;
 import com.hostelbasera.utility.Globals;
 import com.hostelbasera.utility.Toaster;
 import com.victor.loading.rotate.RotateLoading;
@@ -54,6 +55,9 @@ public class SplashActivity extends AppCompatActivity {
     UserDetailModel userModel;
     private static final int UpdateCode = 2212;
 
+    String property_name = "";
+    int property_id = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,6 +74,20 @@ public class SplashActivity extends AppCompatActivity {
         tvPoweredBy.setTypeface(tvPoweredBy.getTypeface(), Typeface.BOLD);
         isSeller = globals.getIsSeller();
         userModel = globals.getUserDetails();
+
+        try {
+            Intent intent = getIntent();
+            Uri data = intent.getData();
+
+            if (data != null && data.getPath() != null) {
+                property_id = Integer.parseInt(data.getPath().substring(data.getPath().lastIndexOf("/") + 1));
+                property_name = data.getPath().substring(data.getPath().indexOf("w/") + 2, data.getPath().lastIndexOf("/"))
+                        .replaceAll("-", " ");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         init();
     }
 
@@ -140,7 +158,7 @@ public class SplashActivity extends AppCompatActivity {
     }
 
     public void updateChecker() {
-        UserDetailModel.VersionDetail versionDetail = isSeller? globals.getUserDetails().loginSellerDetail.versionDetail: globals.getUserDetails().loginUserDetail.versionDetail;
+        UserDetailModel.VersionDetail versionDetail = isSeller ? globals.getUserDetails().loginSellerDetail.versionDetail : globals.getUserDetails().loginUserDetail.versionDetail;
         if (versionDetail.is_update_available) {
             MaterialStyledDialog.Builder builder = new MaterialStyledDialog.Builder(this);
             builder.setTitle(R.string.new_update_available)
@@ -174,13 +192,15 @@ public class SplashActivity extends AppCompatActivity {
                         });
             }
             builder.show();
-        }else {
+        } else {
             redirectDashboard();
         }
     }
 
-    public void redirectDashboard(){
-        startActivity(new Intent(SplashActivity.this, isSeller ? SellerDashboardActivity.class : DashboardActivity.class));
+    public void redirectDashboard() {
+        startActivity(new Intent(SplashActivity.this, isSeller ? SellerDashboardActivity.class : DashboardActivity.class)
+                .putExtra(Constant.Property_id, property_id)
+                .putExtra(Constant.Property_name, property_name));
         finish();
     }
 

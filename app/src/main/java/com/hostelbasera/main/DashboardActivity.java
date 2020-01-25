@@ -147,6 +147,12 @@ public class DashboardActivity extends BaseActivity implements NavigationView.On
 
         setFragment(new FragmentHome());
 
+        if (getIntent().hasExtra(Constant.Property_id) && getIntent().getIntExtra(Constant.Property_id, 0) > 0) {
+            startActivity(new Intent(DashboardActivity.this, HostelDetailActivity.class)
+                    .putExtra(Constant.Property_id, getIntent().getIntExtra(Constant.Property_id, 0))
+                    .putExtra(Constant.Property_name, getIntent().getStringExtra(Constant.Property_name))
+            );
+        }
     }
 
     public void updateChecker() {
@@ -203,7 +209,7 @@ public class DashboardActivity extends BaseActivity implements NavigationView.On
             setFragment(new FragmentHome());
         }
 
-        if(requestCode== filterCode){
+        if (requestCode == filterCode) {
             for (Fragment fragment : getSupportFragmentManager().getFragments()) {
                 fragment.onActivityResult(requestCode, resultCode, data);
             }

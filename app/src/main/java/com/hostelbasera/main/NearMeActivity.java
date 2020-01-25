@@ -9,6 +9,7 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PagerSnapHelper;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
@@ -32,6 +33,7 @@ import com.hostelbasera.model.FilterModel;
 import com.hostelbasera.model.GetPropertyDetailModel;
 import com.hostelbasera.utility.BaseActivity;
 import com.hostelbasera.utility.Constant;
+import com.hostelbasera.utility.GetNearbyPlacesData;
 import com.hostelbasera.utility.Globals;
 import com.hostelbasera.utility.Toaster;
 import com.squareup.picasso.Callback;
@@ -115,22 +117,46 @@ public class NearMeActivity extends BaseActivity implements OnMapReadyCallback {
             longitude = getIntent().getDoubleExtra(Constant.Longitude, 0);
         }
 
-        if (Globals.isNetworkAvailable(this)) {
+       /* if (Globals.isNetworkAvailable(this)) { Todo : Remove
             getPropertyListData(true, false);
             getFiltersData();
         } else {
             showNoRecordFound(getString(R.string.no_data_found));
             Toaster.shortToast(R.string.no_internet_msg);
-        }
+        }*/
 
+        latitude = 23.010353;
+        longitude = 72.5054966;
+        String url = getUrl(latitude, longitude, "bus_station");
+        Object[] DataTransfer = new Object[2];
+//        DataTransfer[0] = mMap;
+        DataTransfer[1] = url;
+        Log.d("onClick", url);
+        GetNearbyPlacesData getNearbyPlacesData = new GetNearbyPlacesData();
+        getNearbyPlacesData.execute(DataTransfer);
+
+    }
+
+    private int PROXIMITY_RADIUS = 10000;
+
+    private String getUrl(double latitude, double longitude, String nearbyPlace) {
+
+        StringBuilder googlePlacesUrl = new StringBuilder("https://maps.googleapis.com/maps/api/place/nearbysearch/json?");
+        googlePlacesUrl.append("location=" + latitude + "," + longitude);
+        googlePlacesUrl.append("&radius=" + PROXIMITY_RADIUS);
+        googlePlacesUrl.append("&type=" + nearbyPlace);
+        googlePlacesUrl.append("&sensor=true");
+        googlePlacesUrl.append("&key=" + "AIzaSyATuUiZUkEc_UgHuqsBJa1oqaODI-3mLs0");
+        Log.d("getUrl", googlePlacesUrl.toString());
+        return (googlePlacesUrl.toString());
     }
 
 
     public void getPropertyListData(boolean showProgress, boolean isFilter) {
         JSONObject postData;
-        //TODO :Remove
-        latitude = 23.010353;
-        longitude = 72.5054966;
+//        //TODO :Remove
+//        latitude = 23.010353;
+//        longitude = 72.5054966;
 //        23.0226819
 //        72.5797763
         postData = HttpRequestHandler.getInstance().getNearbyPropertyDataParam(pageNo, arrPropertyCategoryId, arrPropertyTypeId, arrTypeId, arrPropertySizeId, arrPriceId, latitude, longitude);//23.010336, 72.505890);
@@ -424,7 +450,7 @@ public class NearMeActivity extends BaseActivity implements OnMapReadyCallback {
 
                 MarkerOptions pin = new MarkerOptions();
                 pin.position(latLng);
-                pin.title(arrPropertyDetailArrayList.get(i).property_name);
+                pin.title("₹ " + arrPropertyDetailArrayList.get(i).price);
                 pin.icon(BitmapDescriptorFactory.fromResource(R.drawable.map_logo));
 
                 Marker marker = googleMap.addMarker(pin);
