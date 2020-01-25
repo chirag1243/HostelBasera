@@ -6,6 +6,7 @@ import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.maps.android.SphericalUtil;
 
 import java.util.HashMap;
 import java.util.List;
@@ -57,8 +58,10 @@ public class GetNearbyPlacesData extends AsyncTask<Object, String, String> {
             Toaster.shortToast("Distance " + distance(23.010353, 72.5054966, lat, lng));
 
             float results[] = new float[10];
-            Location.distanceBetween(23.010353, 72.5054966, lat, lng,results);
+            Location.distanceBetween(23.010353, 72.5054966, lat, lng, results);
             Toaster.shortToast("Distance " + results[0]);
+
+            Toaster.shortToast("Distance " + SphericalUtil.computeDistanceBetween(new LatLng(23.010353, 72.5054966), latLng));
 
 //            mMap.addMarker(markerOptions);
 //            markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
@@ -66,6 +69,13 @@ public class GetNearbyPlacesData extends AsyncTask<Object, String, String> {
 //            mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
 //            mMap.animateCamera(CameraUpdateFactory.zoomTo(11));
         }
+    }
+
+    public static Double distanceBetween(LatLng point1, LatLng point2) {
+        if (point1 == null || point2 == null) {
+            return null;
+        }
+        return SphericalUtil.computeDistanceBetween(point1, point2);
     }
 
     private double distance(double lat1, double lon1, double lat2, double lon2) {
