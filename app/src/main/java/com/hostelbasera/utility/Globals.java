@@ -365,6 +365,32 @@ public class Globals extends CoreApp {
     }
 
 
+    public void setLatitude(String latitude) {
+        getEditor().putString(Constant.Latitude, latitude);
+        getEditor().commit();
+    }
+
+    public double getLatitude() {
+        return doStringToDouble(getSharedPref().getString(Constant.Latitude, "0.0"));
+    }
+
+    public void setLongitude(String longitude) {
+        getEditor().putString(Constant.Longitude, longitude);
+        getEditor().commit();
+    }
+
+    public double getLongitude() {
+        return doStringToDouble(getSharedPref().getString(Constant.Longitude, "0.0"));
+    }
+
+    public static double doStringToDouble(String string) {
+        try {
+            return Double.parseDouble(string);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
 
     public static void darkenStatusBar(Activity activity, int color) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -416,13 +442,13 @@ public class Globals extends CoreApp {
         return fileSizeInMB > Constant.MAX_FILE_SIZE;
     }
 
-    public static int randomNumber(){
+    public static int randomNumber() {
         final int min = 10;
         final int max = 10000;
         return new Random().nextInt((max - min) + 1) + min;
     }
 
-    public static void doBoldTextView(TextView textView){
+    public static void doBoldTextView(TextView textView) {
         textView.setTypeface(textView.getTypeface(), Typeface.BOLD);
     }
 }

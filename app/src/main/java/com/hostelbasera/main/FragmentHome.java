@@ -112,12 +112,12 @@ public class FragmentHome extends Fragment implements Paginate.Callbacks, SwipeR
     DashboardActivity activity;
 
     EasyWayLocation easyWayLocation;
-    private double lati = 0, longi = 0;
+    //    private double lati = 0, longi = 0;
     boolean isNearMe;
     Context mContext;
 
     public static FragmentHome newInstance(/*AllCategoriesDetailModel model*/) {
-       FragmentHome fragment = new FragmentHome();
+        FragmentHome fragment = new FragmentHome();
 //        fragment.allCategoriesModel = model;
         return fragment;
     }
@@ -171,19 +171,22 @@ public class FragmentHome extends Fragment implements Paginate.Callbacks, SwipeR
     @Override
     public void onPermissionGranted() {
 //        Toaster.shortToast("Location permission granted");
-        easyWayLocation = new EasyWayLocation(getActivity());
+        easyWayLocation = new EasyWayLocation(mContext);
         easyWayLocation.setListener(this);
 
+        if (easyWayLocation != null)
+            easyWayLocation.beginUpdates();
+
         if (isNearMe) {
-//            if (lati != 0 && longi != 0) { Todo : Remove
+            if (globals.getLatitude() != 0 && globals.getLongitude() != 0) {
                 startActivity(new Intent(getActivity(), NearMeActivity.class)
                         .putExtra(Constant.Category_name, getString(R.string.near_me))
-                        .putExtra(Constant.Latitude, lati)
-                        .putExtra(Constant.Longitude, longi));
-            /*} else {
+                        .putExtra(Constant.Latitude, globals.getLatitude())
+                        .putExtra(Constant.Longitude, globals.getLongitude()));
+            } else {
                 isNearMe = false;
                 Toaster.shortToast("Not getting your Location.");
-            }*/
+            }
         }
     }
 
@@ -404,7 +407,7 @@ public class FragmentHome extends Fragment implements Paginate.Callbacks, SwipeR
                                 e.printStackTrace();
                             }
                         }
-                        if (isFilter){
+                        if (isFilter) {
                             arrPropertyDetailArrayList = new ArrayList<>();
                         }
                         setupList(getPropertyDetailModel.propertyDetail, showProgress);
@@ -501,7 +504,7 @@ public class FragmentHome extends Fragment implements Paginate.Callbacks, SwipeR
     public void onRefresh() {
         if (Globals.isNetworkAvailable(getActivity())) {
             pageNo = 1;
-            getPropertyListData(true,false);
+            getPropertyListData(true, false);
         } else {
             Toaster.shortToast(R.string.no_internet_msg);
         }
@@ -511,7 +514,7 @@ public class FragmentHome extends Fragment implements Paginate.Callbacks, SwipeR
     public void onLoadMore() {
         loading = true;
         pageNo++;
-        getPropertyListData(false,false);
+        getPropertyListData(false, false);
     }
 
     @Override
@@ -535,14 +538,20 @@ public class FragmentHome extends Fragment implements Paginate.Callbacks, SwipeR
     public void locationOn() {
 //        Toaster.shortToast("Location ON");
         easyWayLocation.beginUpdates();
-        lati = easyWayLocation.getLatitude();
-        longi = easyWayLocation.getLongitude();
+
+        if (easyWayLocation.getLatitude() != 0 && easyWayLocation.getLongitude() != 0) {
+            globals.setLatitude("" + easyWayLocation.getLatitude());
+            globals.setLongitude("" + easyWayLocation.getLongitude());
+        }
     }
 
     @Override
     public void onPositionChanged() {
-        lati = easyWayLocation.getLatitude();
-        longi = easyWayLocation.getLongitude();
+        if (easyWayLocation.getLatitude() != 0 && easyWayLocation.getLongitude() != 0) {
+            globals.setLatitude("" + easyWayLocation.getLatitude());
+            globals.setLongitude("" + easyWayLocation.getLongitude());
+        }
+
 //        Toaster.shortToast(String.valueOf(easyWayLocation.getLongitude()) + "," + String.valueOf(easyWayLocation.getLatitude()));
     }
 
@@ -550,6 +559,7 @@ public class FragmentHome extends Fragment implements Paginate.Callbacks, SwipeR
     public void locationCancelled() {
         easyWayLocation.showAlertDialog("Cancelled", "Cancelled Location", null);
     }
+
 
     @Override
     public void onDestroy() {

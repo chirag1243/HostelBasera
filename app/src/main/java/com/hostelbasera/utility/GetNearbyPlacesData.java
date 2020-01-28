@@ -7,6 +7,7 @@ import android.util.Log;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.SphericalUtil;
+import com.hostelbasera.main.NearMeActivity;
 
 import java.util.HashMap;
 import java.util.List;
@@ -16,6 +17,11 @@ public class GetNearbyPlacesData extends AsyncTask<Object, String, String> {
     String googlePlacesData;
     //    GoogleMap mMap;
     String url;
+    NearMeActivity mActivity;
+
+    public GetNearbyPlacesData(NearMeActivity nearMeActivity) {
+        mActivity= nearMeActivity;
+    }
 
     @Override
     protected String doInBackground(Object... params) {

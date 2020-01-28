@@ -64,7 +64,7 @@ public class PayMentGateWay extends Activity {
     @SuppressLint("JavascriptInterface")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        // TODO Auto-generated method stub
+
         super.onCreate(savedInstanceState);
 
         progressDialog = new ProgressDialog(activity);
@@ -176,21 +176,21 @@ public class PayMentGateWay extends Activity {
 			/*@Override
 			public void onReceivedError(WebView view, int errorCode,
 					String description, String failingUrl) {
-				// TODO Auto-generated method stub
+
 				Toast.makeText(activity, "Oh no! " + description, Toast.LENGTH_SHORT).show();
 			}
 
 			@Override
 			public void onReceivedSslError(WebView view,
 					SslErrorHandler handler, SslError error) {
-				// TODO Auto-generated method stub
+
 				Toast.makeText(activity, "SslError! " +  error, Toast.LENGTH_SHORT).show();
 				 handler.proceed();
 			}
 
 			@Override
 			public boolean shouldOverrideUrlLoading(WebView view, String url) {
-				// TODO Auto-generated method stub
+
 				Toast.makeText(activity, "Page Started! " + url, Toast.LENGTH_SHORT).show();
 				if(url.startsWith(SUCCESS_URL)){
 					Toast

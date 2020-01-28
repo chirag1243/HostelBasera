@@ -33,7 +33,6 @@ import com.hostelbasera.model.FilterModel;
 import com.hostelbasera.model.GetPropertyDetailModel;
 import com.hostelbasera.utility.BaseActivity;
 import com.hostelbasera.utility.Constant;
-import com.hostelbasera.utility.GetNearbyPlacesData;
 import com.hostelbasera.utility.Globals;
 import com.hostelbasera.utility.Toaster;
 import com.squareup.picasso.Callback;
@@ -117,14 +116,15 @@ public class NearMeActivity extends BaseActivity implements OnMapReadyCallback {
             longitude = getIntent().getDoubleExtra(Constant.Longitude, 0);
         }
 
-       /* if (Globals.isNetworkAvailable(this)) { Todo : Remove
+        if (Globals.isNetworkAvailable(this)) {
             getPropertyListData(true, false);
             getFiltersData();
         } else {
             showNoRecordFound(getString(R.string.no_data_found));
             Toaster.shortToast(R.string.no_internet_msg);
-        }*/
+        }
 
+        /*
         latitude = 23.010353;
         longitude = 72.5054966;
         String url = getUrl(latitude, longitude, "bus_station");
@@ -132,8 +132,9 @@ public class NearMeActivity extends BaseActivity implements OnMapReadyCallback {
 //        DataTransfer[0] = mMap;
         DataTransfer[1] = url;
         Log.d("onClick", url);
-        GetNearbyPlacesData getNearbyPlacesData = new GetNearbyPlacesData();
-        getNearbyPlacesData.execute(DataTransfer);
+        new GetNearbyPlacesData(this).execute(DataTransfer);
+
+         */
 
     }
 
@@ -223,8 +224,7 @@ public class NearMeActivity extends BaseActivity implements OnMapReadyCallback {
                 public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                     super.onScrollStateChanged(recyclerView, newState);
                     if (newState == RecyclerView.SCROLL_STATE_IDLE) {
-                        int position = getCurrentItem();
-                        onPageChanged(position);
+                        onPageChanged(getCurrentItem());
                     }
                 }
             });

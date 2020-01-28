@@ -126,7 +126,7 @@ public class OTPVerifyActivity extends BaseActivity implements GoogleApiClient.C
         doLogin();
     }
 
-    String version = "1.1.8";
+    String version = "1.1.9";
 
     @SuppressLint("HardwareIds")
     public void doLogin() {

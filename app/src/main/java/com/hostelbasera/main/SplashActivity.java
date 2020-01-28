@@ -109,7 +109,7 @@ public class SplashActivity extends AppCompatActivity {
 
     @SuppressLint("HardwareIds")
     public void doLogin() {
-        String version = "1.1.8";
+        String version = "1.1.9";
         try {
             PackageInfo pInfo = this.getPackageManager().getPackageInfo(getPackageName(), 0);
             version = pInfo.versionName;

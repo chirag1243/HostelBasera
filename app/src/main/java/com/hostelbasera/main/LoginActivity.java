@@ -344,7 +344,7 @@ public class LoginActivity extends BaseActivity implements GoogleApiClient.Conne
         Globals.hideKeyboard(this);
     }
 
-    //TODO : Google Login remove comment once issue solved
+
     /*@OnClick(R.id.sign_in_button)
     public void signIn() {
         try {
@@ -436,7 +436,7 @@ public class LoginActivity extends BaseActivity implements GoogleApiClient.Conne
         doLogin();
     }
 
-    String version = "1.1.8";
+    String version = "1.1.9";
 
     @SuppressLint("HardwareIds")
     public void doLogin() {
@@ -614,7 +614,6 @@ public class LoginActivity extends BaseActivity implements GoogleApiClient.Conne
                             } */
                             Toaster.shortToast(mobilenoForOtpModel.message);
                             user_id = mobilenoForOtpModel.user_id;
-
                         }
 
                         @Override
