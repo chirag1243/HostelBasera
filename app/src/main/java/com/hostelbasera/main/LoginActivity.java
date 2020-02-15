@@ -55,6 +55,7 @@ import com.hostelbasera.apis.PostRequest;
 import com.hostelbasera.model.CheckMobilenoForOtpModel;
 import com.hostelbasera.model.UserDetailModel;
 import com.hostelbasera.seller.SellerDashboardActivity;
+import com.hostelbasera.utility.AppSignatureHelper;
 import com.hostelbasera.utility.BaseActivity;
 import com.hostelbasera.utility.Constant;
 import com.hostelbasera.utility.Globals;
@@ -125,6 +126,12 @@ public class LoginActivity extends BaseActivity implements GoogleApiClient.Conne
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
         globals = ((Globals) getApplicationContext());
+
+        AppSignatureHelper appSignatureHelper = new AppSignatureHelper(this);
+        appSignatureHelper.getAppSignatures();
+
+//        Toaster.shortToast("Hash String is  " + appSignatureHelper.getAppSignatures().get(0));
+        globals.setHasKey(appSignatureHelper.getAppSignatures().get(0));
 
         Globals.doBoldTextView(tvMobileNo);
         Globals.doBoldTextView(tvOtp);

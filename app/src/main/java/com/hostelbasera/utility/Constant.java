@@ -199,6 +199,15 @@ public class Constant {
 
     public static final String Reference_name = "reference_name";
 
+    public static final String About_us = "About_us_details.html";
+    public static final String Privacy_policy = "Privacy_policy_details.html";
+    public static final String Refund_policy = "Refund_policy_details_details.html";
+    public static final String Booking_policy = "Booking_policy_details.html";
+    public static final String Non_discrimination_policy = "Non_discrimination_policy_details.html";
+    public static final String Guest_refund_policy = "Guest_refund_policy_details.html";
+    public static final String Service_terms = "Service_terms_details.html";
+    public static final String Terms_and_conditions = "Terms_and_conditions_details.html";
+
 
     //"https://securegw.paytm.in/theia/paytmCallback?ORDER_ID=";
     //"https://pguat.paytm.com/paytmchecksum/paytmCallback.jsp";

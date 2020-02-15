@@ -3,7 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:showIn="navigation_view">
 
-    <group android:checkableBehavior="single">
+    <group
+        android:id="@+id/group1"
+        android:checkableBehavior="single">
         <item
             android:id="@+id/nav_pg_hostel"
             android:icon="@drawable/nav_pg_hostels"
@@ -34,10 +36,47 @@
             android:id="@+id/nav_contact_us"
             android:icon="@drawable/footer_contact"
             android:title="@string/contact_us" />
+
         <item
             android:id="@+id/nav_sign_out"
             android:icon="@drawable/nav_signout"
             android:title="@string/sign_out" />
+
     </group>
+    <group
+        android:id="@+id/group2"
+        android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_about_us"
+            android:title="@string/about_us" />
+
+        <item
+            android:id="@+id/nav_privacy_policy"
+            android:title="@string/privacy_policy" />
+
+        <item
+            android:id="@+id/nav_refund_policy"
+            android:title="@string/refund_policy" />
+
+        <item
+            android:id="@+id/nav_booking_policy"
+            android:title="@string/booking_policy" />
+        <item
+            android:id="@+id/nav_non_discrimination_policy"
+            android:title="@string/non_discrimination_policy" />
+
+        <item
+            android:id="@+id/nav_guest_refund_policy"
+            android:title="@string/guest_refund_policy" />
+
+        <item
+            android:id="@+id/nav_service_terms"
+            android:title="@string/service_terms" />
+
+        <item
+            android:id="@+id/nav_terms_and_conditions"
+            android:title="@string/terms_and_conditions" />
+    </group>
+
 
 </menu>
