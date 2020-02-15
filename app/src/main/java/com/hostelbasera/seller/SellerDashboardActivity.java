@@ -44,10 +44,12 @@ import com.gun0912.tedpermission.TedPermission;
 import com.hostelbasera.R;
 import com.hostelbasera.apis.HttpRequestHandler;
 import com.hostelbasera.apis.PostRequest;
+import com.hostelbasera.main.FragmentPolicyDetails;
 import com.hostelbasera.main.LoginActivity;
 import com.hostelbasera.model.PropertyDetailModel;
 import com.hostelbasera.model.UserDetailModel;
 import com.hostelbasera.utility.BaseActivity;
+import com.hostelbasera.utility.Constant;
 import com.hostelbasera.utility.Globals;
 import com.hostelbasera.utility.Toaster;
 
@@ -271,6 +273,40 @@ public class SellerDashboardActivity extends BaseActivity implements NavigationV
                 return false;
             case R.id.nav_sign_out:
                 doLogout();
+                break;
+
+            case R.id.nav_about_us:
+                setToolbarTitle(R.string.about_us);
+                new FragmentPolicyDetails();
+                setFragment(FragmentPolicyDetails.newInstance(Constant.About_us));
+                break;
+            case R.id.nav_privacy_policy:
+                setToolbarTitle(R.string.privacy_policy);
+                setFragment(FragmentPolicyDetails.newInstance(Constant.Privacy_policy));
+                break;
+            case R.id.nav_refund_policy:
+                setToolbarTitle(R.string.refund_policy);
+                setFragment(FragmentPolicyDetails.newInstance(Constant.Refund_policy));
+                break;
+            case R.id.nav_booking_policy:
+                setToolbarTitle(R.string.booking_policy);
+                setFragment(FragmentPolicyDetails.newInstance(Constant.Booking_policy));
+                break;
+            case R.id.nav_non_discrimination_policy:
+                setToolbarTitle(R.string.non_discrimination_policy);
+                setFragment(FragmentPolicyDetails.newInstance(Constant.Non_discrimination_policy));
+                break;
+            case R.id.nav_guest_refund_policy:
+                setToolbarTitle(R.string.guest_refund_policy);
+                setFragment(FragmentPolicyDetails.newInstance(Constant.Guest_refund_policy));
+                break;
+            case R.id.nav_service_terms:
+                setToolbarTitle(R.string.service_terms);
+                setFragment(FragmentPolicyDetails.newInstance(Constant.Service_terms));
+                break;
+            case R.id.nav_terms_and_conditions:
+                setToolbarTitle(R.string.terms_and_conditions);
+                setFragment(FragmentPolicyDetails.newInstance(Constant.Terms_and_conditions));
                 break;
             default:
                 return super.onOptionsItemSelected(item);
