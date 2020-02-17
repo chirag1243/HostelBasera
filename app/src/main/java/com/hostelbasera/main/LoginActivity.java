@@ -443,7 +443,7 @@ public class LoginActivity extends BaseActivity implements GoogleApiClient.Conne
         doLogin();
     }
 
-    String version = "1.1.9";
+    String version = "1.2.0";
 
     @SuppressLint("HardwareIds")
     public void doLogin() {

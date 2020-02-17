@@ -168,7 +168,7 @@ public class Constant {
     public static final String TXN_AMOUNT = "TXN_AMOUNT";
     public static final String WEBSITE = "WEBSITE";
 
-    public static final String MID_Value = "Hostel43804177878709";//"Hostel18046436735915";//TODO : Live MID : EaIFcN67369119029789
+    public static final String MID_Value = "Hostel43804177878709";//"Hostel18046436735915";// : Live MID : EaIFcN67369119029789
     public static final String CHANNEL_ID_Value = "WAP";
     public static final String WEBSITE_Value = "DEFAULT";
     public static final String CALLBACK_URL_Value = "https://securegw.paytm.in/theia/paytmCallback?ORDER_ID=";
