@@ -87,5 +87,9 @@ public class GetPropertyDetailModel implements Serializable {
         @SerializedName("distance")
         public double distance;
 
+        @SerializedName("banners")
+        public ArrayList<BannerListModel.Banners> banners;
+
+
     }
 }

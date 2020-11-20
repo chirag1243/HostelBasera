@@ -23,7 +23,7 @@ public class Constant {
     public static final boolean addLoadingRow = true;
     public static final int GRID_SPAN = 2;
 
-    public static final int MAX_FILE_SIZE = 5; //mb
+    public static final int MAX_FILE_SIZE = 10; //mb
 
     public static final String Token = "token";
     public static final String Limit = "limit";
@@ -135,6 +135,7 @@ public class Constant {
     public static final String Roomprice = "roomprice";
 
     public static final String Userfile = "userfile";
+    public static final String Userfile_ = "userfile[]";
     public static final String Type = "type";
 
     public static final String Fb_id = "fb_id";
@@ -208,8 +209,34 @@ public class Constant {
     public static final String Service_terms = "Service_terms_details.html";
     public static final String Terms_and_conditions = "Terms_and_conditions_details.html";
 
+    //payment_period_id
+    public static final int Monthly = 1;
+    public static final int Days15 = 2;
+
 
     //"https://securegw.paytm.in/theia/paytmCallback?ORDER_ID=";
     //"https://pguat.paytm.com/paytmchecksum/paytmCallback.jsp";
     //"https://securegw-stage.paytm.in/theia/paytmCallback?ORDER_ID=<order_id>"
+
+    public static final String UserId = "userId";
+    public static final String PropertyId = "propertyId";
+    public static final String RoomId = "roomId";
+    public static final String SellerId = "sellerId";
+    public static final String StartDate = "startDate";
+    public static final String EndDate = "endDate";
+
+    public static final String UploadPropertyImagesDetail = "uploadPropertyImagesDetail";
+
+    public static final String User_property_request_id = "user_property_request_id";
+    public static final String UserPropertyRequestData = "userPropertyRequestData";
+
+    public static final String OrderData = "orderData";
+    public static final String Coupon_id = "coupon_id";
+    public static final String Coupon_amout_type = "coupon_amout_type";
+    public static final String Applied_coupon_amount = "applied_coupon_amount";
+    public static final String Applied_wallet_amount = "applied_wallet_amount";
+    public static final String Remark = "remark";
+    public static final String Payment_status = "payment_status";
+    public static final String List_type = "list_type";
+
 }

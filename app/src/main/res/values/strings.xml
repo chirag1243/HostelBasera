@@ -157,4 +157,30 @@
     <string name="guest_refund_policy">Guest Refund Policy</string>
     <string name="service_terms">Service Terms</string>
     <string name="terms_and_conditions">Terms and Conditions</string>
+
+    <string name="dateFormat" translatable="false">EE, dd MMM</string>
+    <string name="timeFormat" translatable="false">EE, dd MMM HH:mm</string>
+    <string name="period" translatable="false">%1$s – %2$s</string>
+
+    <string name="UploadDateFormat">yyyy-MM-dd</string>
+
+    <string name="Max_10mb_file_allowed">Max 10mb file allowed.</string>
+
+    <string name="booking_dates">Booking Dates</string>
+    <string name="documents">Documents</string>
+    <string name="pay_deposit_to_owner_by_your_own">Pay deposit to owner by your own</string>
+
+    <string name="please_add_document">Please add document</string>
+    <string name="booking_request">Booking Request\'s</string>
+    <string name="wallet_balance">Wallet Balance</string>
+    <string name="pay">Pay</string>
+    <string name="rent">Rent</string>
+    <string name="coupon">Coupon</string>
+    <string name="wallet">Wallet</string>
+    <string name="amount_payable">Amount Payable</string>
+    <string name="amount_details">Amount Details</string>
+    <string name="no_coupon_found">No Coupon Found</string>
+    <string name="expiry_date">Expiry Date</string>
+
+    <string name="applied">Applied</string>
 </resources>

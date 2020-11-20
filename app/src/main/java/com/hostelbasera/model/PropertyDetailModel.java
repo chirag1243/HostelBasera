@@ -30,7 +30,7 @@ public class PropertyDetailModel implements Serializable {
         @SerializedName("by_admin")
         public String by_admin;
         @SerializedName("seller_id")
-        public String seller_id;
+        public int seller_id;
         @SerializedName("price")
         public String price;
         @SerializedName("cooking_menu")
@@ -90,6 +90,16 @@ public class PropertyDetailModel implements Serializable {
 
         @SerializedName("propertyrooms")
         public ArrayList<Propertyrooms> propertyrooms;
+
+        @SerializedName("payment_period_id")
+        public int payment_period_id;
+
+        @SerializedName("deposit_amount")
+        public String deposit_amount;
+        @SerializedName("notice_period")
+        public String notice_period;
+        @SerializedName("booking_status")
+        public int booking_status;
     }
 
     public static class Propertyrooms implements Serializable {

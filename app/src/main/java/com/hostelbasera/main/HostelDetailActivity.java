@@ -3,6 +3,7 @@ package com.hostelbasera.main;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -14,6 +15,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ShareCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.AppCompatTextView;
@@ -25,11 +27,14 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.esafirm.imagepicker.features.ImagePicker;
+import com.esafirm.imagepicker.model.Image;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -45,13 +50,18 @@ import com.gun0912.tedpermission.TedPermission;
 import com.hostelbasera.R;
 import com.hostelbasera.apis.HttpRequestHandler;
 import com.hostelbasera.apis.PostRequest;
+import com.hostelbasera.apis.PostWithRequestParam;
+import com.hostelbasera.model.AddImageAttachmentModel;
+import com.hostelbasera.model.DocumentUploadModel;
 import com.hostelbasera.model.PropertyDetailModel;
 import com.hostelbasera.model.PropertyReviewModel;
+import com.hostelbasera.seller.AdapterAddAttachment;
 import com.hostelbasera.utility.BaseActivity;
 import com.hostelbasera.utility.Constant;
 import com.hostelbasera.utility.DetailImagePagerAdapter;
 import com.hostelbasera.utility.Globals;
 import com.hostelbasera.utility.Toaster;
+import com.loopj.android.http.RequestParams;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 import com.stepstone.apprating.AppRatingDialog;
@@ -59,13 +69,26 @@ import com.stepstone.apprating.listener.RatingDialogListener;
 
 import org.json.JSONObject;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
 import java.util.Timer;
+import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import ru.slybeaver.slycalendarview.SlyCalendarDialog;
+
+import static com.hostelbasera.utility.Constant.Days15;
+import static com.hostelbasera.utility.Constant.Monthly;
+import static com.hostelbasera.utility.Globals.checkFileSize;
 
 public class HostelDetailActivity extends BaseActivity implements RatingDialogListener, OnMapReadyCallback, PermissionListener {
 
@@ -127,19 +150,40 @@ public class HostelDetailActivity extends BaseActivity implements RatingDialogLi
     @BindView(R.id.tv_hostel_pg_for)
     TextView tvHostelPgFor;
 
+    @BindView(R.id.cv_booking_dates)
+    CardView cvBookingDates;
+    @BindView(R.id.tv_booking_dates)
+    TextView tvBookingDates;
+
+    @BindView(R.id.cv_document)
+    CardView cvDocument;
+    @BindView(R.id.rv_document)
+    RecyclerView rvDocument;
+    @BindView(R.id.tv_deposit_txt)
+    TextView tvDepositTxt;
+    @BindView(R.id.tv_notice_period_txt)
+    TextView tvNoticePeriodTxt;
+
+    ArrayList<String> arrFile;
+    AdapterAddAttachment adapterAddAttachment;
+    ArrayList<AddImageAttachmentModel> arrAddImageAttachment;
+
     PropertyDetailModel.PropertyDetails propertyDetails;
     Timer timer;
     final long DELAY_MS = 500;//delay in milliseconds before task is to be executed
     final long PERIOD_MS = 3000; // time in milliseconds between successive task executions.
     AdapterAmenities adapterAmenities;
     AdapterReview adapterReview;
-    //    @BindView(R.id.btn_book_now)
-//    Button btnBookNow;
+    @BindView(R.id.btn_book_now)
+    Button btnBookNow;
     boolean is_bookmark_remove;
 
     AdapterRoom adapterRoom;
 
     int room_id = 0;
+
+    Calendar calStart, calEnd;
+//    Date expDate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -155,13 +199,17 @@ public class HostelDetailActivity extends BaseActivity implements RatingDialogLi
         toolbarTitle.setText(getIntent().getStringExtra(Constant.Property_name));
         imgBack.setVisibility(View.VISIBLE);
         imgShare.setVisibility(View.VISIBLE);
-//        btnBookNow.setTypeface(btnBookNow.getTypeface(), Typeface.BOLD);
+        Globals.doBoldTextView(btnBookNow);
+        arrAddImageAttachment = new ArrayList<>();
+        Globals.doBoldTextView(tvDepositTxt);
+
         if (Globals.isNetworkAvailable(this)) {
             getPropertyListData();
         } else {
             finish();
             Toaster.shortToast(R.string.no_internet_msg);
         }
+
     }
 
     public void getPropertyListData() {
@@ -205,9 +253,9 @@ public class HostelDetailActivity extends BaseActivity implements RatingDialogLi
         } else {
             if (propertyDetails.price != null && !propertyDetails.price.isEmpty() && !propertyDetails.price.equals("0")) {
                 tvPrice.setText("₹ " + propertyDetails.price);
-            } /*else {
+            } else {
                 btnBookNow.setVisibility(View.GONE);
-            }*/
+            }
         }
 
         is_bookmark_remove = propertyDetails.isBookMark;
@@ -230,6 +278,43 @@ public class HostelDetailActivity extends BaseActivity implements RatingDialogLi
             cvDescription.setVisibility(View.VISIBLE);
             tvDescription.setText(propertyDetails.description);
         }
+
+        calStart = Calendar.getInstance();
+        calStart.setTime(new Date());
+
+        calEnd = Calendar.getInstance();
+        calEnd.setTime(new Date());
+
+        switch (propertyDetails.payment_period_id) {
+            case Days15:
+                calEnd.add(Calendar.DAY_OF_MONTH, 14);
+                break;
+            case Monthly:
+            default:
+                calEnd.add(Calendar.MONTH, 1);
+                calEnd.add(Calendar.DAY_OF_MONTH, -1);
+                break;
+        }
+
+//        expDate = calEnd.getTime();
+
+        tvBookingDates.setText(getString(
+                R.string.period,
+                new SimpleDateFormat(getString(R.string.dateFormat), Locale.getDefault()).format(calStart.getTime()),
+                new SimpleDateFormat(getString(R.string.dateFormat), Locale.getDefault()).format(calEnd.getTime())
+        ));
+
+        btnBookNow.setVisibility(propertyDetails.booking_status == 1 ? View.VISIBLE : View.GONE);
+        cvDocument.setVisibility(propertyDetails.booking_status == 1 ? View.VISIBLE : View.GONE);
+        cvBookingDates.setVisibility(propertyDetails.booking_status == 1 ? View.VISIBLE : View.GONE);
+//        tvDepositTxt.setVisibility(propertyDetails.booking_status == 1 ? View.VISIBLE : View.GONE);
+        tvDepositTxt.setText("Pay deposit (" + Globals.checkString(propertyDetails.deposit_amount) + ") to owner by your own");
+//        tvNoticePeriodTxt.setVisibility(propertyDetails.booking_status == 1 ? View.VISIBLE : View.GONE);
+        if (!Globals.checkString(propertyDetails.notice_period).isEmpty()) {
+            tvNoticePeriodTxt.setVisibility(View.VISIBLE);
+            tvNoticePeriodTxt.setText(Globals.checkString(propertyDetails.notice_period));
+        } else
+            tvNoticePeriodTxt.setVisibility(View.GONE);
     }
 
     private void setRoomAdapter() {
@@ -683,19 +768,125 @@ public class HostelDetailActivity extends BaseActivity implements RatingDialogLi
         super.onBackPressed();
     }
 
-    /*@OnClick(R.id.btn_book_now)
+    @OnClick(R.id.btn_book_now)
     public void onViewClicked() {
         if (!Globals.isNetworkAvailable(this)) {
             Toaster.shortToast(R.string.no_internet_msg);
             return;
         }
+        if (arrAddImageAttachment == null || arrAddImageAttachment.isEmpty()) {
+            Toaster.shortToast(R.string.please_add_document);
+            return;
+        }
+
+        arrAddImageAttachment.size();
+        setProgressDialog(arrAddImageAttachment.size());
+
+        File[] arr = new File[arrAddImageAttachment.size()];
+        for (int i = 0; i < arrAddImageAttachment.size(); i++) {
+            arr[i] = new File(arrAddImageAttachment.get(i).FilePath);
+        }
+        doUploadFile(arr, 0);
+
+    }
+
+    ArrayList<String> arrFileName;
+    ArrayList<Integer> arrFileIndex;
+
+    public void setProgressDialog(int size) {
+        FileCount = 0;
+        arrFileName = new ArrayList<>();
+        arrFileIndex = new ArrayList<>();
+
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+        progressDialog.setCancelable(false);
+        progressDialog.setMax(size);
+        progressDialog.setTitle("File Uploading");
+        progressDialog.show();
+    }
+
+    ProgressDialog progressDialog;
+    int FileCount = 0;
+
+    private void doUploadFile(File[] file, int index) {
+        RequestParams requestParams = new RequestParams();
+        try {
+            requestParams.put(Constant.Userfile_, file);
+            requestParams.put(Constant.File_id, index);
+            requestParams.put(Constant.Type, "document");
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        new PostWithRequestParam(this, getString(R.string.uploadPropertyimages), requestParams,
+                false, new PostWithRequestParam.OnPostWithReqParamServiceCallListener() {
+            @Override
+            public void onSucceedToPostCall(JSONObject response) {
+                progressDialog.setProgress(FileCount);
+                FileCount++;
+                DocumentUploadModel fileUploadModel = new Gson().fromJson(response.toString(), DocumentUploadModel.class);
+                if (fileUploadModel.status == 0 && fileUploadModel.uploadPropertyImagesDetail != null) {
+                    for (int i = 0; i < fileUploadModel.uploadPropertyImagesDetail.size(); i++) {
+//                        arrFileName.add(fileUploadModel.uploadPropertyImagesDetail.get(i).file_name);
+//                        arrFileIndex.add(fileUploadModel.uploadPropertyImagesDetail.get(i).file_id);
+
+                        arrAddImageAttachment.get(i).FileName = fileUploadModel.uploadPropertyImagesDetail.get(i).file_name;
+                        arrAddImageAttachment.get(i).uploadPropertyImagesDetail = fileUploadModel.uploadPropertyImagesDetail.get(i);
+                    }
+
+                    /*if (arrFileName.size() == arrAddImageAttachment.size()) {
+                        int count = 0;
+                        for (int j = 0; j < arrAddImageAttachment.size(); j++) {
+                            for (int k = 0; k < arrFileIndex.size(); k++) {
+                                if (arrFileIndex.get(k) == count) {
+                                    arrAddImageAttachment.get(j).FileName = arrFileName.get(k);
+                                    arrAddImageAttachment.get(j).uploadPropertyImagesDetail = fileUploadModel.uploadPropertyImagesDetail.get(0);
+                                    break;
+                                }
+                            }
+                            count++;
+                        }*/
+//                        if (dialog != null && dialog.isShowing())
+//                            dialog.dismiss();
+                    progressDialog.dismiss();
+                    doBook();
+//                    }
+                } else {
+//                    isFailToUpload = true;
+                    progressDialog.dismiss();
+                    Toaster.shortToast(fileUploadModel.message);
+                }
+            }
+
+            @Override
+            public void onFailedToPostCall(int statusCode, String msg) {
+//                isFailToUpload = true;
+//                if (dialog != null && dialog.isShowing())
+//                    dialog.dismiss();
+                progressDialog.dismiss();
+                Toaster.shortToast(msg);
+            }
+
+            @Override
+            public void onProgressCall(int progress) {
+                progressDialog.setProgress(progress);
+            }
+        }).execute();
+    }
+
+    public void doBook() {
         if (adapterRoom != null) {
             room_id = adapterRoom.room_id;
         }
-        JSONObject postData = HttpRequestHandler.getInstance().getAddOrderDataParam(property_id, room_id);
+
+        JSONObject postData = HttpRequestHandler.getInstance().getBookNowDataParam(property_id, room_id, propertyDetails.seller_id,
+                new SimpleDateFormat(getString(R.string.UploadDateFormat), Locale.getDefault()).format(calStart.getTime()),
+                new SimpleDateFormat(getString(R.string.UploadDateFormat), Locale.getDefault()).format(calEnd.getTime()),
+                arrAddImageAttachment);
         if (postData != null) {
 
-            new PostRequest(this, getString(R.string.addOrder), postData, true, new PostRequest.OnPostServiceCallListener() {
+            new PostRequest(this, getString(R.string.bookNow), postData, true, new PostRequest.OnPostServiceCallListener() {
                 @Override
                 public void onSucceedToPostCall(JSONObject response) {
                     PropertyReviewModel propertyReviewModel = new Gson().fromJson(response.toString(), PropertyReviewModel.class);
@@ -713,6 +904,169 @@ public class HostelDetailActivity extends BaseActivity implements RatingDialogLi
             }).execute();
         }
         Globals.hideKeyboard(this);
-    }*/
+    }
+
+
+    @OnClick(R.id.cv_booking_dates)
+    public void onCvBookingDatesClicked() {
+        new SlyCalendarDialog()
+                .setSingle(false)
+                .setBackgroundColor(ContextCompat.getColor(this, R.color.white))
+                .setSelectedTextColor(ContextCompat.getColor(this, R.color.colorAccent))
+                .setSelectedColor(ContextCompat.getColor(this, R.color.colorPrimary))
+                .setHeaderColor(ContextCompat.getColor(this, R.color.colorPrimary))
+                .setStartDate(calStart.getTime())
+                .setEndDate(calEnd.getTime())
+                .setFirstMonday(false)
+                .setCallback(new SlyCalendarDialog.Callback() {
+                    @Override
+                    public void onCancelled() {
+                    }
+
+                    @Override
+                    public void onDataSelected(Calendar firstDate, Calendar secondDate, int hours, int minutes) {
+                        SimpleDateFormat dateFormat = new SimpleDateFormat(getString(R.string.dateFormat), Locale.getDefault());
+                        if (firstDate != null && secondDate != null) {
+
+                            if (doValidateDaysMonth(dateFormat, firstDate, secondDate)) {
+                                calStart = firstDate;
+                                calEnd = secondDate;
+//                                Toaster.shortToast(getString(
+//                                        R.string.period,
+//                                        dateFormat.format(firstDate.getTime()),
+//                                        dateFormat.format(secondDate.getTime())
+//                                ));
+
+                                tvBookingDates.setText(getString(
+                                        R.string.period,
+                                        dateFormat.format(firstDate.getTime()),
+                                        dateFormat.format(secondDate.getTime())
+                                ));
+                            } else {
+                                Toaster.shortToast("Please select " + (propertyDetails.payment_period_id == Days15 ? "15 Days" : "1 Month") + " from both dates");
+                            }
+                        } else {
+                            Toaster.shortToast("Please select both dates");
+                        }
+                    }
+                })
+                .show(getSupportFragmentManager(), "TAG_SLYCALENDAR");
+    }
+
+    public boolean doValidateDaysMonth(SimpleDateFormat dateFormat, Calendar firstDate, Calendar secondDate) {
+        switch (propertyDetails.payment_period_id) {
+            case Days15: //TODO : Check This Validation Proper
+                if (getDateDiff(dateFormat, dateFormat.format(firstDate.getTime()), dateFormat.format(secondDate.getTime())) == 15) {
+                    return false;
+                }
+                break;
+            case Monthly:
+            default:
+                Calendar cal = Calendar.getInstance();
+                cal.setTime(firstDate.getTime());
+                cal.add(Calendar.MONTH, 1);
+                cal.add(Calendar.DAY_OF_MONTH, -1);
+                return secondDate.getTime().toString().equals(cal.getTime().toString());
+        }
+        return true;
+    }
+
+
+    public long getDateDiff(SimpleDateFormat format, String oldDate, String newDate) {
+        try { //TODO : Check This Validation Proper
+            return TimeUnit.DAYS.convert(format.parse(newDate).getTime() - format.parse(oldDate).getTime(), TimeUnit.MILLISECONDS);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 0;
+        }
+    }
+
+    @OnClick(R.id.tv_add_doc)
+    public void doAddDocument() {
+        ImagePicker.create(this)
+                .showCamera(true)
+                .theme(R.style.ImagePickerTheme)
+                .limit(10)
+                .folderMode(true)
+                .includeVideo(false)
+                .toolbarFolderTitle(getString(R.string.select_image))
+                .start();
+    }
+
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (ImagePicker.shouldHandle(requestCode, resultCode, data)) {
+            // Get a list of picked images
+            List<Image> images = ImagePicker.getImages(data);
+
+            for (int i = 0; i < images.size(); i++) {
+                arrFile = new ArrayList<>();
+                arrFile.add(images.get(i).getPath());
+                doAttachment();
+            }
+        }
+
+
+      /* if (requestCode == PAYMENT_CODE) {
+            if (resultCode == Activity.RESULT_OK && data != null) {
+                if (data.getStringExtra(Constant.RESULT).equals("Success")) {
+                    paymentId = data.getStringExtra(Constant.Payment_id);
+
+                    if (arrAddImageAttachment.size() > 0) {
+                        setProgressDialog(arrAddImageAttachment.size());
+                        for (int i = 0; i < arrAddImageAttachment.size(); i++) {
+                            doUploadFile(new File(arrAddImageAttachment.get(i).FilePath), i);
+                        }
+                    } else if (arrAddMenuAttachment.size() > 0) {
+                        setProgressDialog(arrAddMenuAttachment.size());
+                        for (int i = 0; i < arrAddMenuAttachment.size(); i++) {
+                            doUploadMenuFile(new File(arrAddMenuAttachment.get(i).FilePath), i);
+                        }
+                    } else {
+                        doAddHostelPG();
+                    }
+                }
+
+            }
+        }*/
+
+    }
+
+
+    public void doAttachment() {
+        for (int i = 0; i < arrFile.size(); i++) {
+            if (checkFileSize(arrFile.get(i))) {
+                Toaster.shortToast(getString(R.string.Max_10mb_file_allowed));
+                return;
+            }
+        }
+        for (int i = 0; i < arrFile.size(); i++) {
+            AddImageAttachmentModel addImageAttachmentModel = new AddImageAttachmentModel();
+            addImageAttachmentModel.FilePath = arrFile.get(i);
+            arrAddImageAttachment.add(addImageAttachmentModel);
+        }
+
+        setAttachment();
+    }
+
+    public void setAttachment() {
+        if (adapterAddAttachment == null) {
+            adapterAddAttachment = new AdapterAddAttachment(this);
+        }
+        adapterAddAttachment.doRefresh(arrAddImageAttachment);
+
+        if (rvDocument.getAdapter() == null) {
+            rvDocument.setHasFixedSize(true);
+            rvDocument.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+            rvDocument.setItemAnimator(new DefaultItemAnimator());
+            rvDocument.setAdapter(adapterAddAttachment);
+        }
+    }
+
 
 }
+
+

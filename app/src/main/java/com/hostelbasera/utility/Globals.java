@@ -31,8 +31,6 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.hostelbasera.R;
 import com.hostelbasera.model.UserDetailModel;
-import com.orhanobut.logger.AndroidLogAdapter;
-import com.orhanobut.logger.Logger;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -57,7 +55,7 @@ public class Globals extends CoreApp {
     public void onCreate() {
         super.onCreate();
         Fabric.with(this, new Crashlytics());
-        Logger.addLogAdapter(new AndroidLogAdapter());
+//        Logger.addLogAdapter(new AndroidLogAdapter());
         context = getApplicationContext();
     }
 
@@ -260,6 +258,36 @@ public class Globals extends CoreApp {
         return str;
     }
 
+    public String parseOrderDateToDDMMyyyy(String datetime) {
+
+        String inputPattern = "yyyy-MM-dd HH:mm:ss"; //2020-10-27 18:54:56
+        String outputPattern = "dd/MM/yyyy"; // 27/10/2020
+        SimpleDateFormat inputFormat = new SimpleDateFormat(inputPattern, Locale.ENGLISH);
+        SimpleDateFormat outputFormat = new SimpleDateFormat(outputPattern, Locale.ENGLISH);
+        String str = "";
+        try {
+            str = outputFormat.format(inputFormat.parse(datetime));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return str;
+    }
+
+    public String parseDateToDDMMyyyy(String datetime) {
+
+        String inputPattern = "yyyy-MM-dd"; //2020-10-27
+        String outputPattern = "dd/MM/yyyy"; // 27/10/2020
+        SimpleDateFormat inputFormat = new SimpleDateFormat(inputPattern, Locale.ENGLISH);
+        SimpleDateFormat outputFormat = new SimpleDateFormat(outputPattern, Locale.ENGLISH);
+        String str = "";
+        try {
+            str = outputFormat.format(inputFormat.parse(datetime));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return str;
+    }
+
     @SuppressLint("WorldReadableFiles")
     public String readFromFile(Context context, String fileName) {
         StringBuilder returnString = new StringBuilder();
@@ -450,5 +478,12 @@ public class Globals extends CoreApp {
 
     public static void doBoldTextView(TextView textView) {
         textView.setTypeface(textView.getTypeface(), Typeface.BOLD);
+    }
+
+    public static int checkInteger(String text) {
+        return text != null && !text.isEmpty() ? Integer.parseInt(text) : 0;
+    }
+    public static String checkString(String text) {
+        return text != null && !text.isEmpty() ? text : "";
     }
 }

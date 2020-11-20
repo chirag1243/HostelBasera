@@ -1,7 +1,8 @@
-package com.hostelbasera.seller;
+package com.hostelbasera.main;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -22,7 +23,8 @@ import com.google.gson.Gson;
 import com.hostelbasera.R;
 import com.hostelbasera.apis.HttpRequestHandler;
 import com.hostelbasera.apis.PostRequest;
-import com.hostelbasera.model.OrderListModel;
+import com.hostelbasera.model.BookingListDataModel;
+import com.hostelbasera.model.OrderDetailModel;
 import com.hostelbasera.utility.Constant;
 import com.hostelbasera.utility.Globals;
 import com.hostelbasera.utility.PaginationProgressBarAdapter;
@@ -37,14 +39,19 @@ import java.util.Objects;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class FragmentBookedList extends Fragment implements Paginate.Callbacks, SwipeRefreshLayout.OnRefreshListener{
+/**
+ * Created by Chirag on 29/10/20.
+ */
+public class FragmentBookingList extends Fragment implements Paginate.Callbacks, SwipeRefreshLayout.OnRefreshListener, AdapterBookingList.OnBookingStatusListener {
 
     View view;
-    @BindView(R.id.rv_order_list)
-    RecyclerView rvOrderList;
+    @BindView(R.id.rv_booking_list)
+    RecyclerView rvBookingList;
+
     @BindView(R.id.progressBar)
     ProgressBar progressBar;
-
+    //    @BindView(R.id.rotate_loading)
+//    RotateLoading rotateLoading;
     @BindView(R.id.img_icon)
     ImageView imgIcon;
     @BindView(R.id.fl_rotate_loading)
@@ -55,26 +62,24 @@ public class FragmentBookedList extends Fragment implements Paginate.Callbacks, 
     SwipeRefreshLayout swipeRefreshLayout;
 
     Globals globals;
-
-    OrderListModel orderListModel;
-    ArrayList<OrderListModel.Order_list> arrOrderList;
-    AdapterOrderList adapterOrderList;
+    BookingListDataModel bookingListDataModel;
+    ArrayList<BookingListDataModel.Booking_requests> arrBookingList;
+    AdapterBookingList adapterBookingList;
+    Activity mActivity;
 
     int pageNo = 1;
     private Paginate paginate;
     private boolean loading = false, isSeller;
-    Activity mActivity;
 
-
-    public static FragmentBookedList newInstance(boolean isSeller) {
-        FragmentBookedList fragment = new FragmentBookedList();
+    public static FragmentBookingList newInstance(boolean isSeller) {
+        FragmentBookingList fragment = new FragmentBookingList();
         fragment.isSeller = isSeller;
         return fragment;
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fragment_order_list, container, false);
+        view = inflater.inflate(R.layout.fragment_booking_list, container, false);
         ButterKnife.bind(this, view);
         init();
         return view;
@@ -88,15 +93,15 @@ public class FragmentBookedList extends Fragment implements Paginate.Callbacks, 
         swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary);
         swipeRefreshLayout.setOnRefreshListener(this);
         tvNoDataFound.setText("");
-        arrOrderList = new ArrayList<>();
+        arrBookingList = new ArrayList<>();
 
-        if (Globals.isNetworkAvailable(getActivity())) {
-            getOrderListData(true);
+        if (Globals.isNetworkAvailable(mActivity)) {
+            getBookingListData(true);
         } else {
             Toaster.shortToast(R.string.no_internet_msg);
         }
 
-        rvOrderList.addOnScrollListener(new RecyclerView.OnScrollListener() {
+        rvBookingList.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
@@ -104,8 +109,8 @@ public class FragmentBookedList extends Fragment implements Paginate.Callbacks, 
 
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
-                if (rvOrderList.getChildAt(0) != null) {
-                    swipeRefreshLayout.setEnabled(rvOrderList.getChildAt(0).getTop() == 0);
+                if (rvBookingList.getChildAt(0) != null) {
+                    swipeRefreshLayout.setEnabled(rvBookingList.getChildAt(0).getTop() == 0);
                 }
                 super.onScrolled(recyclerView, dx, dy);
             }
@@ -113,38 +118,38 @@ public class FragmentBookedList extends Fragment implements Paginate.Callbacks, 
     }
 
 
-    public void getOrderListData(boolean showProgress) {
-        JSONObject postData = HttpRequestHandler.getInstance().getOrderListDataParam(pageNo, isSeller);
+    public void getBookingListData(boolean showProgress) {
+        JSONObject postData = HttpRequestHandler.getInstance().getBookingListDataParam(pageNo, isSeller);
 
         if (postData != null) {
             if (!swipeRefreshLayout.isRefreshing() && showProgress)
                 progressBar.setVisibility(View.VISIBLE);
 
-            new PostRequest(mActivity, getString(R.string.orderList),
+            new PostRequest(mActivity, getString(R.string.bookingRequestList),
                     postData, showProgress, new PostRequest.OnPostServiceCallListener() {
                 @Override
                 public void onSucceedToPostCall(JSONObject response) {
                     if (progressBar.getVisibility() == View.VISIBLE)
                         progressBar.setVisibility(View.GONE);
 
-                    orderListModel = new Gson().fromJson(response.toString(), OrderListModel.class);
-                    if (orderListModel.status == 0 && orderListModel.order_list != null && !orderListModel.order_list.isEmpty()) {
+                    bookingListDataModel = new Gson().fromJson(response.toString(), BookingListDataModel.class);
+                    if (bookingListDataModel.status == 0 && bookingListDataModel.booking_requests != null && !bookingListDataModel.booking_requests.isEmpty()) {
                         if (swipeRefreshLayout.isRefreshing()) {
                             try {
                                 stopRefreshing();
-                                rvOrderList.setAdapter(null);
-                                arrOrderList.clear();
-                                adapterOrderList.notifyDataSetChanged();
+                                rvBookingList.setAdapter(null);
+                                arrBookingList.clear();
+                                adapterBookingList.notifyDataSetChanged();
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
                         }
-                        setupList(orderListModel.order_list);
+                        setupList(bookingListDataModel.booking_requests);
                     } else {
                         stopRefreshing();
                         if (pageNo == 1) {
                             showNoRecordFound("");
-                            Toaster.shortToast(orderListModel.message);
+                            Toaster.shortToast(bookingListDataModel.message);
                         }
                     }
                 }
@@ -164,7 +169,7 @@ public class FragmentBookedList extends Fragment implements Paginate.Callbacks, 
 
     private void showNoRecordFound(String no_data_found) {
         loading = false;
-        rvOrderList.setVisibility(View.GONE);
+        rvBookingList.setVisibility(View.GONE);
         if (tvNoDataFound.getVisibility() == View.GONE) {
             tvNoDataFound.setVisibility(View.VISIBLE);
             tvNoDataFound.setText(no_data_found);
@@ -172,7 +177,7 @@ public class FragmentBookedList extends Fragment implements Paginate.Callbacks, 
     }
 
     private void hideNoRecordFound() {
-        rvOrderList.setVisibility(View.VISIBLE);
+        rvBookingList.setVisibility(View.VISIBLE);
         if (tvNoDataFound.getVisibility() == View.VISIBLE)
             tvNoDataFound.setVisibility(View.GONE);
     }
@@ -183,9 +188,9 @@ public class FragmentBookedList extends Fragment implements Paginate.Callbacks, 
         }
     }
 
-    private void setupList(ArrayList<OrderListModel.Order_list> arrayList) {
+    private void setupList(ArrayList<BookingListDataModel.Booking_requests> arrayList) {
         if (arrayList != null && !arrayList.isEmpty()) {
-            arrOrderList.addAll(arrayList);
+            arrBookingList.addAll(arrayList);
 //            setAllMarkers();
             setAdapter();
         } else
@@ -194,18 +199,18 @@ public class FragmentBookedList extends Fragment implements Paginate.Callbacks, 
 
 
     private void setAdapter() {
-        if (adapterOrderList == null) {
-            adapterOrderList = new AdapterOrderList(getActivity());
+        if (adapterBookingList == null) {
+            adapterBookingList = new AdapterBookingList(getActivity());
         }
-        adapterOrderList.doRefresh(arrOrderList, isSeller);
+        adapterBookingList.doRefresh(arrBookingList, isSeller, this);
 
-        if (rvOrderList.getAdapter() == null) {
-            rvOrderList.setHasFixedSize(false);
-            rvOrderList.setLayoutManager(new LinearLayoutManager(getActivity()));
-            rvOrderList.setItemAnimator(new DefaultItemAnimator());
-            rvOrderList.setAdapter(adapterOrderList);
-            if (arrOrderList.size() < orderListModel.total_orders && rvOrderList != null) {
-                paginate = Paginate.with(rvOrderList, this)
+        if (rvBookingList.getAdapter() == null) {
+            rvBookingList.setHasFixedSize(false);
+            rvBookingList.setLayoutManager(new LinearLayoutManager(getActivity()));
+            rvBookingList.setItemAnimator(new DefaultItemAnimator());
+            rvBookingList.setAdapter(adapterBookingList);
+            if (arrBookingList.size() < bookingListDataModel.total_booking_requests && rvBookingList != null) {
+                paginate = Paginate.with(rvBookingList, this)
                         .setLoadingTriggerThreshold(Constant.progress_threshold_2)
                         .addLoadingListItem(Constant.addLoadingRow)
                         .setLoadingListItemCreator(new PaginationProgressBarAdapter())
@@ -214,7 +219,7 @@ public class FragmentBookedList extends Fragment implements Paginate.Callbacks, 
             }
         }
 
-        adapterOrderList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        adapterBookingList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 //                startActivity(new Intent(getActivity(), HostelDetailActivity.class)
@@ -228,7 +233,7 @@ public class FragmentBookedList extends Fragment implements Paginate.Callbacks, 
     public void onLoadMore() {
         loading = true;
         pageNo++;
-        getOrderListData(false);
+        getBookingListData(false);
     }
 
     @Override
@@ -238,21 +243,74 @@ public class FragmentBookedList extends Fragment implements Paginate.Callbacks, 
 
     @Override
     public boolean hasLoadedAllItems() {
-        return arrOrderList.size() >= orderListModel.total_orders;
+        return arrBookingList.size() >= bookingListDataModel.total_booking_requests;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+//        arrBookingList = new ArrayList<>();
+//        if (adapterBookingList != null)
+//            setAdapter();
+//        pageNo = 1;
+//        onRefresh();
+    }
 
     @Override
     public void onRefresh() {
         if (Globals.isNetworkAvailable(mActivity)) {
-            getOrderListData(true);
+            getBookingListData(true);
         } else {
             Toaster.shortToast(R.string.no_internet_msg);
         }
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
+    public void onChangeStatus(int id, int status) {
+        if (Globals.isNetworkAvailable(mActivity)) {
+
+            JSONObject postData = HttpRequestHandler.getInstance().getChangeBookingStatusDataParam(id, status);
+
+            if (postData != null) {
+                new PostRequest(mActivity, getString(R.string.changeBookingStatus), postData, true, new PostRequest.OnPostServiceCallListener() {
+                    @Override
+                    public void onSucceedToPostCall(JSONObject response) {
+                        OrderDetailModel orderDetailModel = new Gson().fromJson(response.toString(), OrderDetailModel.class);
+                        if (orderDetailModel.status == 0) {
+                            arrBookingList = new ArrayList<>();
+                            setAdapter();
+                            pageNo = 1;
+                            onRefresh();
+                        }
+//                        else {
+                        Toaster.shortToast(orderDetailModel.message);
+//                        }
+                    }
+
+                    @Override
+                    public void onFailedToPostCall(int statusCode, String msg) {
+                        Toaster.shortToast(msg);
+                    }
+                }).execute();
+            }
+            Globals.hideKeyboard(getActivity());
+
+        } else {
+            Toaster.shortToast(R.string.no_internet_msg);
+        }
     }
+
+
+    @Override
+    public void onMakePayment(int id, int seller_id, int property_id, int price) {
+        startActivity(new Intent(getActivity(), BookingPaymentActivity.class)
+                .putExtra(Constant.Property_price, price)
+                .putExtra(Constant.Seller_id, seller_id)
+                .putExtra(Constant.Property_id, property_id)
+                .putExtra(Constant.User_property_request_id, id));
+
+        // .putExtra(Constant.Property_name, arrBookingList.get(position).property_name)
+    }
+
 }
+

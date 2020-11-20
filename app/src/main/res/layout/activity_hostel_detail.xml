@@ -35,8 +35,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/dim_20dp"
-                    android:layout_marginRight="@dimen/dim_20dp"
-                    android:layout_marginTop="@dimen/dim_200dp">
+                    android:layout_marginTop="@dimen/dim_200dp"
+                    android:layout_marginRight="@dimen/dim_20dp">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -79,8 +79,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/dim_20dp"
-                    android:layout_marginRight="@dimen/dim_20dp"
                     android:layout_marginTop="@dimen/dim_12dp"
+                    android:layout_marginRight="@dimen/dim_20dp"
                     android:visibility="gone">
 
                     <LinearLayout
@@ -110,6 +110,31 @@
                     </LinearLayout>
                 </android.support.v7.widget.CardView>
 
+                <TextView
+                    android:id="@+id/tv_deposit_txt"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/pay_deposit_to_owner_by_your_own"
+                    android:background="@color/colorPrimary"
+                    android:layout_marginLeft="@dimen/dim_20dp"
+                    android:layout_marginRight="@dimen/dim_20dp"
+                    android:layout_marginTop="@dimen/dim_12dp"
+                    android:padding="@dimen/dim_5dp"
+                    android:textStyle="bold"
+                    android:textColor="@color/colorAccent"/>
+
+                <TextView
+                    android:id="@+id/tv_notice_period_txt"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/colorPrimary"
+                    android:layout_marginLeft="@dimen/dim_20dp"
+                    android:layout_marginRight="@dimen/dim_20dp"
+                    android:layout_marginTop="@dimen/dim_12dp"
+                    android:padding="@dimen/dim_5dp"
+                    android:textStyle="bold"
+                    android:textColor="@color/colorAccent"/>
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -120,9 +145,9 @@
                         cardCornerRadius="@dimen/dim_5dp"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="@dimen/dim_5dp"
                         android:layout_marginLeft="@dimen/dim_20dp"
                         android:layout_marginRight="@dimen/dim_5dp"
+                        android:layout_marginBottom="@dimen/dim_5dp"
                         android:layout_weight="1">
 
                         <LinearLayout
@@ -156,9 +181,9 @@
                         cardCornerRadius="@dimen/dim_5dp"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="@dimen/dim_5dp"
                         android:layout_marginLeft="@dimen/dim_5dp"
                         android:layout_marginRight="@dimen/dim_20dp"
+                        android:layout_marginBottom="@dimen/dim_5dp"
                         android:layout_weight="1">
 
                         <LinearLayout
@@ -193,8 +218,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/dim_20dp"
-                    android:layout_marginRight="@dimen/dim_20dp"
-                    android:layout_marginTop="@dimen/dim_12dp">
+                    android:layout_marginTop="@dimen/dim_12dp"
+                    android:layout_marginRight="@dimen/dim_20dp">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -253,8 +278,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/dim_20dp"
-                    android:layout_marginRight="@dimen/dim_20dp"
-                    android:layout_marginTop="@dimen/dim_12dp">
+                    android:layout_marginTop="@dimen/dim_12dp"
+                    android:layout_marginRight="@dimen/dim_20dp">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -293,8 +318,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/dim_20dp"
-                    android:layout_marginRight="@dimen/dim_20dp"
-                    android:layout_marginTop="@dimen/dim_12dp">
+                    android:layout_marginTop="@dimen/dim_12dp"
+                    android:layout_marginRight="@dimen/dim_20dp">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -329,11 +354,11 @@
                     android:id="@+id/cv_rooms"
                     cardCornerRadius="@dimen/dim_5dp"
                     android:layout_width="match_parent"
-                    android:visibility="gone"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/dim_20dp"
+                    android:layout_marginTop="@dimen/dim_12dp"
                     android:layout_marginRight="@dimen/dim_20dp"
-                    android:layout_marginTop="@dimen/dim_12dp">
+                    android:visibility="gone">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -373,10 +398,10 @@
                         android:layout_height="wrap_content"
                         android:background="@color/white"
                         android:orientation="vertical"
-                        android:paddingBottom="@dimen/dim_24dp"
                         android:paddingLeft="@dimen/dim_12dp"
+                        android:paddingTop="@dimen/dim_12dp"
                         android:paddingRight="@dimen/dim_12dp"
-                        android:paddingTop="@dimen/dim_12dp">
+                        android:paddingBottom="@dimen/dim_24dp">
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -407,20 +432,118 @@
 
                 </FrameLayout>
 
+                <ru.slybeaver.slycalendarview.SlyCalendarView
+                    android:id="@+id/slyCalendarView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/dim_5dp"
+                    app:backgroundColor="#000000"
+                    app:firstMonday="true"
+                    app:headerColor="#ff0000"
+                    app:selectedColor="#0000ff"
+                    app:textColor="#00ff00" />
+
+
+                <android.support.v7.widget.CardView
+                    android:id="@+id/cv_booking_dates"
+                    cardCornerRadius="@dimen/dim_5dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/dim_20dp"
+                    android:layout_marginTop="@dimen/dim_12dp"
+                    android:layout_marginRight="@dimen/dim_20dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/white"
+                        android:orientation="vertical"
+                        android:padding="@dimen/dim_12dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/booking_dates"
+                            android:textAllCaps="true"
+                            android:textColor="@color/colorPrimary"
+                            android:textSize="@dimen/dim_text13" />
+
+                        <TextView
+                            android:id="@+id/tv_booking_dates"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/dim_5dp"
+                            android:text=""
+                            android:textAllCaps="true"
+                            android:textColor="@color/colorAccent"
+                            android:textSize="@dimen/dim_text16" />
+                    </LinearLayout>
+                </android.support.v7.widget.CardView>
+
+                <android.support.v7.widget.CardView
+                    android:id="@+id/cv_document"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/dim_20dp"
+                    android:layout_marginRight="@dimen/dim_20dp"
+                    android:layout_marginTop="@dimen/dim_12dp"
+                    android:padding="@dimen/dim_2dp"
+                    app:cardCornerRadius="@dimen/dim_3dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/dim_8dp"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="@string/documents"
+                                android:textColor="@color/colorPrimary"
+                                android:textSize="@dimen/dim_text14"
+                                android:textStyle="bold" />
+
+                            <android.support.v7.widget.AppCompatTextView
+                                android:id="@+id/tv_add_doc"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:background="@drawable/rounded_add_bg"
+                                android:padding="@dimen/dim_5dp"
+                                android:text="@string/add"
+                                android:textColor="@color/white"
+                                android:textSize="@dimen/dim_text14" />
+                        </LinearLayout>
+
+                        <android.support.v7.widget.RecyclerView
+                            android:id="@+id/rv_document"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/dim_8dp"
+                            android:nestedScrollingEnabled="false" />
+                    </LinearLayout>
+                </android.support.v7.widget.CardView>
+
+
                 <Button
                     android:id="@+id/btn_book_now"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/dim_12dp"
                     android:layout_marginLeft="@dimen/dim_12dp"
-                    android:layout_marginRight="@dimen/dim_12dp"
                     android:layout_marginTop="@dimen/dim_12dp"
+                    android:layout_marginRight="@dimen/dim_12dp"
+                    android:layout_marginBottom="@dimen/dim_12dp"
                     android:background="@color/colorAccent"
                     android:text="@string/book_now"
                     android:textAllCaps="true"
                     android:textColor="@color/white"
                     android:textSize="@dimen/dim_text16"
-                    android:visibility="gone" />
+                    android:visibility="visible" />
             </LinearLayout>
         </FrameLayout>
     </android.support.v4.widget.NestedScrollView>
@@ -436,9 +559,9 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:drawableTop="@drawable/footer_bookmark"
             android:drawablePadding="@dimen/dim_5dp"
             android:drawableTint="@color/border_light_gray"
-            android:drawableTop="@drawable/footer_bookmark"
             android:gravity="center"
             android:padding="@dimen/dim_12dp"
             android:text="@string/bookmark"
@@ -450,8 +573,8 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:drawablePadding="@dimen/dim_5dp"
             android:drawableTop="@drawable/footer_edit"
+            android:drawablePadding="@dimen/dim_5dp"
             android:gravity="center"
             android:text="@string/review"
             android:textColor="@color/colorPrimary"
@@ -462,8 +585,8 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:drawablePadding="@dimen/dim_5dp"
             android:drawableTop="@drawable/footer_contact"
+            android:drawablePadding="@dimen/dim_5dp"
             android:gravity="center"
             android:padding="@dimen/dim_12dp"
             android:text="@string/call"
@@ -475,8 +598,8 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:drawablePadding="@dimen/dim_5dp"
             android:drawableTop="@drawable/nav_feedback"
+            android:drawablePadding="@dimen/dim_5dp"
             android:gravity="center"
             android:padding="@dimen/dim_12dp"
             android:text="@string/enquiry"

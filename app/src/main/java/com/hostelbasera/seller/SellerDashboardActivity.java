@@ -12,7 +12,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
@@ -44,6 +43,7 @@ import com.gun0912.tedpermission.TedPermission;
 import com.hostelbasera.R;
 import com.hostelbasera.apis.HttpRequestHandler;
 import com.hostelbasera.apis.PostRequest;
+import com.hostelbasera.main.FragmentBookingList;
 import com.hostelbasera.main.FragmentPolicyDetails;
 import com.hostelbasera.main.LoginActivity;
 import com.hostelbasera.model.PropertyDetailModel;
@@ -59,7 +59,6 @@ import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class SellerDashboardActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener, PermissionListener {
@@ -79,8 +78,7 @@ public class SellerDashboardActivity extends BaseActivity implements NavigationV
     NavigationView navView;
     @BindView(R.id.drawer_layout)
     DrawerLayout drawer;
-    @BindView(R.id.fb_add_hostel)
-    FloatingActionButton fbAddHostel;
+
     Globals globals;
     AppCompatImageView img_menu;
     CircleImageView imgProfile;
@@ -98,7 +96,6 @@ public class SellerDashboardActivity extends BaseActivity implements NavigationV
     @SuppressLint("RestrictedApi")
     public void init() {
         globals = ((Globals) getApplicationContext());
-        fbAddHostel.setVisibility(View.VISIBLE);
         updateChecker();
 
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close) {
@@ -240,14 +237,14 @@ public class SellerDashboardActivity extends BaseActivity implements NavigationV
                 setToolbarTitle(R.string.my_pg_hostel);
                 setFragment(new FragmentSellerHome());
                 break;
+            case R.id.nav_booking_request:
+                setToolbarTitle(R.string.booking_request);
+                setFragment(FragmentBookingList.newInstance(true));
+                break;
             case R.id.nav_booked_hostel_pg:
                 setToolbarTitle(R.string.booked_hostel_pg);
-                setFragment(new FragmentBookedList());
+                setFragment(FragmentBookedList.newInstance(true));
                 break;
-            /*case R.id.nav_enquiry:
-                setToolbarTitle(R.string.enquiry);
-                setFragment(new FragmentOrderList());
-                break;*/
             /*case R.id.nav_change_password:
                 setToolbarTitle(R.string.change_password);
                 onChangePasswordClicked();
@@ -426,7 +423,7 @@ public class SellerDashboardActivity extends BaseActivity implements NavigationV
     }
 
     private void doChangePassword(String password) {
-        JSONObject postData = HttpRequestHandler.getInstance().getChangePasswordParam(true, password,globals.getUserDetails().loginSellerDetail.seller_reg_Id);
+        JSONObject postData = HttpRequestHandler.getInstance().getChangePasswordParam(true, password, globals.getUserDetails().loginSellerDetail.seller_reg_Id);
         if (postData != null) {
 
             new PostRequest(this, getString(R.string.changePassword), postData, true, new PostRequest.OnPostServiceCallListener() {
@@ -465,10 +462,6 @@ public class SellerDashboardActivity extends BaseActivity implements NavigationV
         setFragment(new FragmentSellerHome());
     }*/
 
-    @OnClick(R.id.fb_add_hostel)
-    public void doAddHostel() {
-        startActivityForResult(new Intent(SellerDashboardActivity.this, AddHostelPGActivity.class), Dashboard_REQUEST_CODE);
-    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

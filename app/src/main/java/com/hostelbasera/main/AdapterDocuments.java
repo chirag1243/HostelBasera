@@ -1,4 +1,4 @@
-package com.hostelbasera.seller;
+package com.hostelbasera.main;
 
 import android.content.Context;
 import android.content.Intent;
@@ -14,7 +14,6 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
 import com.bumptech.glide.request.RequestOptions;
 import com.hostelbasera.R;
-import com.hostelbasera.model.AddImageAttachmentModel;
 import com.hostelbasera.utility.Constant;
 import com.hostelbasera.utility.ViewFullImageActivity;
 
@@ -23,54 +22,50 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class AdapterAddAttachment extends RecyclerView.Adapter<AdapterAddAttachment.ViewHolder> {
+/**
+ * Created by Chirag on 07/11/20.
+ */
+public class AdapterDocuments extends RecyclerView.Adapter<AdapterDocuments.ViewHolder> {
 
-    public ArrayList<AddImageAttachmentModel> mValues = new ArrayList<>();
+    public ArrayList<String> mValues = new ArrayList<>();
     private final Context mContext;
     private AdapterView.OnItemClickListener onItemClickListener;
 
-    public AdapterAddAttachment(Context context) {
+    public AdapterDocuments(Context context) {
         mContext = context;
     }
 
-    public void doRefresh(ArrayList<AddImageAttachmentModel> arrAddImageAttachment) {
-        mValues = arrAddImageAttachment;
+    public void doRefresh(ArrayList<String> arrayList) {
+        mValues = arrayList;
         notifyDataSetChanged();
     }
 
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public AdapterDocuments.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.attachment_item, parent, false);
-        return new ViewHolder(view, this);
+        return new AdapterDocuments.ViewHolder(view, this);
     }
 
     class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        private AdapterAddAttachment adapterAddAttachment;
+        private AdapterDocuments adapterDocuments;
 
         @BindView(R.id.img_attachment_icon)
         ImageView imgAttachmentIcon;
         @BindView(R.id.tv_remove)
         TextView tvRemove;
 
-        ViewHolder(View itemView, AdapterAddAttachment adapterAddAttachment) {
+        ViewHolder(View itemView, AdapterDocuments adapterDocuments) {
             super(itemView);
-            this.adapterAddAttachment = adapterAddAttachment;
+            this.adapterDocuments = adapterDocuments;
             ButterKnife.bind(this, itemView);
             itemView.setOnClickListener(this);
         }
 
-        void setDataToView(AddImageAttachmentModel mItem, ViewHolder holder, int position) {
-            tvRemove.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mValues.remove(position);
-                    notifyItemRemoved(position);
-                    notifyItemRangeChanged(position, mValues.size());
-                }
-            });
+        void setDataToView(String mItem, AdapterDocuments.ViewHolder holder, int position) {
+            tvRemove.setVisibility(View.GONE);
 
             Glide.with(mContext)
-                    .load(mItem.FilePath)
+                    .load(mItem)
                     .apply(new RequestOptions()
                             .fitCenter()
                             .placeholder(R.drawable.image_placeholder)
@@ -80,7 +75,7 @@ public class AdapterAddAttachment extends RecyclerView.Adapter<AdapterAddAttachm
             imgAttachmentIcon.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mContext.startActivity(new Intent(mContext, ViewFullImageActivity.class).putExtra(Constant.File_name, mItem.FilePath).putExtra(Constant.IsFullPath, true));
+                    mContext.startActivity(new Intent(mContext, ViewFullImageActivity.class).putExtra(Constant.File_name, mItem).putExtra(Constant.IsFullPath, true));
                 }
             });
 
@@ -88,13 +83,13 @@ public class AdapterAddAttachment extends RecyclerView.Adapter<AdapterAddAttachm
 
         @Override
         public void onClick(View v) {
-            adapterAddAttachment.onItemHolderClick(ViewHolder.this);
+            adapterDocuments.onItemHolderClick(AdapterDocuments.ViewHolder.this);
         }
     }
 
 
     @Override
-    public void onBindViewHolder(final ViewHolder holder, int position) {
+    public void onBindViewHolder(final AdapterDocuments.ViewHolder holder, int position) {
         holder.setDataToView(mValues.get(position), holder, position);
     }
 
@@ -107,7 +102,7 @@ public class AdapterAddAttachment extends RecyclerView.Adapter<AdapterAddAttachm
         this.onItemClickListener = onItemClickListener;
     }
 
-    private void onItemHolderClick(ViewHolder holder) {
+    private void onItemHolderClick(AdapterDocuments.ViewHolder holder) {
         if (onItemClickListener != null)
             onItemClickListener.onItemClick(null, holder.itemView, holder.getAdapterPosition(), holder.getItemId());
     }

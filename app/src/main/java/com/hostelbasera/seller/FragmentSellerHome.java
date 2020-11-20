@@ -3,6 +3,7 @@ package com.hostelbasera.seller;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -47,6 +48,7 @@ import java.util.HashMap;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class FragmentSellerHome extends Fragment implements Paginate.Callbacks, SwipeRefreshLayout.OnRefreshListener, AdapterSellerHome.OnRenewListener {
 
@@ -66,6 +68,10 @@ public class FragmentSellerHome extends Fragment implements Paginate.Callbacks, 
     TextView tvNoDataFound;
     @BindView(R.id.swipe_refresh_layout)
     SwipeRefreshLayout swipeRefreshLayout;
+    @BindView(R.id.fl_hostel)
+    FrameLayout flHostel;
+    @BindView(R.id.fb_add_hostel)
+    FloatingActionButton fbAddHostel;
 
     private Paginate paginate;
     private boolean loading = false;
@@ -103,7 +109,6 @@ public class FragmentSellerHome extends Fragment implements Paginate.Callbacks, 
         arrPropertyDetailArrayList = new ArrayList<>();
         tvNoDataFound.setText("");
 
-
         if (Globals.isNetworkAvailable(getActivity())) {
             getPropertyListData(true);
         } else {
@@ -122,11 +127,11 @@ public class FragmentSellerHome extends Fragment implements Paginate.Callbacks, 
                 if (rvHostel.getChildAt(0) != null) {
                     swipeRefreshLayout.setEnabled(rvHostel.getChildAt(0).getTop() == 0);
                 }
-               /* if (dy > 0 && floatingActionButton.getVisibility() == View.VISIBLE) {
-                    floatingActionButton.hide();
-                } else if (dy < 0 && floatingActionButton.getVisibility() != View.VISIBLE) {
-                    floatingActionButton.show();
-                }*/
+                if (dy > 0 && fbAddHostel.getVisibility() == View.VISIBLE) {
+                    fbAddHostel.hide();
+                } else if (dy < 0 && fbAddHostel.getVisibility() != View.VISIBLE) {
+                    fbAddHostel.show();
+                }
                 super.onScrolled(recyclerView, dx, dy);
             }
         });
@@ -236,6 +241,7 @@ public class FragmentSellerHome extends Fragment implements Paginate.Callbacks, 
 
     private void showNoRecordFound(String no_data_found) {
         loading = false;
+//        flHostel.setVisibility(View.GONE);
         rvHostel.setVisibility(View.GONE);
         if (tvNoDataFound.getVisibility() == View.GONE) {
             tvNoDataFound.setVisibility(View.VISIBLE);
@@ -244,6 +250,7 @@ public class FragmentSellerHome extends Fragment implements Paginate.Callbacks, 
     }
 
     private void hideNoRecordFound() {
+//        flHostel.setVisibility(View.VISIBLE);
         rvHostel.setVisibility(View.VISIBLE);
         if (tvNoDataFound.getVisibility() == View.VISIBLE)
             tvNoDataFound.setVisibility(View.GONE);
@@ -468,6 +475,11 @@ public class FragmentSellerHome extends Fragment implements Paginate.Callbacks, 
                     }
 
                 });
+    }
+
+    @OnClick(R.id.fb_add_hostel)
+    public void doAddHostel() {
+        startActivityForResult(new Intent(getActivity(), AddHostelPGActivity.class), 1243);
     }
 }
 

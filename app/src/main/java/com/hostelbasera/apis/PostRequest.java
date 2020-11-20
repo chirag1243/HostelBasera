@@ -50,6 +50,7 @@ public class PostRequest {
         this.context = context;
         this.isLoaderRequired = isLoaderRequired;
         this.url = context.getString(R.string.server_url) + url;
+
     }
 
     public PostRequest(Context context, String server_url, String url, JSONObject postData, boolean isLoaderRequired, OnPostServiceCallListener listener) {
@@ -111,8 +112,9 @@ public class PostRequest {
         if (isLoaderRequired) { //&& pb == null
             dialog = HttpRequestHandler.getInstance().getProgressBar(context);
         }
-        Logger.d("URL :=>"+ url);
+        Logger.d("URL :=>" + url);
         Logger.json(postData.toString());
+
         HttpRequestHandler.getInstance().post(context, url, postData, new JsonHttpResponseHandler() {
 
             @Override

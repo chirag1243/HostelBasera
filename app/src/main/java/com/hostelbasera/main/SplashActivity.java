@@ -29,6 +29,8 @@ import com.hostelbasera.seller.SellerDashboardActivity;
 import com.hostelbasera.utility.Constant;
 import com.hostelbasera.utility.Globals;
 import com.hostelbasera.utility.Toaster;
+import com.orhanobut.logger.AndroidLogAdapter;
+import com.orhanobut.logger.Logger;
 import com.victor.loading.rotate.RotateLoading;
 
 import org.json.JSONObject;
@@ -63,7 +65,7 @@ public class SplashActivity extends AppCompatActivity {
         setContentView(R.layout.activity_splash);
         globals = ((Globals) getApplicationContext());
         ButterKnife.bind(this);
-
+        Logger.addLogAdapter(new AndroidLogAdapter());
 //        AppSignatureHelper appSignatureHelper = new AppSignatureHelper(this);
 //        appSignatureHelper.getAppSignatures();
 //

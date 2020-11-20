@@ -44,6 +44,7 @@ import com.hostelbasera.apis.HttpRequestHandler;
 import com.hostelbasera.apis.PostRequest;
 import com.hostelbasera.model.PropertyDetailModel;
 import com.hostelbasera.model.UserDetailModel;
+import com.hostelbasera.seller.FragmentBookedList;
 import com.hostelbasera.utility.BaseActivity;
 import com.hostelbasera.utility.Constant;
 import com.hostelbasera.utility.Globals;
@@ -277,15 +278,14 @@ public class DashboardActivity extends BaseActivity implements NavigationView.On
                 setToolbarTitle(R.string.bookmarks);
                 setFragment(new FragmentBookmarkList());
                 break;
-            /*case R.id.nav_my_pg_hostel:
-                setToolbarTitle(R.string.my_pg_hostel);
-                setFragment(new FragmentOrderList());
-                break;*/
-            /*case R.id.nav_change_password:
-                setToolbarTitle(R.string.change_password);
-                onChangePasswordClicked();
-                doCloseDrawer();
-                return false;*/
+            case R.id.nav_booking_request:
+                setToolbarTitle(R.string.booking_request);
+                setFragment(FragmentBookingList.newInstance(false));
+                break;
+            case R.id.nav_booked_hostel_pg:
+                setToolbarTitle(R.string.booked_hostel_pg);
+                setFragment(FragmentBookedList.newInstance(false));
+                break;
             case R.id.nav_feedback:
                 onFeedbackClicked();
                 doCloseDrawer();
@@ -318,6 +318,7 @@ public class DashboardActivity extends BaseActivity implements NavigationView.On
             case R.id.nav_about_us:
                 setToolbarTitle(R.string.about_us);
                 new FragmentPolicyDetails();
+
                 setFragment(FragmentPolicyDetails.newInstance(Constant.About_us));
                 break;
             case R.id.nav_privacy_policy:

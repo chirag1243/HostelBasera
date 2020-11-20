@@ -14,15 +14,21 @@
             android:id="@+id/nav_bookmarks"
             android:icon="@drawable/nav_bookmark"
             android:title="@string/bookmarks" />
-        <!--TODO: My PG/Hostel is remove due to book button-->
-        <!-- <item
-             android:id="@+id/nav_my_pg_hostel"
-             android:icon="@drawable/nav_my_pg_hostel"
-             android:title="@string/my_pg_hostel" />-->
+
+        <item
+            android:id="@+id/nav_booking_request"
+            android:icon="@drawable/nav_my_pg_hostel"
+            android:title="@string/booking_request" />
+
         <item
             android:id="@+id/nav_feedback"
             android:icon="@drawable/nav_feedback"
             android:title="@string/feedback" />
+
+        <item
+            android:id="@+id/nav_booked_hostel_pg"
+            android:icon="@drawable/nav_my_pg_hostel"
+            android:title="@string/booked_hostel_pg" />
         <!--<item
             android:id="@+id/nav_change_password"
             android:icon="@drawable/nav_change_pass"

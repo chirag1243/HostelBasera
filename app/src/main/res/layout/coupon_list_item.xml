@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/dim_8dp"
+    card_view:cardCornerRadius="@dimen/dim_5dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tv_expiry_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:background="@drawable/rounded_boys_girls"
+            android:backgroundTint="@color/border_gray"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:padding="@dimen/dim_5dp"
+            android:text="Expiry Date 25/10/2020"
+            android:textColor="@color/white"
+            android:textSize="@dimen/dim_text14" />
+
+        <TextView
+            android:id="@+id/tv_coupon"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/dim_8dp"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:text="RUN300"
+            android:textColor="@color/colorPrimary"
+            android:textSize="@dimen/dim_text18"
+            android:textStyle="bold" />
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/tv_amount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:background="@drawable/rounded_price"
+                android:paddingLeft="@dimen/dim_8dp"
+                android:paddingTop="@dimen/dim_3dp"
+                android:paddingRight="@dimen/dim_8dp"
+                android:paddingBottom="@dimen/dim_3dp"
+                android:text="₹ 5000"
+                android:textColor="@color/colorAccent"
+                android:textSize="@dimen/dim_text20"
+                android:textStyle="bold" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_gravity="center"
+                android:layout_weight="1" />
+
+            <Button
+                android:id="@+id/btn_apply"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:layout_marginRight="@dimen/dim_5dp"
+                android:background="@drawable/rounded_add_hostel_bg"
+                android:minWidth="70dp"
+                android:minHeight="0dp"
+                android:layout_marginBottom="@dimen/dim_3dp"
+                android:padding="@dimen/dim_8dp"
+                android:text="@string/apply"
+                android:textAllCaps="false"
+                android:textColor="@color/white"
+                android:textSize="@dimen/dim_text13" />
+        </LinearLayout>
+    </LinearLayout>
+
+</android.support.v7.widget.CardView>

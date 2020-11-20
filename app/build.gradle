@@ -108,5 +108,7 @@ dependencies {
 
     implementation 'com.crashlytics.sdk.android:crashlytics:2.10.1'
     implementation 'com.github.esafirm.android-image-picker:imagepicker:1.13.1'
+
+    implementation 'com.github.psinetron:slycalendarview:0.0.9'
 }
 apply plugin: 'com.google.gms.google-services'

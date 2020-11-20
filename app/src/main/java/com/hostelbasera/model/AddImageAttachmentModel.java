@@ -11,4 +11,6 @@ public class AddImageAttachmentModel {
 
     @SerializedName("FileName")
     public String FileName;
+
+    public DocumentUploadModel.UploadPropertyImagesDetail uploadPropertyImagesDetail;
 }

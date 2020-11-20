@@ -10,15 +10,17 @@
             android:id="@+id/nav_pg_hostel"
             android:icon="@drawable/nav_pg_hostels"
             android:title="@string/my_pg_hostel" />
+
+        <item
+            android:id="@+id/nav_booking_request"
+            android:icon="@drawable/nav_my_pg_hostel"
+            android:title="@string/booking_request" />
+
         <item
             android:id="@+id/nav_booked_hostel_pg"
             android:icon="@drawable/nav_my_pg_hostel"
             android:title="@string/booked_hostel_pg" />
 
-        <!--<item
-            android:id="@+id/nav_enquiry"
-            android:icon="@drawable/nav_feedback"
-            android:title="@string/enquiry" />-->
         <!--<item
             android:id="@+id/nav_change_password"
             android:icon="@drawable/nav_change_pass"

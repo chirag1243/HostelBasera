@@ -5,12 +5,16 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Typeface;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,6 +36,7 @@ import com.gun0912.tedpermission.TedPermission;
 import com.hostelbasera.R;
 import com.hostelbasera.apis.HttpRequestHandler;
 import com.hostelbasera.apis.PostRequest;
+import com.hostelbasera.model.BannerListModel;
 import com.hostelbasera.model.FilterModel;
 import com.hostelbasera.model.GetPropertyDetailModel;
 import com.hostelbasera.utility.Constant;
@@ -44,6 +49,7 @@ import com.victor.loading.rotate.RotateLoading;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.Timer;
 
 import butterknife.BindView;
@@ -86,12 +92,20 @@ public class FragmentHome extends Fragment implements Paginate.Callbacks, SwipeR
     @BindView(R.id.fa_button)
     FloatingActionButton faButton;
 
+    @BindView(R.id.tv_hostel_suggestion)
+    TextView tvHostelSuggestion;
+    @BindView(R.id.rv_banner)
+    RecyclerView rvBanner;
+    @BindView(R.id.ns_scroll)
+    NestedScrollView nsScroll;
+
     ArrayList<String> arrPropertyCategoryId;
     ArrayList<String> arrPropertyTypeId;
     ArrayList<String> arrTypeId;
     ArrayList<String> arrPropertySizeId;
     ArrayList<String> arrPriceId;
     FilterModel filterModel;
+    BannerListModel bannerListModel;
 
     private static final int filterCode = 1005;
 
@@ -226,6 +240,7 @@ public class FragmentHome extends Fragment implements Paginate.Callbacks, SwipeR
                 .check();
 
         if (Globals.isNetworkAvailable(getActivity())) {
+            getBannerListData();
             getPropertyListData(true, false);
             getFiltersData();
         } else {
@@ -233,7 +248,7 @@ public class FragmentHome extends Fragment implements Paginate.Callbacks, SwipeR
             Toaster.shortToast(R.string.no_internet_msg);
         }
 
-        rvHostel.addOnScrollListener(new RecyclerView.OnScrollListener() {
+        /*rvHostel.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
@@ -251,8 +266,30 @@ public class FragmentHome extends Fragment implements Paginate.Callbacks, SwipeR
                 }
                 super.onScrolled(recyclerView, dx, dy);
             }
-        });
+        });*/
+        /*nsScroll.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
+            @Override
+            public void onScrollChange(NestedScrollView nestedScrollView, int i, int i1, int i2, int i3) {
+                if (nsScroll.getChildAt(0) != null) {
+                    swipeRefreshLayout.setEnabled(nsScroll.getChildAt(0).getTop() == 0);
+                }
+                if (i > 0 && faButton.getVisibility() == View.VISIBLE) {
+                    faButton.hide();
+                } else if (i < 0 && faButton.getVisibility() != View.VISIBLE) {
+                    faButton.show();
+                }
+            }
+        });*/
 
+
+        /*nsScroll.setOnScrollChangeListener((NestedScrollView.OnScrollChangeListener) (v, scrollX, scrollY, oldScrollX, oldScrollY) -> {
+            if(v.getChildAt(v.getChildCount() - 1) != null) {
+                if ((scrollY >= (v.getChildAt(v.getChildCount() - 1).getMeasuredHeight() - v.getMeasuredHeight())) &&
+                        scrollY > oldScrollY) {
+                    //code to fetch more data for endless scrolling
+                }
+            }
+        });*/
     }
 
     @OnClick(R.id.tv_search)
@@ -303,6 +340,30 @@ public class FragmentHome extends Fragment implements Paginate.Callbacks, SwipeR
                 @Override
                 public void onSucceedToPostCall(JSONObject response) {
                     filterModel = new Gson().fromJson(response.toString(), FilterModel.class);
+                    /*if (filterModel.status == 0 && filterModel.filtersOfFullCatalogsDetail != null) {
+                    } else {
+                        Toaster.shortToast(filterModel.message);
+                    }*/
+                }
+
+                @Override
+                public void onFailedToPostCall(int statusCode, String msg) {
+                    Toaster.shortToast(msg);
+                }
+            }).execute();
+        }
+        Globals.hideKeyboard(getActivity());
+    }
+
+    public void getBannerListData() {
+        JSONObject postData = HttpRequestHandler.getInstance().getFilterListParam();
+
+        if (postData != null) {
+            new PostRequest(Objects.requireNonNull(getActivity()), getString(R.string.bannerList),
+                    postData, false, new PostRequest.OnPostServiceCallListener() {
+                @Override
+                public void onSucceedToPostCall(JSONObject response) {
+                    bannerListModel = new Gson().fromJson(response.toString(), BannerListModel.class);
                     /*if (filterModel.status == 0 && filterModel.filtersOfFullCatalogsDetail != null) {
                     } else {
                         Toaster.shortToast(filterModel.message);
@@ -442,11 +503,47 @@ public class FragmentHome extends Fragment implements Paginate.Callbacks, SwipeR
     private void setupList(ArrayList<GetPropertyDetailModel.PropertyDetail> homePageStoresDetailArrayList, boolean showProgress) {
         if (homePageStoresDetailArrayList != null && !homePageStoresDetailArrayList.isEmpty()) {
             arrPropertyDetailArrayList.addAll(homePageStoresDetailArrayList);
-            if (showProgress)
-                arrPropertyDetailArrayList.add(0, new GetPropertyDetailModel.PropertyDetail());
+            if (showProgress) {
+                setRvBanner();
+//                arrPropertyDetailArrayList.add(0, new GetPropertyDetailModel.PropertyDetail());
+
+//                GetPropertyDetailModel.PropertyDetail model = new GetPropertyDetailModel.PropertyDetail();
+//                model.banners = bannerListModel.banners;
+//                arrPropertyDetailArrayList.add(0, model);
+            }
             setAdapter();
         } else
             showNoRecordFound(getString(R.string.no_data_found));
+    }
+
+    public void setRvBanner() {
+        tvHostelSuggestion.setTypeface(tvHostelSuggestion.getTypeface(), Typeface.BOLD);
+
+        if (bannerListModel.banners != null && !bannerListModel.banners.isEmpty()) {
+
+            rvBanner.setVisibility(View.VISIBLE);
+
+            AdapterBanners adapterDocuments = new AdapterBanners(mContext);
+
+            rvBanner.setHasFixedSize(false);
+            rvBanner.setNestedScrollingEnabled(false);
+            rvBanner.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false));
+            rvBanner.setAdapter(adapterDocuments);
+            adapterDocuments.doRefresh(bannerListModel.banners);
+            adapterDocuments.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    if (!Globals.checkString(bannerListModel.banners.get(position).url).isEmpty()) {
+                        if (bannerListModel.banners.get(position).url.startsWith("http://") || bannerListModel.banners.get(position).url.startsWith("https://") || bannerListModel.banners.get(position).url.startsWith("www.")) {
+                            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(bannerListModel.banners.get(position).url)));
+                        } else
+                            Toaster.shortToast(bannerListModel.banners.get(position).url);
+                    }
+                }
+            });
+        } else {
+            rvBanner.setVisibility(View.GONE);
+        }
     }
 
     /*Test*/
@@ -464,6 +561,7 @@ public class FragmentHome extends Fragment implements Paginate.Callbacks, SwipeR
 
         if (rvHostel.getAdapter() == null) {
             rvHostel.setHasFixedSize(false);
+            rvHostel.setNestedScrollingEnabled(false);
             GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), Constant.GRID_SPAN);
 
             gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
@@ -471,6 +569,7 @@ public class FragmentHome extends Fragment implements Paginate.Callbacks, SwipeR
                 public int getSpanSize(int position) {
                     switch (adapterHomePropertyDetail.getItemViewType(position)) {
                         case 0:
+//                        case 1:
                             return 2;
                         default:
                             return 1;

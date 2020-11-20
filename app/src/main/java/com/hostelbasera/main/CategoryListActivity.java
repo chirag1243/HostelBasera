@@ -11,7 +11,6 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -57,8 +56,8 @@ public class CategoryListActivity extends BaseActivity implements Paginate.Callb
     RotateLoading rotateLoading;
     @BindView(R.id.img_icon)
     ImageView imgIcon;
-    @BindView(R.id.fl_rotate_loading)
-    FrameLayout flRotateLoading;
+    //    @BindView(R.id.fl_rotate_loading)
+//    FrameLayout flRotateLoading;
     @BindView(R.id.tv_no_data_found)
     TextView tvNoDataFound;
     @BindView(R.id.swipe_refresh_layout)
@@ -160,8 +159,6 @@ public class CategoryListActivity extends BaseActivity implements Paginate.Callb
             }
         });
     }
-
-
 
 
     public void getPropertyListData(boolean showProgress, boolean isFilter) {
@@ -280,7 +277,6 @@ public class CategoryListActivity extends BaseActivity implements Paginate.Callb
     }
 
 
-
     private void setAdapter() {
         hideNoRecordFound();
         if (adapterCategoryList == null) {
@@ -290,7 +286,7 @@ public class CategoryListActivity extends BaseActivity implements Paginate.Callb
             adapterCategoryList = new AdapterCategoryList(this);
         }
         loading = false;
-        adapterCategoryList.doRefresh(arrPropertyDetailArrayList, isNearMe,false);
+        adapterCategoryList.doRefresh(arrPropertyDetailArrayList, isNearMe, false);
 
         if (rvHostelList.getAdapter() == null) {
             rvHostelList.setHasFixedSize(false);

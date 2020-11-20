@@ -3,6 +3,7 @@ package com.hostelbasera.apis;
 import android.content.Context;
 import android.graphics.Color;
 
+import com.google.gson.Gson;
 import com.hostelbasera.model.AddImageAttachmentModel;
 import com.hostelbasera.model.AddRoomModel;
 import com.hostelbasera.model.SellerDropdownModel;
@@ -33,6 +34,7 @@ public class HttpRequestHandler {
     private static final String HEADER_TYPE_JSON = "application/json";
 
     private static HttpRequestHandler mInstance = null;
+
     private final AsyncHttpClient client;
     public String TAG = getClass().getName();
 
@@ -504,7 +506,7 @@ public class HttpRequestHandler {
                                           String timing, String water_timing, String laundry_fees, ArrayList<AddImageAttachmentModel> arrAddMenuAttachment,
                                           String price, ArrayList<SellerDropdownModel.FacilityList> arrFacilityList,
                                           ArrayList<AddImageAttachmentModel> arrAddImageAttachment, ArrayList<AddRoomModel> arrRoomDetails,
-                                          String payment_id, String price_plan, String area,String reference) {
+                                          String payment_id, String price_plan, String area, String reference) {
         JSONObject params = new JSONObject();
         JSONObject jsonObject = new JSONObject();
         JSONArray jsonArray;
@@ -789,6 +791,182 @@ public class HttpRequestHandler {
         }
         return mParams;
     }
+
+
+    public JSONObject getBookNowDataParam(int propertyId, int roomId, int sellerId, String startDate, String endDate, ArrayList<AddImageAttachmentModel> arrAddImageAttachment) {
+        JSONObject params = new JSONObject();
+
+        JSONObject jsonObject = new JSONObject();
+        try {
+            params = setDefaultParameters();
+            params.put(Constant.UserId, globals.getNewUserId());
+            params.put(Constant.PropertyId, propertyId);
+            params.put(Constant.RoomId, roomId);
+            params.put(Constant.SellerId, sellerId);
+            params.put(Constant.StartDate, startDate);
+            params.put(Constant.EndDate, endDate);
+
+            JSONArray jsonArray = new JSONArray();
+
+            for (int i = 0; i < arrAddImageAttachment.size(); i++) {
+//                jsonArray.put(new Gson().toJson(arrAddImageAttachment.get(i).uploadPropertyImagesDetail));
+
+//                JSONObject object = new JSONObject(new Gson().toJson(arrAddImageAttachment.get(i).uploadPropertyImagesDetail));
+                jsonArray.put(new JSONObject(new Gson().toJson(arrAddImageAttachment.get(i).uploadPropertyImagesDetail)));
+
+//                jsonArray.put(new Gson().toJson(arrAddImageAttachment.get(i).uploadPropertyImagesDetail, new TypeToken<DocumentUploadModel.UploadPropertyImagesDetail>() {
+//                }.getType()));
+            }
+
+            params.put(Constant.UploadPropertyImagesDetail, jsonArray);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return params;
+    }
+
+
+    public JSONObject getBookingListDataParam(int pageNo, boolean isSeller) {
+        JSONObject params = new JSONObject();
+        JSONObject jsonObject = new JSONObject();
+        try {
+            params = setDefaultParameters();
+//            jsonObject.put(Constant.Limit, 0);
+            jsonObject.put(Constant.Page, pageNo);
+            jsonObject.put(isSeller ? Constant.Seller_id : Constant.User_id, globals.getNewUserId());
+
+            params.put(Constant.Filters, jsonObject);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return params;
+    }
+
+
+    /*
+    {
+    "token":"si0d3lRh4Of7ld03l",
+    "deviceType":1,
+    "userPropertyRequestData":{
+        "user_property_request_id":1,
+        "status":1
+    }
+}
+
+     */
+
+
+    public JSONObject getChangeBookingStatusDataParam(int id, int status) {
+        JSONObject params = new JSONObject();
+        JSONObject jsonObject = new JSONObject();
+        try {
+            params = setDefaultParameters();
+//            jsonObject.put(Constant.Limit, 0);
+            jsonObject.put(Constant.User_property_request_id, id);
+            jsonObject.put(Constant.Status, status);
+
+            params.put(Constant.UserPropertyRequestData, jsonObject);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return params;
+    }
+
+    public JSONObject getUserWalletMoneyParam() {
+        return setDefaultParameters();
+    }
+
+    public JSONObject getBookingWiseCouponsParam(int user_property_request_id) {
+        JSONObject params = new JSONObject();
+        try {
+            params = setDefaultParameters();
+
+            params.put(Constant.User_property_request_id, user_property_request_id);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return params;
+    }
+
+    /*
+    {
+        "token":"si0d3lRh4Of7ld03l",
+        "deviceType":1,
+        "orderData":{
+                "user_property_request_id": "13",
+                "user_id": "1",
+                "seller_id": "5",
+                "property_id": "38",
+                "coupon_id":18,
+                "coupon_amout_type":"1",
+                "applied_coupon_amount":500,
+                "applied_wallet_amount":100,
+                "remark":"Property booked",
+                "payment_id":2132468546,
+                "payment_status":"paid"
+            }
+    }
+
+
+     */
+
+    public JSONObject makeOrderDataParam(int user_property_request_id, int seller_id, int property_id, int coupon_id,
+                                         int coupon_amout_type, int applied_coupon_amount, int applied_wallet_amount, String remark, String payment_id, String payment_status) {
+        JSONObject params = new JSONObject();
+        JSONObject jsonObject = new JSONObject();
+        try {
+            params = setDefaultParameters();
+            jsonObject.put(Constant.User_property_request_id, user_property_request_id);
+            jsonObject.put(Constant.User_id, globals.getNewUserId());
+            jsonObject.put(Constant.Seller_id, seller_id);
+            jsonObject.put(Constant.Property_id, property_id);
+            jsonObject.put(Constant.Coupon_id, coupon_id);
+            jsonObject.put(Constant.Coupon_amout_type, coupon_amout_type);
+            jsonObject.put(Constant.Applied_coupon_amount, applied_coupon_amount);
+            jsonObject.put(Constant.Applied_wallet_amount, applied_wallet_amount);
+            jsonObject.put(Constant.Remark, remark);
+            jsonObject.put(Constant.Payment_id, payment_id);
+            jsonObject.put(Constant.Payment_status, payment_status);
+
+            params.put(Constant.OrderData, jsonObject);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return params;
+    }
+
+    /*
+    {
+    "token":"si0d3lRh4Of7ld03l",
+    "deviceType":1,
+    "filters":{
+            "limit":2,
+            "page":1,
+            "user_id":1,
+            "list_type":"user"
+        }
+}
+
+     */
+
+    public JSONObject getOrderListDataParam(int pageNo, boolean isSeller) {
+        JSONObject params = new JSONObject();
+        JSONObject jsonObject = new JSONObject();
+        try {
+            params = setDefaultParameters();
+//            jsonObject.put(Constant.Limit, 0);
+            jsonObject.put(Constant.Page, pageNo);
+            jsonObject.put(isSeller ? Constant.Seller_id : Constant.User_id, globals.getNewUserId());
+            jsonObject.put(Constant.List_type, isSeller ? "seller" : "user");
+
+            params.put(Constant.Filters, jsonObject);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return params;
+    }
+
+
 
 }
 

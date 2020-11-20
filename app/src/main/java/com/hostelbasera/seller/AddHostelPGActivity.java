@@ -659,7 +659,7 @@ public class AddHostelPGActivity extends BaseActivity implements PermissionListe
     public void doAttachment() {
         for (int i = 0; i < arrFile.size(); i++) {
             if (checkFileSize(arrFile.get(i))) {
-                Toaster.shortToast("Max 5mb file allowed.");
+                Toaster.shortToast("Max 10mb file allowed.");
                 return;
             }
         }
@@ -1574,7 +1574,7 @@ TODO :
     }
 
 
-    public void onStartTransaction(String CHECKSUMHASH, String Amount) {
+    public void onStartTransaction(String CHECKSUMHASH, String amount) {
         PaytmPGService Service = PaytmPGService.getProductionService();
 
         HashMap<String, String> paramMap = new HashMap<>();
@@ -1583,7 +1583,7 @@ TODO :
         paramMap.put(Constant.CUST_ID, CustId);
         paramMap.put(Constant.INDUSTRY_TYPE_ID, Constant.INDUSTRY_TYPE_ID_Value);
         paramMap.put(Constant.CHANNEL_ID, Constant.CHANNEL_ID_Value);
-        paramMap.put(Constant.TXN_AMOUNT, Amount);
+        paramMap.put(Constant.TXN_AMOUNT, amount);
         paramMap.put(Constant.WEBSITE, Constant.WEBSITE_Value);
         paramMap.put(Constant.CALLBACK_URL, Constant.CALLBACK_URL_Value + OrderId);
         paramMap.put(Constant.CHECKSUMHASH, CHECKSUMHASH);

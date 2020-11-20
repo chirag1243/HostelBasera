@@ -2,10 +2,11 @@
 <resources>
 
     <!--Live URL-->
-    <string name="server_url">http://hostelbasera.com/services/</string>
-    <string name="image_url">http://hostelbasera.com/hostelbaseraadmin/assets/images/hostel/</string>
-    <string name="facility_url">http://hostelbasera.com/hostelbaseraadmin/assets/images/facility/</string>
-    <string name="city_url">http://hostelbasera.com/hostelbaseraadmin/assets/images/city/</string>
+    <string name="server_url">https://hostelbasera.com/services/</string>
+    <string name="image_url">https://hostelbasera.com/hostelbaseraadmin/assets/images/hostel/</string>
+    <string name="facility_url">https://hostelbasera.com/hostelbaseraadmin/assets/images/facility/</string>
+    <string name="city_url">https://hostelbasera.com/hostelbaseraadmin/assets/images/city/</string>
+    <string name="banner_url">"https://hostelbasera.com/hostelbaseraadmin/uploads/"</string>
 
     <string name="registerUser">Login/registerUser</string>
     <string name="loginUser">Login/loginUser</string>
@@ -48,11 +49,22 @@
 
     <string name="renewProperty">login/renewProperty</string>
 
-    <string name="main_url">http://hostelbasera.com/</string>
+    <string name="main_url">https://hostelbasera.com/</string>
     <string name="generateChecksum">paytm/generateChecksum.php</string>
 
     <string name="getCityList">user/getCityList</string>
 
     <string name="getAllDropdownList">login/getAllDropdownList</string>
 
+    <string name="bookNow">user/bookNow</string>
+
+    <string name="bookingRequestList">user/bookingRequestList</string>
+    <string name="changeBookingStatus">user/changeBookingStatus</string>
+
+    <string name="userWalletMoney">user/userWalletMoney</string>
+    <string name="bookingWiseCoupons">user/bookingWiseCoupons</string>
+    <string name="makeOrder">user/makeOrder</string>
+    <string name="orderList">user/orderList</string>
+
+    <string name="bannerList">user/bannerList</string>
 </resources>

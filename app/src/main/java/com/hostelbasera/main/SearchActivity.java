@@ -99,6 +99,7 @@ public class SearchActivity extends BaseActivity {
         tvNoDataFound.setVisibility(View.GONE);
         JSONObject postData = HttpRequestHandler.getInstance().getSearchDataParam(edsearchView.getText().toString().trim());
 
+
         if (postData != null) {
             new PostRequest(this, getString(R.string.searchProperty),
                     postData, false, new PostRequest.OnPostServiceCallListener() {
