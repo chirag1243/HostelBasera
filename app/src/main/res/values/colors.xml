@@ -36,4 +36,6 @@
     <color name="colorSliderBackground">#4d4772</color><!--#FF181821-->
     <color name="colorTextColor">#FFFFFFFF</color>
     <color name="colorSwitchColor">#91b402</color><!--#FF2371FA-->
+
+    <color name="gray_dot">#7Fc2c2c2</color>
 </resources>

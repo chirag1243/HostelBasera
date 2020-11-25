@@ -5,23 +5,24 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Typeface;
-import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
-import android.support.v4.widget.NestedScrollView;
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.view.animation.LinearInterpolator;
 import android.view.animation.RotateAnimation;
+import android.view.animation.TranslateAnimation;
 import android.widget.AdapterView;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -39,6 +40,7 @@ import com.hostelbasera.apis.PostRequest;
 import com.hostelbasera.model.BannerListModel;
 import com.hostelbasera.model.FilterModel;
 import com.hostelbasera.model.GetPropertyDetailModel;
+import com.hostelbasera.utility.BannerImagePagerAdapter;
 import com.hostelbasera.utility.Constant;
 import com.hostelbasera.utility.Globals;
 import com.hostelbasera.utility.PaginationProgressBarAdapter;
@@ -51,6 +53,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Objects;
 import java.util.Timer;
+import java.util.TimerTask;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -92,12 +95,17 @@ public class FragmentHome extends Fragment implements Paginate.Callbacks, SwipeR
     @BindView(R.id.fa_button)
     FloatingActionButton faButton;
 
-    @BindView(R.id.tv_hostel_suggestion)
-    TextView tvHostelSuggestion;
-    @BindView(R.id.rv_banner)
-    RecyclerView rvBanner;
-    @BindView(R.id.ns_scroll)
-    NestedScrollView nsScroll;
+    //    @BindView(R.id.tv_hostel_suggestion)
+//    TextView tvHostelSuggestion;
+//    @BindView(R.id.rv_banner)
+//    RecyclerView rvBanner;
+    @BindView(R.id.fl_banner)
+    FrameLayout flBanner;
+
+    @BindView(R.id.vp_banner)
+    ViewPager vpBanner;
+    @BindView(R.id.tab_layout)
+    TabLayout tabLayout;
 
     ArrayList<String> arrPropertyCategoryId;
     ArrayList<String> arrPropertyTypeId;
@@ -141,6 +149,9 @@ public class FragmentHome extends Fragment implements Paginate.Callbacks, SwipeR
         view = inflater.inflate(R.layout.fragment_home, container, false);
         ButterKnife.bind(this, view);
         mContext = container.getContext();
+        animShow = AnimationUtils.loadAnimation(mContext, R.anim.view_show);
+        animHide = AnimationUtils.loadAnimation(mContext, R.anim.view_hide);
+
         init();
         return view;
     }
@@ -210,6 +221,8 @@ public class FragmentHome extends Fragment implements Paginate.Callbacks, SwipeR
         isNearMe = false;
     }
 
+    public Animation animShow, animHide;
+
     @SuppressLint("SetTextI18n")
     private void init() {
 
@@ -248,7 +261,7 @@ public class FragmentHome extends Fragment implements Paginate.Callbacks, SwipeR
             Toaster.shortToast(R.string.no_internet_msg);
         }
 
-        /*rvHostel.addOnScrollListener(new RecyclerView.OnScrollListener() {
+        rvHostel.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
@@ -258,6 +271,13 @@ public class FragmentHome extends Fragment implements Paginate.Callbacks, SwipeR
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 if (rvHostel.getChildAt(0) != null) {
                     swipeRefreshLayout.setEnabled(rvHostel.getChildAt(0).getTop() == 0);
+                    showHideAnimation(rvHostel.getChildAt(0).getTop() == 0);
+//                    if (rvHostel.getChildAt(0).getTop() == 0) {
+//                        slideDown(rvBanner);
+//                    } else {
+//                        slideUp(rvBanner);
+//                    }
+//                    showHideAnimation(rvHostel.getChildAt(0).getTop() == 0);
                 }
                 if (dy > 0 && faButton.getVisibility() == View.VISIBLE) {
                     faButton.hide();
@@ -266,7 +286,7 @@ public class FragmentHome extends Fragment implements Paginate.Callbacks, SwipeR
                 }
                 super.onScrolled(recyclerView, dx, dy);
             }
-        });*/
+        });
         /*nsScroll.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
             @Override
             public void onScrollChange(NestedScrollView nestedScrollView, int i, int i1, int i2, int i3) {
@@ -290,6 +310,60 @@ public class FragmentHome extends Fragment implements Paginate.Callbacks, SwipeR
                 }
             }
         });*/
+    }
+
+    public void slideUp(View view) {
+//        TranslateAnimation animate = new TranslateAnimation(
+//                0,                 // fromXDelta
+//                0,                 // toXDelta
+//                view.getHeight(),  // fromYDelta
+//                0);                // toYDelta
+//        animate.setDuration(500);
+//        animate.setFillAfter(true);
+//        view.startAnimation(animate);
+        view.setVisibility(View.GONE);
+    }
+
+    // slide the view from its current position to below itself
+    public void slideDown(View view) {
+        view.setVisibility(View.VISIBLE);
+        TranslateAnimation animate = new TranslateAnimation(
+                0,                 // fromXDelta
+                0,                 // toXDelta
+                0,                 // fromYDelta
+                view.getHeight()); // toYDelta
+        animate.setDuration(500);
+        animate.setFillAfter(true);
+        view.startAnimation(animate);
+
+    }
+
+    public void showHideAnimation(boolean isShow) {
+        if (isShow) {
+            flBanner.setVisibility(View.VISIBLE);
+            flBanner.startAnimation(animShow);
+//            rvBanner.setVisibility(View.VISIBLE);
+//            rvBanner.setAlpha(0.0f);
+//
+//// Start the animation
+//            rvBanner.animate()
+//                    .translationY(rvBanner.getHeight())
+//                    .alpha(1.0f)
+//                    .setListener(null);
+        } else {
+            flBanner.startAnimation(animHide);
+            flBanner.setVisibility(View.GONE);
+//            rvBanner.animate()
+//                    .translationY(0)
+//                    .alpha(0.0f)
+//                    .setListener(new AnimatorListenerAdapter() {
+//                        @Override
+//                        public void onAnimationEnd(Animator animation) {
+//                            super.onAnimationEnd(animation);
+//                            rvBanner.setVisibility(View.GONE);
+//                        }
+//                    });
+        }
     }
 
     @OnClick(R.id.tv_search)
@@ -500,12 +574,14 @@ public class FragmentHome extends Fragment implements Paginate.Callbacks, SwipeR
         }
     }
 
-    private void setupList(ArrayList<GetPropertyDetailModel.PropertyDetail> homePageStoresDetailArrayList, boolean showProgress) {
+    private void setupList
+            (ArrayList<GetPropertyDetailModel.PropertyDetail> homePageStoresDetailArrayList,
+             boolean showProgress) {
         if (homePageStoresDetailArrayList != null && !homePageStoresDetailArrayList.isEmpty()) {
             arrPropertyDetailArrayList.addAll(homePageStoresDetailArrayList);
             if (showProgress) {
                 setRvBanner();
-//                arrPropertyDetailArrayList.add(0, new GetPropertyDetailModel.PropertyDetail());
+                arrPropertyDetailArrayList.add(0, new GetPropertyDetailModel.PropertyDetail());
 
 //                GetPropertyDetailModel.PropertyDetail model = new GetPropertyDetailModel.PropertyDetail();
 //                model.banners = bannerListModel.banners;
@@ -517,10 +593,33 @@ public class FragmentHome extends Fragment implements Paginate.Callbacks, SwipeR
     }
 
     public void setRvBanner() {
-        tvHostelSuggestion.setTypeface(tvHostelSuggestion.getTypeface(), Typeface.BOLD);
+//        tvHostelSuggestion.setTypeface(tvHostelSuggestion.getTypeface(), Typeface.BOLD);
 
         if (bannerListModel.banners != null && !bannerListModel.banners.isEmpty()) {
 
+            BannerImagePagerAdapter adapter = new BannerImagePagerAdapter(mContext, bannerListModel.banners);
+            vpBanner.setAdapter(adapter);
+
+            tabLayout.setupWithViewPager(vpBanner, true);
+
+            final Handler handler = new Handler();
+            final Runnable Update = new Runnable() {
+                public void run() {
+                    if (currentPage == ((bannerListModel.banners.size() + 1) - 1)) {
+                        currentPage = 0;
+                    }
+                    vpBanner.setCurrentItem(currentPage++, true);
+                }
+            };
+
+            timer = new Timer(); // This will create a new Thread
+            timer.schedule(new TimerTask() { // task to be scheduled
+                @Override
+                public void run() {
+                    handler.post(Update);
+                }
+            }, DELAY_MS, PERIOD_MS);
+/*
             rvBanner.setVisibility(View.VISIBLE);
 
             AdapterBanners adapterDocuments = new AdapterBanners(mContext);
@@ -540,9 +639,9 @@ public class FragmentHome extends Fragment implements Paginate.Callbacks, SwipeR
                             Toaster.shortToast(bannerListModel.banners.get(position).url);
                     }
                 }
-            });
+            });*/
         } else {
-            rvBanner.setVisibility(View.GONE);
+            flBanner.setVisibility(View.GONE);
         }
     }
 

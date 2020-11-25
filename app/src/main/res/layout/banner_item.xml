@@ -9,15 +9,13 @@
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/dim_8dp"
         android:layout_marginTop="@dimen/dim_2dp"
-        android:layout_marginRight="@dimen/dim_5dp"
         android:layout_marginBottom="@dimen/dim_5dp"
-        app:cardCornerRadius="@dimen/dim_10dp">
+        app:cardCornerRadius="@dimen/dim_1dp">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="@dimen/dim_150dp"
+            android:layout_height="@dimen/dim_170dp"
             android:background="@color/white"
             android:orientation="vertical">
 

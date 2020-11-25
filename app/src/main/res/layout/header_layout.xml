@@ -10,10 +10,11 @@
         android:id="@+id/tv_hostel_suggestion"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/dim_20dp"
+        android:layout_marginTop="@dimen/dim_10dp"
         android:background="@drawable/rounded_hostel_list_bg"
         android:gravity="center"
-        android:padding="@dimen/dim_20dp"
+        android:paddingTop="@dimen/dim_15dp"
+        android:paddingBottom="@dimen/dim_10dp"
         android:text="@string/hostel_pg_suggestion"
         android:textAllCaps="true"
         android:textColor="@color/colorAccent"
@@ -21,7 +22,7 @@
         android:textStyle="bold"
         android:visibility="visible" />
 
-    <android.support.v7.widget.RecyclerView
+    <!--<android.support.v7.widget.RecyclerView
         android:id="@+id/rv_banner"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -30,5 +31,5 @@
         android:layout_marginRight="@dimen/dim_8dp"
         android:background="@color/white"
         android:nestedScrollingEnabled="false"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />-->
 </LinearLayout>

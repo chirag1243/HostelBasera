@@ -42,7 +42,7 @@ public class AdapterBanners extends RecyclerView.Adapter<AdapterBanners.ViewHold
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.banner_item, parent, false);
         if (mValues.size() > 1) {
             ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
-            layoutParams.width = (int) (parent.getWidth() * 0.9);
+//            layoutParams.width = (int) (parent.getWidth() * 0.9);
             view.setLayoutParams(layoutParams);
         }
         return new AdapterBanners.ViewHolder(view, this);

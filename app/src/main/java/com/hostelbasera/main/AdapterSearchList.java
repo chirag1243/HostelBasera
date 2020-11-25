@@ -88,7 +88,3 @@ public class AdapterSearchList extends RecyclerView.Adapter<AdapterSearchList.Vi
             onItemClickListener.onItemClick(null, holder.itemView, holder.getAdapterPosition(), holder.getItemId());
     }
 }
-
-
-
-

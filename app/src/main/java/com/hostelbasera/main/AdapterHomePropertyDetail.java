@@ -61,7 +61,7 @@ public class AdapterHomePropertyDetail extends RecyclerView.Adapter<RecyclerView
         } /*else if (viewType == TYPE_BANNER) {
             View v2 = inflater.inflate(R.layout.banner_layout, viewGroup, false);
             viewHolder = new HeaderBannerViewHolder(v2);
-        } */else {
+        } */ else {
             View v3 = inflater.inflate(R.layout.home_hostel_item, viewGroup, false);
             viewHolder = new ItemViewHolder(v3);
         }
@@ -165,8 +165,6 @@ public class AdapterHomePropertyDetail extends RecyclerView.Adapter<RecyclerView
 
         @BindView(R.id.tv_hostel_suggestion)
         TextView tvHostelSuggestion;
-        @BindView(R.id.rv_banner)
-        RecyclerView rvBanner;
 
         HeaderViewHolder(View itemView) {
             super(itemView);
@@ -177,28 +175,7 @@ public class AdapterHomePropertyDetail extends RecyclerView.Adapter<RecyclerView
         void setDataToView(GetPropertyDetailModel.PropertyDetail mItem, HeaderViewHolder holder, int position) {
             tvHostelSuggestion.setTypeface(tvHostelSuggestion.getTypeface(), Typeface.BOLD);
 
-            if (mItem.banners != null && !mItem.banners.isEmpty()) {
 
-                rvBanner.setVisibility(View.VISIBLE);
-
-                AdapterBanners adapterDocuments = new AdapterBanners(mContext);
-
-                rvBanner.setHasFixedSize(true);
-                rvBanner.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false));
-                rvBanner.setAdapter(adapterDocuments);
-                adapterDocuments.doRefresh(mItem.banners);
-                adapterDocuments.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                       /* if (!Globals.checkString(mItem.banners.get(position).url).isEmpty()) {
-                            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(mItem.banners.get(position).url));
-                            mContext.startActivity(browserIntent);Todo : Check browser click
-                        }*/
-                    }
-                });
-            } else {
-                rvBanner.setVisibility(View.GONE);
-            }
         }
 
         @Override
@@ -285,10 +262,10 @@ public class AdapterHomePropertyDetail extends RecyclerView.Adapter<RecyclerView
         } else if (position == 1) {
             return TYPE_BANNER;
         } else {*/
-            return TYPE_ITEM;
+//            return TYPE_ITEM;
 //        }
 
-        //return (position == 0) ? TYPE_HEADER : TYPE_ITEM;
+        return (position == 0) ? TYPE_HEADER : TYPE_ITEM;
     }
 }
 
