@@ -10,7 +10,7 @@ import com.hostelbasera.R;
  * For Calligraphy.
  */
 
-public class TextField extends android.support.v7.widget.AppCompatTextView {
+public class TextField extends androidx.appcompat.widget.AppCompatTextView {
 
     public TextField(final Context context, final AttributeSet attrs) {
         super(context, attrs, R.attr.textFieldStyle);

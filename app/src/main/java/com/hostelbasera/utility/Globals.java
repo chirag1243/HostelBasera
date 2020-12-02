@@ -16,8 +16,6 @@ import android.net.Network;
 import android.net.NetworkInfo;
 import android.os.Build;
 import android.provider.Settings;
-import android.support.multidex.MultiDex;
-import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.util.Patterns;
 import android.view.Display;
@@ -26,7 +24,9 @@ import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 
-import com.crashlytics.android.Crashlytics;
+import androidx.core.content.ContextCompat;
+import androidx.multidex.MultiDex;
+
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.hostelbasera.R;
@@ -40,8 +40,6 @@ import java.text.SimpleDateFormat;
 import java.util.Locale;
 import java.util.Random;
 
-import io.fabric.sdk.android.Fabric;
-
 public class Globals extends CoreApp {
     SharedPreferences sp;
     SharedPreferences.Editor editor;
@@ -54,7 +52,7 @@ public class Globals extends CoreApp {
     @Override
     public void onCreate() {
         super.onCreate();
-        Fabric.with(this, new Crashlytics());
+//        Fabric.with(this, new Crashlytics());
 //        Logger.addLogAdapter(new AndroidLogAdapter());
         context = getApplicationContext();
     }

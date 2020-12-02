@@ -11,17 +11,6 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.RequiresApi;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.AppCompatTextView;
-import android.support.v7.widget.CardView;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,19 +23,26 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.widget.AppCompatTextView;
+import androidx.appcompat.widget.Toolbar;
+import androidx.cardview.widget.CardView;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.esafirm.imagepicker.features.ImagePicker;
 import com.esafirm.imagepicker.model.Image;
 import com.example.easywaylocation.EasyWayLocation;
 import com.example.easywaylocation.Listener;
 import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
-import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.places.Place;
-import com.google.android.gms.location.places.Places;
-import com.google.android.gms.location.places.ui.PlacePicker;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.libraries.places.api.Places;
+import com.google.android.libraries.places.api.net.PlacesClient;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.Gson;
 import com.gun0912.tedpermission.PermissionListener;
 import com.gun0912.tedpermission.TedPermission;
@@ -70,6 +66,7 @@ import com.orhanobut.logger.Logger;
 import com.paytm.pgsdk.PaytmOrder;
 import com.paytm.pgsdk.PaytmPGService;
 import com.paytm.pgsdk.PaytmPaymentTransactionCallback;
+import com.schibstedspain.leku.LocationPickerActivity;
 
 import org.json.JSONObject;
 
@@ -204,12 +201,19 @@ public class AddHostelPGActivity extends BaseActivity implements PermissionListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_hostel_pg);
         ButterKnife.bind(this);
-        mGoogleApiClient = new GoogleApiClient
-                .Builder(this)
-                .addApi(Places.GEO_DATA_API)
-                .addApi(Places.PLACE_DETECTION_API)
-                .enableAutoManage(this, this)
-                .build();
+//        mGoogleApiClient = new GoogleApiClient
+//                .Builder(this)
+//                .addApi(Places.GEO_DATA_API)
+//                .addApi(Places.PLACE_DETECTION_API)
+//                .enableAutoManage(this, this)
+//                .build();
+
+        // Initialize the SDK
+        Places.initialize(getApplicationContext(), getString(R.string.google_maps_new_key));
+
+        // Create a new PlacesClient instance
+        PlacesClient placesClient = Places.createClient(this);
+
         checkPermission();
 //        init();
     }
@@ -569,14 +573,47 @@ public class AddHostelPGActivity extends BaseActivity implements PermissionListe
     @OnClick(R.id.tv_address)
     public void doAddAddress() {
 
-        PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
-        try {
+//        PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
+//        try {
+//
+//            builder.setLatLngBounds(new LatLngBounds(new LatLng(lat, lng), new LatLng(lat, lng)));
+//            startActivityForResult(builder.build(AddHostelPGActivity.this), PLACE_PICKER_REQUEST);
+//        } catch (GooglePlayServicesRepairableException | GooglePlayServicesNotAvailableException e) {
+//            e.printStackTrace();
+//        }
 
-            builder.setLatLngBounds(new LatLngBounds(new LatLng(lat, lng), new LatLng(lat, lng)));
-            startActivityForResult(builder.build(AddHostelPGActivity.this), PLACE_PICKER_REQUEST);
-        } catch (GooglePlayServicesRepairableException | GooglePlayServicesNotAvailableException e) {
-            e.printStackTrace();
-        }
+        LocationPickerActivity.Builder builder = new LocationPickerActivity.Builder();
+        builder.withLocation(21.183742, 72.832499)
+                .withGeolocApiKey(getString(R.string.google_maps_new_key))
+                .withDefaultLocaleSearchZone()
+                .shouldReturnOkOnBackPressed()
+                .withGoogleTimeZoneEnabled()
+                .withVoiceSearchHidden()
+
+                .build(this);
+
+        /*
+        .withCityHidden()
+                .withZipCodeHidden()
+                .withSatelliteViewHidden()
+                .withStreetHidden()
+                .withUnnamedRoadHidden()
+                 .withSearchZone("es_ES")
+        * */
+        // .withSearchZone(new SearchZoneRect(new LatLng(26.525467, -18.910366), new LatLng(43.906271, 5.394197)))
+//        locationPickerIntent
+
+//        .withGooglePlacesEnabled()
+
+        startActivityForResult(builder.build(AddHostelPGActivity.this), PLACE_PICKER_REQUEST);
+
+        // Set the fields to specify which types of place data to
+        // return after the user has made a selection.
+//        List<Place.Field> fields = Arrays.asList(Place.Field.ID, Place.Field.NAME);
+//
+//        // Start the autocomplete intent.
+//        Intent intent = new Autocomplete.IntentBuilder(AutocompleteActivityMode.FULLSCREEN, fields).build(this);
+//        startActivityForResult(intent, PLACE_PICKER_REQUEST);
     }
 
     /*
@@ -613,8 +650,76 @@ public class AddHostelPGActivity extends BaseActivity implements PermissionListe
             }
         }
 
-        if (requestCode == PLACE_PICKER_REQUEST) {
-            if (data != null) {
+        if (resultCode == Activity.RESULT_OK && data != null) {
+//            Log.d("RESULT****", "OK")
+            if (requestCode == PLACE_PICKER_REQUEST) {
+
+                latitude = data.getDoubleExtra("latitude", 0.0);
+                longitude = data.getDoubleExtra("longitude", 0.0);
+
+                edtAddress.setText(data.getStringExtra("location_address"));
+//                edtAddress.setText(String.format("%s", place.getAddress()));
+
+
+//                double latitude = data.getDoubleExtra("LATITUDE", 0.0);
+//                val latitude = data.getDoubleExtra(LATITUDE, 0.0)
+//                Log.d("LATITUDE****", latitude.toString())
+//                val longitude = data.getDoubleExtra(LONGITUDE, 0.0)
+//                Log.d("LONGITUDE****", longitude.toString())
+//                val address = data.getStringExtra(LOCATION_ADDRESS)
+//                Log.d("ADDRESS****", address.toString())
+//                val postalcode = data.getStringExtra(ZIPCODE)
+//                Log.d("POSTALCODE****", postalcode.toString())
+//                val bundle = data.getBundleExtra(TRANSITION_BUNDLE)
+//                Log.d("BUNDLE TEXT****", bundle.getString("test"))
+//                val fullAddress = data.getParcelableExtra<Address>(ADDRESS)
+//                if (fullAddress != null) {
+//                    Log.d("FULL ADDRESS****", fullAddress.toString())
+//                }
+//                val timeZoneId = data.getStringExtra(TIME_ZONE_ID)
+//                Log.d("TIME ZONE ID****", timeZoneId)
+//                val timeZoneDisplayName = data.getStringExtra(TIME_ZONE_DISPLAY_NAME)
+//                Log.d("TIME ZONE NAME****", timeZoneDisplayName)
+            } else if (requestCode == 2) {
+                latitude = data.getDoubleExtra("LATITUDE", 0.0);
+                longitude = data.getDoubleExtra("LONGITUDE", 0.0);
+
+                edtAddress.setText(data.getStringExtra("LOCATION_ADDRESS"));
+//                val latitude = data.getDoubleExtra(LATITUDE, 0.0)
+//                Log.d("LATITUDE****", latitude.toString())
+//                val longitude = data.getDoubleExtra(LONGITUDE, 0.0)
+//                Log.d("LONGITUDE****", longitude.toString())
+//                val address = data.getStringExtra(LOCATION_ADDRESS)
+//                Log.d("ADDRESS****", address.toString())
+//                val lekuPoi = data.getParcelableExtra<LekuPoi>(LEKU_POI)
+//                        Log.d("LekuPoi****", lekuPoi.toString())
+            }
+        }
+        if (resultCode == Activity.RESULT_CANCELED) {
+            Toaster.shortToast("RESULT**** CANCELLED");
+        }
+
+       /* if (requestCode == PLACE_PICKER_REQUEST) {
+
+            if (resultCode == RESULT_OK) {
+                Place place = Autocomplete.getPlaceFromIntent(data);
+                latitude = place.getLatLng().latitude;
+                longitude = place.getLatLng().longitude;
+
+                edtAddress.setText(String.format("%s", place.getAddress()));
+//                Log.i(TAG, "Place: " + place.getName() + ", " + place.getId());
+            } else if (resultCode == AutocompleteActivity.RESULT_ERROR) {
+                // TODO: Handle the error.
+                Status status = Autocomplete.getStatusFromIntent(data);
+                Toaster.shortToast(status.getStatusMessage());
+//                Log.i(TAG, status.getStatusMessage());
+            } else if (resultCode == RESULT_CANCELED) {
+                // The user canceled the operation.
+                Toaster.shortToast("No Address selected");
+            }
+            return;
+
+           *//* if (data != null) {
                 Place place = PlacePicker.getPlace(this, data);
 
                 latitude = place.getLatLng().latitude;
@@ -623,8 +728,8 @@ public class AddHostelPGActivity extends BaseActivity implements PermissionListe
                 edtAddress.setText(String.format("%s", place.getAddress()));
             } else {
                 Toaster.shortToast("No Address selected");
-            }
-        }
+            }*//*
+        }*/
 
         if (requestCode == FilePickerConst.REQUEST_CODE_PHOTO) {
             if (resultCode == Activity.RESULT_OK && data != null) {
@@ -1496,12 +1601,12 @@ TODO :
     @Override
     protected void onStart() {
         super.onStart();
-        mGoogleApiClient.connect();
+//        mGoogleApiClient.connect();
     }
 
     @Override
     protected void onStop() {
-        mGoogleApiClient.disconnect();
+//        mGoogleApiClient.disconnect();
         super.onStop();
     }
 

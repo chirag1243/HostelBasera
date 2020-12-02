@@ -3,10 +3,9 @@ package com.hostelbasera.main;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
@@ -20,9 +19,7 @@ import com.hostelbasera.model.BookmarkDetailModel;
 import com.hostelbasera.utility.BaseActivity;
 import com.hostelbasera.utility.Constant;
 import com.hostelbasera.utility.Globals;
-import com.hostelbasera.utility.PaginationProgressBarAdapter;
 import com.hostelbasera.utility.Toaster;
-import com.paginate.Paginate;
 
 import org.json.JSONObject;
 

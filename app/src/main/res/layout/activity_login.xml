@@ -79,7 +79,7 @@
             android:textColor="@color/colorAccent"
             android:textStyle="bold" />
 
-        <android.support.v7.widget.AppCompatEditText
+        <androidx.appcompat.widget.AppCompatEditText
             android:id="@+id/edt_mobile_no"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

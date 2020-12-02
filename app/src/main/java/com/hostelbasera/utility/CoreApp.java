@@ -1,7 +1,7 @@
 package com.hostelbasera.utility;
 
 import android.os.StrictMode;
-import android.support.multidex.MultiDexApplication;
+import androidx.multidex.MultiDexApplication;
 
 import com.hostelbasera.BuildConfig;
 import com.hostelbasera.R;

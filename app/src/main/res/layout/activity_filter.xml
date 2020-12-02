@@ -20,7 +20,7 @@
         android:layout_weight="1"
         android:orientation="horizontal">
 
-        <android.support.v7.widget.RecyclerView
+        <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_filter_name"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -33,14 +33,14 @@
             android:background="@color/border_gray"
             android:visibility="gone" />
 
-        <android.support.v7.widget.RecyclerView
+        <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_filter"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="0.6" />
     </LinearLayout>
 
-    <android.support.v7.widget.CardView
+    <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:cardCornerRadius="0dp">
@@ -84,5 +84,5 @@
                 android:textSize="@dimen/dim_text11"
                 android:textStyle="bold" />
         </LinearLayout>
-    </android.support.v7.widget.CardView>
+    </androidx.cardview.widget.CardView>
 </LinearLayout>
